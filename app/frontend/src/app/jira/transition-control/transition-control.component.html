@@ -1,0 +1,14 @@
+<div [class.p-1]="padding===1" [class.p-2]="padding===2" class="rounded status-container" [class.text-dark]="status.statusCategory.colorName!=='green' && status.statusCategory.colorName!=='yellow'"
+  [class.bg-light]="status.statusCategory.colorName!=='green' && status.statusCategory.colorName!=='yellow'" [class.bg-success]="status.statusCategory.colorName==='green'"
+  [class.bg-primary]="status.statusCategory.colorName==='yellow'" (click)="toggled = !toggled">
+  {{status.name}}
+  <div class="transitions" [class.toggled]="toggled">
+    <div class="transition p-1" *ngFor="let trans of transitions"
+    [class.text-dark]="trans.to.statusCategory.colorName!=='green' && trans.to.statusCategory.colorName!=='yellow'"
+    [class.text-success]="trans.to.statusCategory.colorName==='green'"
+    [class.text-primary]="trans.to.statusCategory.colorName==='yellow'"
+    (click)="doTransition(trans.id)">
+      {{trans.name}}
+    </div>
+  </div>
+</div>

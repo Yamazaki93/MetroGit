@@ -1,0 +1,43 @@
+$item-height: 55px;
+$badge-size: 20px;
+
+:host{
+    width: 100%;
+}
+#action-button-container{
+    border-bottom: solid 1px #222;
+    width: 100%;
+    min-height: $item-height;
+    cursor: pointer;
+    .action-button{
+        width: 80px;
+        height: $item-height;
+        padding: 5px 10px;
+        font-size: 35px;
+        text-align: center;
+        position: relative;
+        app-spinner{
+            position: absolute;
+            top: 10px;
+            left: 20px;
+        }
+        &:hover{
+            background: rgba(0, 0, 0, 0.2);
+            color: var(--blue);
+        }
+        .badge{
+            position: absolute;
+            border-radius: 50%;
+            background: rgb(5, 142, 217);
+            width: $badge-size;
+            height: $badge-size;
+            top: 8px;
+            right: 13px;
+            font-size: 12px;
+            padding: 0.25em 0;
+            line-height: 14px;
+            color: #FFF !important;
+        }
+    }
+    
+}

@@ -1,0 +1,11 @@
+<div class="console-output-container">
+  <div class="output p-2" *ngIf="!loading && display" [innerHtml]="display">
+    
+  </div>
+  <div class="d-flex align-items-center justify-content-center loading-container" *ngIf="loading">
+    <div class="">
+      <app-spinner [enabled]="loading"></app-spinner>
+      <h5>Loading output...</h5>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,13 @@
+<div class="status-bar-container">
+    <div class="message-container d-flex" [class.show]="show"
+    [class.animated]="type==='danger' || type==='warning'"
+    [class.flash]="type==='danger' || type==='warning'">
+        <div class="status-icon-container" [class.loading-spinner]="loading">
+            <i [class.icon-refresh-cw]="type==='loading'" [class.icon-check]="type==='success'" [class.icon-alert-triangle]="type==='warning'"
+            [class.icon-alert-circle]="type==='danger'" [class.icon-info]="type==='info'"></i>
+        </div>
+        <div class="status-message-container ml-1">
+            {{message}}
+        </div>
+    </div>
+</div>

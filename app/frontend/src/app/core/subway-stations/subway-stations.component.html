@@ -1,0 +1,24 @@
+<div class="commit-info-container">
+  <div class="commit-info" [style.height.px]="height" *ngFor="let commit of _commits" [id]="'commit-info-' + commit.sha" (click)="select(commit.sha)">
+    <div class="background" [class.selected]="commit.sha === selected"></div>
+    <div class="commit-info-detail-container d-flex">
+      <div class="ml-1 committer text-center" [style.background]="getColorByAuthor(commit)" *ngIf="!commit.virtual">
+        {{d3Service.getAuthor(commit)}}
+      </div>
+      <div class="files-summary ml-1" *ngIf="commit.virtual">
+        <span class="mr-1 commit-summary modification" *ngIf="commit.fileSummary.modified">
+          <i class="icon-file-text"></i>{{commit.fileSummary.modified}}</span>
+        <span class="mr-1 commit-summary addition" *ngIf="commit.fileSummary.newCount">
+          <i class="icon-file-plus"></i>{{commit.fileSummary.newCount}}</span>
+        <span class="mr-1 commit-summary deletion" *ngIf="commit.fileSummary.deleted">
+          <i class="icon-file-minus"></i>{{commit.fileSummary.deleted}}</span>
+        <span class="mr-1 commit-summary rename" *ngIf="commit.fileSummary.renamed">
+          <i class="icon-file-minus"></i>{{commit.fileSummary.renamed}}</span>
+        <span class="mr-1 commit-summary ignored" *ngIf="commit.fileSummary.ignored">
+          <i class="icon-file-minus"></i>{{commit.fileSummary.ignored}}</span>
+      </div>
+      <div class="ml-2 commit-message full-width">
+        <span *ngIf="!commit.message" class="text-muted">Message...</span>{{commit.message}}</div>
+    </div>
+  </div>
+</div>

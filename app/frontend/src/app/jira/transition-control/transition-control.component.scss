@@ -1,0 +1,27 @@
+.status-container {
+    position: relative;
+    cursor: pointer;
+    .transitions {
+        z-index: 1;
+        min-width: 130px;
+        display: none;
+        position: absolute;
+        top: 35px;
+        background: #FFF;
+        border-radius: 5px;
+        width: 100%;
+        right: 0;
+        min-height: 20px;
+        border: solid 2px var(--gray);
+        &.toggled {
+            display: block;
+        }
+        .transition {
+            cursor: pointer;
+            &:hover {
+                color: #FFF !important;
+                background: var(--gray);
+            }
+        }
+    }
+}

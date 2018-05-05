@@ -1,0 +1,95 @@
+:host {
+    width: 100%;
+    height: 100%;
+}
+
+.loading-container,
+.empty-container {
+    width: 100%;
+    height: 100%;
+}
+.loading-container{
+    top: 0;
+    position: absolute;
+    background: rgba(0, 0, 0, 0.2);
+}
+
+.flex-no-shrink {
+    flex-shrink: 0;
+}
+
+.hidden {
+    display: none !important;
+}
+
+.full-width {
+    width: 100%;
+}
+.selectable {
+    user-select: initial;
+
+}
+
+.jira-detail-container {
+    height: 100%;
+    .external-link {
+        cursor: pointer;
+        &:hover {
+            color: var(--blue);
+        }
+    }
+    .icon-container {
+        min-width: 0;
+    }
+    .summary-container {
+        h5 {
+            margin: 0;
+        }
+    }
+    .issue-status-container {
+        .profile-container {
+            white-space: nowrap;
+            text-overflow: ellipsis;
+            overflow: hidden;
+        }
+    }
+    .subtasks {
+        max-height: 300px;
+        overflow: auto;
+        .subtask {
+            &:hover {
+                background: rgba(0, 0, 0, 0.2);
+            }
+            .subtask-priority {
+                width: 20px;
+                height: 20px;
+                margin-top: 7px
+            }
+            .subtask-summary {
+                width: 100%;
+                line-height: 32px;
+            }
+            .subtask-key {
+                line-height: 32px;
+                flex-shrink: 0;
+            }
+        }
+    }
+    .comments-container {
+        width: 100%;
+        height: 100%;
+        .comments {
+            overflow-y: auto;
+            .comment {
+                width: 100%;
+                .comment-body {
+                    width: 100%;
+                }
+                .author-pic {
+                    height: 24px;
+                    width: 24px;
+                }
+            }
+        }
+    }
+}

@@ -1,0 +1,58 @@
+<svg:g [attr.transform]="'translate(' + node.x + ',' + node.y + ')'" class="map-station" (click)="select()">
+  <svg:rect x="0" y="-13" *ngIf="graphWidth > node.x + 3" [attr.width]="graphWidth - 3 - node.x" height="27" class="highlight smooth-1"
+    [class.selected]="selected" [style.fill]="node.color.stringValue" />
+  <svg:circle *ngIf="!node.commit.isStash" cx="0" cy="0" r="13" class="dot" [style.stroke]="node.color.stringValue" [style.fill]="node.commit.virtual? node.color.stringValue:'#fff'">
+  </svg:circle>
+  <svg:circle cx="0" cy="0" r="7" class="dot" [style.fill]="node.secondColor.stringValue" *ngIf="node.commit.parents.length > 1 && !node.commit.isStash">
+  </svg:circle>
+  <svg:rect *ngIf="node.commit.isStash" [attr.x]="-13" y="-13" width="26" height="26" [style.fill]="node.color.stringValue">
+  </svg:rect>
+  <svg *ngIf="node.commit.isStash" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" x="-9" y="-9" stroke="currentColor" stroke-width="2"
+    stroke-linecap="round" stroke-linejoin="round" class="feather feather-archive">
+    <polyline points="21 8 21 21 3 21 3 8"></polyline>
+    <rect x="1" y="3" width="22" height="5"></rect>
+    <line x1="10" y1="12" x2="14" y2="12"></line>
+  </svg>
+  <svg:rect *ngIf="graphWidth > node.x + 3" [attr.x]="graphWidth - 3 - node.x" y="-13" width="3" height="27" [style.fill]="node.color.stringValue">
+  </svg:rect>
+  <!-- CI setting -->
+  <!-- pass -->
+  <svg:g class="animated bounceIn" *ngIf="node.commit.ci==='success'">
+    <svg:circle cx="0" cy="0" r="12" fill="var(--success)">
+    </svg:circle>
+    <svg:svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" x="-9" y="-8" viewBox="0 0 24 24" fill="none" stroke="#FFF"
+      stroke-width="3" stroke-linecap="round" stroke-linejoin="round" class="feather feather-check">
+      <svg:polyline points="20 6 9 17 4 12"></svg:polyline>
+    </svg:svg>
+  </svg:g>
+  <!-- fail -->
+  <svg:g class="animated flash" *ngIf="node.commit.ci==='failed'">
+    <svg:circle cx="0" cy="0" r="12" fill="var(--danger)">
+    </svg:circle>
+    <svg xmlns="http://www.w3.org/2000/svg" x="-9" y="-9" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="3" stroke-linecap="round" stroke-linejoin="round" class="feather feather-x">
+      <line x1="18" y1="6" x2="6" y2="18"></line>
+      <line x1="6" y1="6" x2="18" y2="18"></line>
+    </svg>
+  </svg:g>
+  <!-- pending -->
+  <svg:g class="animated infinite pulse" *ngIf="node.commit.ci==='queued'">
+    <svg:circle cx="0" cy="0" r="12" fill="var(--gray-dark)">
+    </svg:circle>
+    <svg xmlns="http://www.w3.org/2000/svg" x="-9" y="-9" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-clock">
+      <circle cx="12" cy="12" r="10"></circle>
+      <polyline points="12 6 12 12 16 14"></polyline>
+    </svg>
+  </svg:g>
+  <!-- cancelled -->
+  <svg:g class="animated flash" *ngIf="node.commit.ci==='cancelled'">
+    <svg:circle cx="0" cy="0" r="12" fill="var(--gray)">
+    </svg:circle>
+    <svg xmlns="http://www.w3.org/2000/svg" x="-9" y="-9" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-minus-circle">
+      <circle cx="12" cy="12" r="10"></circle>
+      <line x1="8" y1="12" x2="16" y2="12"></line>
+    </svg>
+  </svg:g>
+</svg:g>

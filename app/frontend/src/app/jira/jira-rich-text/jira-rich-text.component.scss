@@ -1,0 +1,8 @@
+.rich-text-container{
+    width: 100%;
+    max-height: 200px;
+    overflow-y: auto;
+    overflow-x: hidden;
+    background: rgba(0, 0, 0, 0.2);
+    user-select: initial;
+}

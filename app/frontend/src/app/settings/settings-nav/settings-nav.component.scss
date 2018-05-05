@@ -1,0 +1,49 @@
+$primary-color: #FFF;
+$item-height: 46px;
+$width: 400px;
+
+:host{
+    height: 100%;
+}
+.back-btn{
+    cursor: pointer;
+}
+
+#setting-nav {
+    position:relative;
+    width: $width;
+    height: 100%;
+    flex-shrink: 0;
+    background-color: var(--gray-dark);
+    color: $primary-color;
+    box-shadow: 0 0 8px rgba(0, 0, 0, 0.8);
+    overflow: visible;
+}
+.setting-option-container{
+    width: 100%;
+    padding: 10px 25px;
+    height: $item-height;
+    border-top: solid 1px #222;
+}
+
+.setting-separator{
+    width: 100%;
+    padding: 2px 10px;
+    height: 26px;
+    font-size: 14px;
+    color: var(--gray);
+    
+    // box-shadow: 
+    //     inset 0px 11px 8px -12px rgba(0, 0, 0, 0.8),
+    //     inset 0px -11px 8px -12px rgba(0, 0, 0, 0.8);
+
+    background-color: rgba(0,0,0,0.2);
+    border-top: solid 1px #222;
+}
+
+.action-button{
+    cursor: pointer;
+    &:hover{
+        background: rgba(0, 0, 0, 0.2);
+    }
+}

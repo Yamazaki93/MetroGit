@@ -1,0 +1,65 @@
+$main-width: 180px;
+:host {
+    height: 100%;
+    padding-top: 4px;
+    width: $main-width;
+}
+
+.annot-container {
+    width: $main-width;
+    height: 100%;
+    position: relative;
+}
+
+.annot {
+    margin-top: 8px;
+    width: 100%;
+    position: absolute;
+    max-width: $main-width;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    cursor: pointer;
+    .connect-line {
+        position: absolute;
+        height: 2px;
+        top: 14px;
+        .line {
+            stroke: var(--blue);
+            stroke-width: 2px;
+        }
+    }
+    ul {
+        margin-top: 3px;
+        list-style: none;
+        float: right;
+        max-width: 100%;
+        -webkit-padding-start: 0;
+        .summary {
+            display: block;
+        }
+        .detail {
+            display: none;
+        }
+        &:hover {
+            .summary {
+                display: none;
+            }
+            .detail {
+                display: block;
+            }
+        }
+        
+        li {
+            line-height: 17px;
+            border-radius: 3px;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+            overflow: hidden;
+            font-size: 14px;
+            i {
+                font-size: 12px;
+            }
+            padding: 2px 5px;
+        }
+    }
+}

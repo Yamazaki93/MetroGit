@@ -1,0 +1,49 @@
+{
+  "name": "metrogit",
+  "version": "0.1.0-beta",
+  "description": "Metro themed git UI",
+  "main": "app/main.js",
+  "scripts": {
+    "start": "electron .",
+    "test": "npm test",
+    "postinstall": "electron-builder install-app-deps",
+    "pack": "electron-builder --dir",
+    "dist": "electron-builder"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Yamazaki93/MetroGit.git"
+  },
+  "author": "Michael Lu",
+  "license": "SEE LICENSE IN LICENSE",
+  "devDependencies": {
+    "electron": "^1.8.4",
+    "electron-builder": "^20.10.0"
+  },
+  "build": {
+    "appId": "com.rhodiumcode.metrogit",
+    "productName": "MetroGit",
+    "directories": {
+      "buildResources": "build"
+    },
+    "publish": {
+      "provider": "github"
+    },
+    "win": {
+      "target": "nsis",
+      "icon": "build/icon.ico"
+    },
+    "nsis": {
+      "license": "../LICENSE"
+    },
+    "extends": null
+  },
+  "dependencies": {
+    "axios": "^0.18.0",
+    "electron-updater": "^2.21.10",
+    "keytar": "^4.2.1",
+    "nodegit": "^0.22.0",
+    "read-last-line": "^1.1.0",
+    "uuid": "^3.2.1"
+  }
+}

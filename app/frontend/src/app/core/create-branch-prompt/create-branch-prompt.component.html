@@ -1,0 +1,9 @@
+<form class="form-inline" name="credentialForm">
+  <h5 class="mr-2">Please enter new branch name</h5>
+
+  <div class="form-group mb-2 mr-2">
+    <input type="text" class="form-control form-control-sm" placeholder="Branch Name" [(ngModel)]="branchName" name="username">
+  </div>
+  <a class="btn btn-success btn-sm mb-2 mr-2" (click)="enter()">Create Branch</a>
+  <a class="btn btn-secondary btn-sm mb-2" (click)="close()">Cancel</a>
+</form>

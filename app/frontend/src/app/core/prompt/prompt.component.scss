@@ -1,0 +1,27 @@
+:host{
+    position: absolute;
+    width: 100%;
+    left: 0;
+    top: -55px;
+    z-index: 15;
+    height: 55px;
+}
+
+:host.toggled{
+    top: 0;
+}
+
+.prompt-container{
+    width: 100%;
+    height: 100%;
+    background: var(--dark);
+    border-radius: 0 0 5px 5px;
+    border: solid 1px #222;
+    box-shadow: 0 0 8px rgba(0, 0, 0, 0.8);
+    text-align: center;
+    position: relative;
+    .prompt-inner{
+        margin: 0 auto;
+        height: 100%;
+    }
+}

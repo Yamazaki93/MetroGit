@@ -1,0 +1,24 @@
+:host{
+    cursor: pointer;
+}
+
+:host:hover{
+    .highlight{
+        opacity: 0.3;
+    }
+}
+
+.highlight.selected{
+    opacity: 0.3;
+}
+
+.dot {
+    fill: #FFFFFF;
+    stroke-width: 4;
+    stroke-miterlimit: 10;
+}
+
+.highlight{
+    opacity: 0.1;
+    border-right: solid 1px transparent;
+}

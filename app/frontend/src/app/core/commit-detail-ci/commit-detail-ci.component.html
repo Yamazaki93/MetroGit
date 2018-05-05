@@ -1,0 +1,67 @@
+<div class="ci-detail-info-container full-width d-flex flex-column p-3" *ngIf="commit">
+  <div class="full-width d-flex overall-container">
+    <div class="mr-3">
+      <div class="animated bounceIn overall-ci bg-success" *ngIf="commit.ci==='success'">
+        <svg class="feather" style="margin-top: 5px;" fill="none" stroke="#FFF" stroke-linecap="round" stroke-linejoin="round" stroke-width="3"
+          viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <polyline points="20 6 9 17 4 12"></polyline>
+        </svg>
+      </div>
+      <div class="animated flash overall-ci bg-danger" *ngIf="commit.ci==='failed'">
+        <svg class="feather" fill="none" stroke="#FFF" stroke-linecap="round" stroke-linejoin="round" stroke-width="3" viewBox="0 0 24 24"
+          xmlns="http://www.w3.org/2000/svg">
+          <line x1="18" y1="6" x2="6" y2="18"></line>
+          <line x1="6" y1="6" x2="18" y2="18"></line>
+        </svg>
+      </div>
+      <div class="animated infinite pulse overall-ci" style="background: var(--gray-dark)" *ngIf="commit.ci==='queued'">
+        <svg class="feather" fill="none" stroke="#FFF" stroke-linecap="round" stroke-linejoin="round" stroke-width="3" viewBox="0 0 24 24"
+          xmlns="http://www.w3.org/2000/svg">
+          <circle cx="12" cy="12" r="10"></circle>
+          <polyline points="12 6 12 12 16 14"></polyline>
+        </svg>
+      </div>
+      <div class="animated flash overall-ci" style="background: var(--gray)" *ngIf="commit.ci==='cancelled'">
+        <svg class="feather" fill="none" stroke="#FFF" stroke-linecap="round" stroke-linejoin="round" stroke-width="3" viewBox="0 0 24 24"
+          xmlns="http://www.w3.org/2000/svg">
+          <circle cx="12" cy="12" r="10"></circle>
+          <line x1="8" y1="12" x2="16" y2="12"></line>
+        </svg>
+      </div>
+    </div>
+    <div class="full-width">
+      <h5>Overall: {{getStatusText(commit.ci)}}</h5>
+    </div>
+  </div>
+  <div class="ci-status-container full-width mt-1" *ngIf="appveyor.enabled && appveyor.buildResults && appveyor.buildResults[commit.sha]"
+    [class.toggled]="showAppveyor">
+    <div class="status-header p-2 d-flex" [class.bg-success]="appveyor.buildResults[commit.sha].status === 'success'" [class.bg-danger]="appveyor.buildResults[commit.sha].status === 'failed'"
+      [class.bg-gray]="appveyor.buildResults[commit.sha].status === 'cancelled'" (click)="toggleAppveyor()">
+      <div class="mr-3 logo-container">
+        <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="30px" height="30px" viewBox="0 0 256 256"
+          version="1.1" preserveAspectRatio="xMidYMid">
+          <g fill-rule="evenodd">
+            <path d="M127.585761,0 C198.834951,0 256,57.1650485 256,127.585761 C256,198.834951 198.834951,256 127.585761,256 C57.1650485,256 0,198.834951 0,127.585761 C0,57.1650485 57.1650485,0 127.585761,0 L127.585761,0 Z M159.067961,152.440129 C144.983819,170.666667 119.300971,173.980583 101.902913,159.89644 C84.5048544,146.640777 82.0194175,120.957929 96.1035599,102.731392 C111.016181,85.3333333 136.699029,82.0194175 154.097087,95.2750809 C171.495146,109.359223 173.980583,135.042071 159.067961,152.440129 L159.067961,152.440129 Z M91.1326861,236.116505 L140.012945,188.893204 C121.786408,193.035599 102.731392,189.721683 87.8187702,177.294498 C70.420712,164.038835 62.9644013,141.669903 65.4498382,120.957929 L21.5404531,169.009709 C21.5404531,169.009709 15.7411003,158.239482 14.0841424,138.355987 L91.1326861,77.8770227 C114.330097,61.3074434 145.812298,60.4789644 168.18123,77.8770227 C193.035599,97.7605178 198.006472,134.213592 179.779935,161.553398 L123.443366,241.915858 C115.158576,241.915858 98.5889968,239.430421 91.1326861,236.116505 L91.1326861,236.116505 Z"
+              fill="#FFFFFF" />
+          </g>
+        </svg>
+      </div>
+      <div class="full-width">
+        <h5>AppVeyor - build {{appveyor.buildResults[commit.sha].build}}: {{getStatusShort(appveyor.buildResults[commit.sha].status)}}</h5>
+      </div>
+      <div class="external-link mr-2" placement="left" container="body" ngbTooltip="Open in AppVeyor" (click)="openAppveyor($event)">
+        <h5>
+          <i class="icon-external-link"></i>
+        </h5>
+      </div>
+      <div>
+        <h5>
+          <i [class.icon-chevron-down]="!showAppveyor" [class.icon-chevron-up]="showAppveyor"></i>
+        </h5>
+      </div>
+    </div>
+    <div class="status-content smooth">
+      <app-ci-console-output [loading]="loadingAppveyor" [text]="appveyorOutput"></app-ci-console-output>
+    </div>
+  </div>
+</div>

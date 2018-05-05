@@ -1,0 +1,28 @@
+<div id="action-button-container" class="d-flex flex-wrap">
+  <a class="action-button" placement="right" ngbTooltip="Create Branch" container="body" (click)="branch()">
+    <i class="icon-git-branch"></i>
+  </a>
+  <a class="action-button" placement="right" [ngbTooltip]="behind > 0 ? behind + ' behind' : 'Pull'"
+    container="body" (click)="pull()">
+    <i class="icon-arrow-down"></i>
+    <app-spinner [enabled]="pulling"></app-spinner>
+    <div class="badge" *ngIf="behind" [class.bg-warning]="ahead">
+      {{behind}}
+    </div>
+  </a>
+  <a class="action-button" placement="right" [ngbTooltip]="(ahead > 0 && !behind) ? ahead + ' directly ahead'  : 'Push'"
+    container="body" (click)="push()">
+    <i class="icon-arrow-up"></i>
+    <app-spinner [enabled]="pushing"></app-spinner>
+    <div class="badge" *ngIf="ahead" [class.bg-warning]="behind">
+      {{ahead}}
+    </div>
+  </a>
+  <a class="action-button" placement="right" ngbTooltip="Stash" container="body" (click)="stash()">
+    <app-spinner [enabled]="stashing"></app-spinner>
+    <i class="icon-download"></i>
+  </a>
+  <a class="action-button" placement="right" ngbTooltip="Pop Stash" container="body" (click)="pop()">
+    <i class="icon-upload"></i>
+  </a>
+</div>

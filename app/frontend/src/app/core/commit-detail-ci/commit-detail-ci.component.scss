@@ -1,0 +1,63 @@
+.commit-detail-info-container {
+    height: 100%;
+}
+
+.full-width {
+    width: 100%;
+}
+
+.overall-container {
+    .overall-ci {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        .feather {
+            width: 42px;
+            height: 42px;
+            margin-top: 4px;
+            margin-left: 4px;
+        }
+    }
+    h5 {
+        line-height: 50px;
+    }
+}
+
+.bg-gray {
+    background: var(--gray) !important;
+}
+
+.selectable {
+    user-select: initial;
+}
+
+.external-link {
+    cursor: pointer;
+    &:hover {
+        color: var(--blue);
+    }
+}
+
+.ci-status-container {
+    overflow: hidden;
+    .status-header {
+        cursor: pointer;
+        .logo-container {
+            height: 30px;
+        }
+        h5 {
+            margin: 0;
+            line-height: 30px;
+        }
+        background: rgba(0, 0, 0, 0.2);
+    }
+    .status-content {
+        background: rgba(0, 0, 0, 0.2);
+        max-height: 0;
+    }
+    &.toggled .status-content {
+        
+        max-height: 400px;
+    }
+
+}

@@ -1,0 +1,73 @@
+:host {
+    height: 100%;
+    padding-top: 3px;
+    min-width: 0;
+}
+
+.commit-info-container {
+    width: 100%;
+}
+
+.commit-info {
+    margin-top: 8px;
+    width: 100%;
+    position: relative;
+    cursor: pointer;
+    p {
+        font-size: 16px;
+        line-height: 30px;
+        margin: 0;
+        position: absolute;
+    }
+    .background {
+        width: 100%;
+        height: 100%;
+        opacity: 0;
+        top: 1px;
+        position: absolute;
+        z-index: -1;
+        &.selected {
+            opacity: 0.2;
+        }
+    }
+    .committer {
+        border-radius: 50%;
+        width: 30px;
+        height: 30px;
+        padding: 3px 0;
+        flex-shrink: 0;
+        box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2);
+    }
+    .commit-message {
+        height: 30px;
+        line-height: 30px;
+
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        padding-right: 15px;
+    }
+    .files-summary {
+        flex-shrink: 0;
+        height: 30px;
+        line-height: 30px;
+        .modification {
+            color: var(--yellow);
+        }
+        .addition {
+            color: var(--success);
+        }
+        .deletion {
+            color: var(--danger);
+        }
+        .rename {
+            color: var(--info);
+        }
+        .ignored {
+            color: var(--gray);
+        }
+    }
+}
+.full-width {
+    width: 100%;
+}

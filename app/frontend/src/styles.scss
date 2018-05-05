@@ -1,0 +1,65 @@
+@font-face {
+    font-family: 'Lato';
+    src: url('assets/fonts/Lato-Regular.ttf');
+}
+
+body{
+    user-select: none;   
+}
+
+.nav-tabs .nav-item.show .nav-link, .nav-tabs .nav-link.active{
+    color: var(--light);
+}
+
+/* width */
+::-webkit-scrollbar {
+    width: 8px;
+}
+/* Track */
+::-webkit-scrollbar-track {
+    background-color: rgba(0,0,0,0.2);
+}
+/* Handle */
+::-webkit-scrollbar-thumb {
+    background: var(--gray);
+}
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+    background: var(--gray);
+}
+
+.smooth{
+    -webkit-transition: all 0.3s ease;
+    -moz-transition: all 0.3s ease;
+    -ms-transition: all 0.3s ease;
+    -o-transition: all 0.3s ease;
+    transition: all 0.3s ease;
+}
+
+.smooth-1{
+    -webkit-transition: all 0.1s ease;
+    -moz-transition: all 0.1s ease;
+    -ms-transition: all 0.1s ease;
+    -o-transition: all 0.1s ease;
+    transition: all 0.1s ease;
+}
+
+// notification style
+.simple-notification.success .sn-progress-loader span { background: #28a745; }
+.simple-notification.error .sn-progress-loader span { background: #dc3545; }
+.simple-notification.alert .sn-progress-loader span { background: #ffc107; }
+.simple-notification.info .sn-progress-loader span { background: #007bff; }
+.simple-notification.warn .sn-progress-loader span { background: #ffc107; }
+
+tag-input {
+    width: 100%;
+}
+
+.ng2-tag-input__text-input {
+    background: transparent !important;
+    color: #FFF !important;
+}
+
+tag-input tag:hover{
+    box-shadow: none !important;
+}

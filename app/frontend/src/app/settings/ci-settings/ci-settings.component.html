@@ -1,0 +1,49 @@
+<h3>
+    <i class="icon-check-circle mr-3"></i>CI</h3>
+<ngb-tabset>
+    <ngb-tab>
+        <ng-template ngbTabTitle>
+            AppVeyor</ng-template>
+        <ng-template ngbTabContent>
+            <form class="mt-3">
+                <div class="form-group">
+                    <div class="input-group mb-2">
+                        <label for="exampleInputPassword1">Enable AppVeyor</label>
+                        <app-icheck class="ml-2" [checked]="appveyor" (checkedChange)="updateAppveyor($event)"></app-icheck>
+                    </div>
+                </div>
+                <div class="form-group" *ngIf="appveyor">
+                    <label for="exampleInputPassword1">Access Token</label>
+                    <div class="input-group mb-2">
+                        <input type="password" class="form-control" [(ngModel)]="appveyorToken" (blur)="updateAppveyorToken()" name="appveyorToken">
+                    </div>
+                    <small class="form-text text-muted">For help getting your AppVeyor API token, click <a href="javascript:void(0)" (click)="openHelp()">here</a></small>
+                </div>
+                <div class="form-group" *ngIf="appveyor">
+                    <label for="exampleInputPassword1">Account Name</label>
+                    <div class="input-group mb-2">
+                        <input type="text" class="form-control" [(ngModel)]="appveyorAccount" (change)="updateAppveyorDetails()" name="appveyorAccount">
+                    </div>
+                    <small class="form-text text-muted">Usually, your account name is in the URL in a project (https://ci.appveyor.com/project/YOUR_ACCOUNT_NAME/PROJECT)</small>
+                </div>
+                <div class="form-group" *ngIf="appveyor">
+                    <label for="exampleInputPassword1">Project Name</label>
+                    <div class="input-group mb-2">
+                        <input type="text" class="form-control" [(ngModel)]="appveyorProject" (change)="updateAppveyorDetails()" name="appveyorProject">
+                    </div>
+                </div>
+            </form>
+        </ng-template>
+    </ngb-tab>
+    <!-- <ngb-tab title="Disabled" [disabled]="true">
+          <ng-template ngbTabContent>
+            <p>Sed commodo, leo at suscipit dictum, quam est porttitor sapien, eget sodales nibh elit id diam. Nulla facilisi. Donec
+              egestas ligula vitae odio interdum aliquet. Duis lectus turpis, luctus eget tincidunt eu, congue et odio. Duis pharetra
+              et nisl at faucibus. Quisque luctus pulvinar arcu, et molestie lectus ultrices et. Sed diam urna, egestas ut ipsum
+              vel, volutpat volutpat neque. Praesent fringilla tortor arcu. Vivamus faucibus nisl enim, nec tristique ipsum euismod
+              facilisis. Morbi ut bibendum est, eu tincidunt odio. Orci varius natoque penatibus et magnis dis parturient montes,
+              nascetur ridiculus mus. Mauris aliquet odio ac lorem aliquet ultricies in eget neque. Phasellus nec tortor vel tellus
+              pulvinar feugiat.</p>
+          </ng-template>
+        </ngb-tab> -->
+</ngb-tabset>

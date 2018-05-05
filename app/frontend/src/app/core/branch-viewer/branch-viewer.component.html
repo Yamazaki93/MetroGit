@@ -1,0 +1,48 @@
+<div id="side-nav" class="d-flex flex-column smooth" [class.toggled]="toggled">
+  <div id="toggle-button-container">
+    <a id="toggle-button" (click)="toggleNavigation()">
+      <span [class.icon-chevron-left]="toggled" [class.icon-chevron-right]="!toggled"></span>
+    </a>
+  </div>
+  <app-action-toolbar *ngIf="repoName !== ''"></app-action-toolbar>
+  <div class="repo-info-container toggle-visible action-button smooth" placement="right" ngbTooltip="Current Repository: {{repoName}}"
+    container="body" (click)="toggleOpenRepo()">
+    <h4>
+      <i class="icon-folder mr-3"></i>
+      <span class="nav-text">{{repoName}}</span>
+    </h4>
+  </div>
+  <div class="repo-info-container smooth action-button" placement="right" ngbTooltip="Current Branch" container="body" *ngIf="branchName !== ''" (click)="goToCurrentBranch()">
+    <h4><i class="icon-git-branch mr-3"></i>{{branchName}}</h4>
+  </div>
+  <div style="height: 100%;position: relative;">
+    <ul class="main-nav-list">
+      <li *ngIf="repoName !== ''" class="expandable smooth" [class.toggled]="showLocal">
+        <a class="smooth-1 action-button" (click)="toggleLocal()">
+          <h4>
+            <span class="icon-monitor mr-3"></span>
+            <span class="nav-text">Local</span>
+          </h4>
+          <!-- <span class="expand" [class.icon-chevron-up]="showLocal" [class.icon-chevron-down]="!showLocal"></span> -->
+        </a>
+        <app-branch-list [branches]="local"></app-branch-list>
+      </li>
+      <li *ngIf="repoName !== ''" class="expandable smooth" [class.toggled]="showRemote">
+        <a class="smooth-1  action-button" (click)="toggleRemote()">
+          <h4>
+            <span class="icon-cloud mr-3"></span>
+            <span class="nav-text">Remote</span>
+          </h4>
+        </a>
+        <app-branch-list [branches]="remote"></app-branch-list>
+      </li>
+    </ul>
+  </div>
+  <div class="repo-info-container toggle-visible action-button smooth" (click)="goToSettings()">
+    <h4>
+      <i class="icon-settings mr-3 text-primary"></i>
+      <span class="nav-text">Settings</span>
+    </h4>
+  </div>
+</div>
+<app-open-repo-panel class="smooth" [class.toggled]="toggled" #openRepoPanel></app-open-repo-panel>

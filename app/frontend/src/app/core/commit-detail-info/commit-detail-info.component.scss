@@ -1,0 +1,119 @@
+:host {
+    width: 100%;
+    height: 100%;
+}
+
+.full-width {
+    width: 100%;
+}
+
+.flex-no-shrink {
+    flex-shrink: 0;
+}
+.commit-detail-info-container {
+    width: 100%;
+    height: 100%;
+    .summary-header {
+        flex-shrink: 0;
+    }
+    .summary-container {
+        height: 230px;
+        width: 100%;
+        flex-shrink: 0;
+    }
+    .committer-info-container {
+        width: 100%;
+    }
+    .committer-badge {
+        flex-shrink: 0;
+        width: 70px;
+        height: 70px;
+        border-radius: 50%;
+        line-height: 70px;
+        text-align: center;
+        font-size: 36px;
+        box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.4);
+    }
+    .sha-container {
+        width: 200px;
+    }
+    .file-details-container {
+        min-height: 0;
+        height: 100%;
+    }
+    .message-title-container {
+        background: rgba(0, 0, 0, 0.2);
+        border-bottom: solid 2px #222;
+        h5 {
+            margin: 0;
+        }
+        input {
+            border: none;
+            color: #fff;
+            background: transparent;
+            width: 100%;
+            font-size: 1.25rem;
+            &:focus {
+                outline: none !important;
+            }
+        }
+        .word-count {
+            line-height: 32px;
+        }
+        user-select: initial;
+    }
+    .message-container {
+        height: 100%;
+        textarea {
+            height: 95%;
+            width: 100%;
+            outline: none;
+            border: none;
+            background: transparent;
+            color: #fff;
+            resize: none;
+            overflow-x: hidden;
+        }
+    }
+    .message-content-container {
+        background: rgba(0, 0, 0, 0.2);
+        overflow-y: auto;
+        user-select: initial;
+        height: 100%;
+    }
+    .modified-file-list {
+        background: rgba(0, 0, 0, 0.2);
+        overflow-y: auto;
+        overflow-x: hidden;
+        min-height: 0;
+        user-select: initial;
+        .modified-file-entry {
+            white-space: nowrap;
+            user-select: initial;
+            position: relative;
+            .btn-sm {
+                height: 24px;
+                font-size: 12px;
+                padding: 2px;
+            }
+            &:hover {
+                background: rgba(0, 0, 0, 0.2);
+                .action-button {
+                    display: block;
+                }
+            }
+            .action-button {
+                display: none;
+                position: absolute;
+                right: 3px;
+                top: 3px;
+                line-height: 20px;
+            }
+        }
+    }
+    .action-button-container{
+        .btn {
+            width: 100%;
+        }
+    }
+}

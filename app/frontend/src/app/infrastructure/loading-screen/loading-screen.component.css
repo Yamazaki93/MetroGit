@@ -1,0 +1,15 @@
+:host{
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.8);
+    position: absolute;
+    top: 0;
+    z-index: 9999;
+}
+.loading-container{
+    height: 100vh;
+}
+.loading-text-container{
+    width: 100vw;
+    text-align: center
+}

@@ -1,0 +1,38 @@
+:host {
+    width: 100%;
+}
+
+.branch-folder,
+.branch {
+    width: 100%;
+    padding-top: 2px;
+    padding-bottom: 2px;
+    height: 30px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    position: relative;
+    cursor: pointer;
+    .color-marker {
+        position: absolute;
+        height: 100%;
+        width: 5px;
+        left: 0;
+        opacity: 0;
+    }
+}
+
+.branch:hover .color-marker {
+    opacity: 1;
+}
+
+.branch-folder {
+    &.toggled {
+        height: auto;
+    }
+    .expand {
+        margin-top: 5px;
+        margin-right: 5px;
+        float: right;
+    }
+}

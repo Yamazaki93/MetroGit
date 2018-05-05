@@ -1,0 +1,102 @@
+$item-height: 55px;
+$badge-size: 20px;
+
+:host {
+    position: absolute;
+    right: 0;
+    top: 0;
+    height: 100%;
+}
+
+.commit-detail-container {
+    height: 100%;
+    width: 0;
+    background: var(--gray-dark);
+    box-shadow: 0 0 8px rgba(0, 0, 0, 0.8);
+    &.toggled {
+        width: 70vh;
+    }
+    position: relative;
+    overflow: hidden;
+}
+
+
+
+#toggle-button-container {
+    width: 35px;
+    height: 50px;
+    position: absolute;
+    left: -30px;
+    top: 5px;
+    border-radius: 5px;
+    border: solid 1px #222;
+    background-color: var(--gray-dark);
+    box-shadow: 0 0 8px rgba(0, 0, 0, 0.8);
+    #toggle-button {
+        cursor: pointer;
+        font-size: 33px;
+    }
+}
+
+.hidden {
+    display: none !important;
+}
+
+#commit-detail-nav-container{
+    width: 100%;
+    min-height: $item-height;
+    cursor: pointer;
+    .nav-button{
+        width: 80px;
+        height: $item-height;
+        padding: 5px 10px;
+        font-size: 35px;
+        text-align: center;
+        position: relative;
+        app-spinner{
+            position: absolute;
+            top: 10px;
+            left: 20px;
+        }
+        &:hover,
+        &.toggled{
+            background: rgba(0, 0, 0, 0.2);
+            color: var(--blue);
+            .simpleicons{
+                fill: var(--blue);
+            }
+        }
+        .badge{
+            position: absolute;
+            border-radius: 50%;
+            background: rgb(5, 142, 217);
+            width: $badge-size;
+            height: $badge-size;
+            top: 8px;
+            right: 13px;
+            font-size: 12px;
+            padding: 0.25em 0;
+            line-height: 14px;
+            color: #FFF !important;
+        }
+    }
+}
+
+.empty-container,
+.loading-container{
+    width: 100%;
+    height: 100%;
+}
+
+.loading-container {
+    background: rgba(0, 0, 0, 0.5);
+    position: absolute;
+}
+
+.commit-detail-content {
+    width: 100%;
+    height: 100%;
+    min-height: 0;
+    position: relative;
+    background: rgba(0, 0, 0, 0.2);
+}

@@ -1,0 +1,49 @@
+<div id="setting-nav" class="d-flex flex-column">
+  <div style="height: 100%;">
+    <div class="setting-option-container">
+      <h4 class="text-primary">
+        <i class="icon-settings mr-3"></i>Settings</h4>
+    </div>
+    <div class="setting-separator">
+      Application Settings
+    </div>
+    <div class="setting-option-container action-button" (click)="this.route.navigateByUrl('settings/general')">
+      <h4>
+        <i class="icon-star mr-3"></i>General
+      </h4>
+    </div>
+    <div class="setting-option-container action-button" (click)="this.route.navigateByUrl('settings/profile')">
+      <h4>
+        <i class="icon-user mr-3"></i>Profile
+      </h4>
+    </div>
+    <div class="setting-option-container action-button" (click)="this.route.navigateByUrl('settings/auth')">
+      <h4>
+        <i class="icon-lock mr-3"></i>Authentication
+      </h4>
+    </div>
+    <div *ngIf="repoName && repoName!==''">
+      <div class="setting-separator">
+        Repository Settings: {{repoName}}
+      </div>
+      <div class="setting-option-container action-button" (click)="this.route.navigateByUrl('settings/ci')">
+        <h4>
+          <i class="icon-check-circle mr-3"></i>CI
+        </h4>
+      </div>
+      <div class="setting-option-container action-button" (click)="this.route.navigateByUrl('settings/jira')">
+        <h4>
+          <svg fill="#FFF" width="24px" class="mr-3" aria-labelledby="simpleicons-jira-icon" role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <title id="simpleicons-jira-icon">Jira icon</title>
+            <path d="M23.323 11.33L13.001 1 12 0 4.225 7.775.67 11.33a.96.96 0 0 0 0 1.347l7.103 7.103L12 24l7.771-7.771.121-.121 3.431-3.431a.945.945 0 0 0 0-1.347zM12 15.551L8.449 12 12 8.453 15.548 12 12 15.551z"
+            />
+          </svg>JIRA
+        </h4>
+      </div>
+    </div>
+  </div>
+  <div class="setting-option-container action-button" (click)="goToGitView()">
+    <h4>
+      <i class="icon-arrow-left mr-3"></i>Back</h4>
+  </div>
+</div>

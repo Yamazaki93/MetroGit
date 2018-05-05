@@ -1,0 +1,6 @@
+<svg #svg width="100%" height="100%">
+  <svg:g *ngIf="graph">
+    <svg:g [linkVisual]="link" *ngFor="let link of graph.links"></svg:g>
+    <svg:g [nodeVisual]="node" [graphWidth]="width" *ngFor="let node of graph.nodes"></svg:g>
+  </svg:g>
+</svg>

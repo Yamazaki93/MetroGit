@@ -1,0 +1,33 @@
+<svg:g *ngIf="linkDirection < 0 && !link.merge">
+  <svg:line [attr.stroke-dasharray]="link.source.commit.virtual || link.source.commit.isStash? '5, 3' : 'none'" class="line" [attr.x1]="link.source.x" [attr.y1]="link.source.y" [attr.x2]="link.source.x" [attr.y2]="link.target.y-(10)"
+    [style.stroke]="link.color.stringValue"></svg:line>
+  <svg:line [attr.stroke-dasharray]="link.source.commit.virtual || link.source.commit.isStash? '5, 3' : 'none'" class="line" [attr.x1]="link.source.x-(10)" [attr.y1]="link.target.y" [attr.x2]="link.target.x" [attr.y2]="link.target.y"
+    [style.stroke]="link.color.stringValue"></svg:line>
+  <svg:path [attr.stroke-dasharray]="link.source.commit.virtual || link.source.commit.isStash? '5, 3' : 'none'" class="line" [style.stroke]="link.color.stringValue" [attr.d]="'M' + link.source.x + ',' + (link.target.y-(15)) + ' C' + link.source.x + ',' + link.target.y + ' ' + (link.source.x) + ',' + (link.target.y) + ' ' + (link.source.x-(15))  + ',' + link.target.y" />
+</svg:g>
+<svg:g *ngIf="linkDirection > 0 && !link.merge">
+  <!-- <svg:line class="line" [attr.x1]="link.source.x" [attr.y1]="link.source.y" [attr.x2]="link.target.x -(10)" [attr.y2]="link.source.y"
+    [style.stroke]="link.color.stringValue"></svg:line>
+  <svg:line class="line" [attr.x1]="link.target.x" [attr.y1]="link.source.y+(10)" [attr.x2]="link.target.x" [attr.y2]="link.target.y"
+    [style.stroke]="link.color.stringValue"></svg:line>
+  <svg:path class="line" [style.stroke]="link.color.stringValue" [attr.d]="'M' + (link.target.x-(15)) + ',' + (link.source.y) + ' C' + link.target.x + ',' + link.source.y + ' ' + (link.target.x+1) + ',' + (link.source.y+1) + ' ' + (link.target.x)  + ',' + (link.source.y+(15))" /> -->
+  <svg:line [attr.stroke-dasharray]="link.source.commit.virtual || link.source.commit.isStash? '5, 3' : 'none'" class="line" [attr.x1]="link.source.x" [attr.y1]="link.source.y" [attr.x2]="link.source.x" [attr.y2]="link.target.y-(10)"
+    [style.stroke]="link.color.stringValue"></svg:line>
+  <svg:line [attr.stroke-dasharray]="link.source.commit.virtual || link.source.commit.isStash? '5, 3' : 'none'" class="line" [attr.x1]="link.source.x+(10)" [attr.y1]="link.target.y" [attr.x2]="link.target.x" [attr.y2]="link.target.y"
+    [style.stroke]="link.color.stringValue"></svg:line>
+  <svg:path [attr.stroke-dasharray]="link.source.commit.virtual || link.source.commit.isStash? '5, 3' : 'none'" class="line" [style.stroke]="link.color.stringValue" [attr.d]="'M' + link.source.x + ',' + (link.target.y-(15)) + ' C' + link.source.x + ',' + link.target.y + ' ' + (link.source.x) + ',' + (link.target.y) + ' ' + (link.source.x+(15))  + ',' + link.target.y" />
+</svg:g>
+<svg:g *ngIf="link.merge">
+  <svg:line [attr.stroke-dasharray]="link.source.commit.virtual || link.source.commit.isStash? '5, 3' : 'none'" class="line" [attr.x1]="link.source.x" [attr.y1]="link.source.y" [attr.x2]="link.target.x -(10 * linkDirection)" [attr.y2]="link.source.y"
+    [style.stroke]="link.color.stringValue"></svg:line>
+  <svg:line [attr.stroke-dasharray]="link.source.commit.virtual || link.source.commit.isStash? '5, 3' : 'none'" class="line" [attr.x1]="link.target.x" [attr.y1]="link.source.y+(10)" [attr.x2]="link.target.x" [attr.y2]="link.target.y"
+    [style.stroke]="link.color.stringValue"></svg:line>
+  <svg:path [attr.stroke-dasharray]="link.source.commit.virtual || link.source.commit.isStash? '5, 3' : 'none'" class="line" [style.stroke]="link.color.stringValue" [attr.d]="'M' + (link.target.x-(15*linkDirection)) + ',' + (link.source.y) + ' C' + link.target.x + ',' + link.source.y + ' ' + (link.target.x+1) + ',' + (link.source.y+1) + ' ' + (link.target.x)  + ',' + (link.source.y+(15))" />
+</svg:g>
+<!--<svg:g *ngIf="linkDirection > 0 && link.merge">
+  <svg:line class="line" [attr.x1]="link.source.x" [attr.y1]="link.source.y" [attr.x2]="link.target.x -(10)" [attr.y2]="link.source.y"
+    [style.stroke]="link.color"></svg:line>
+  <svg:line class="line" [attr.x1]="link.target.x" [attr.y1]="link.source.y+(10)" [attr.x2]="link.target.x" [attr.y2]="link.target.y"
+    [style.stroke]="link.color"></svg:line>
+  <svg:path class="line" [style.stroke]="link.color" [attr.d]="'M' + (link.target.x-(15)) + ',' + (link.source.y) + ' C' + link.target.x + ',' + link.source.y + ' ' + (link.target.x+1) + ',' + (link.source.y+1) + ' ' + (link.target.x)  + ',' + (link.source.y+(15))" />
+</svg:g>-->

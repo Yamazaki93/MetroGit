@@ -1,0 +1,17 @@
+<div class="d-flex align-items-stretch align-content-stretch" id="outer-container">
+  <app-prompt></app-prompt>
+  <app-branch-viewer></app-branch-viewer>
+  <div class="d-flex flex-column justify-content-between align-items-stretch align-content-stretch" id="inner-container">
+    <div id="main-container" class="d-flex align-items-stretch align-content-stretch">
+      <div class="open-repo-prompt" *ngIf="repoName === null">
+        <div class="alert alert-primary">
+          <i class="icon-arrow-left mr-2"></i>Click the folder icon to open a repository</div>
+      </div>
+      <app-subway [commits]="commits"></app-subway>
+      <app-commit-detail></app-commit-detail>
+    </div>
+    <div class="d-flex" id="footer-container">
+      <app-status-bar></app-status-bar>
+    </div>
+  </div>
+</div>
