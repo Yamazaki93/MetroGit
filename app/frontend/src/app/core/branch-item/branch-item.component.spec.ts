@@ -4,11 +4,7 @@ import { BranchItemComponent } from './branch-item.component';
 import { D3Service } from '../d3/d3.service';
 import { ElectronService } from '../../infrastructure/electron.service';
 import { MockElectron } from '../../infrastructure/mocks/mock-electron.service';
-
-class MockD3 {
-  scrollTo(commit) {
-  }
-}
+import { MockD3 } from '../d3/mock-d3.service';
 
 describe('BranchItemComponent', () => {
   let component: BranchItemComponent;
