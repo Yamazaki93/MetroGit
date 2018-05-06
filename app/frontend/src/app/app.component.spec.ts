@@ -7,6 +7,9 @@ import { RouterModule } from '@angular/router';
 import { APP_BASE_HREF } from '@angular/common';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { RouterTestingModule } from '@angular/router/testing';
+import { SettingsModule } from './settings/settings.module';
+import { ElectronService } from './infrastructure/electron.service';
+import { MockElectron } from './infrastructure/mocks/mock-electron.service';
 
 describe('AppComponent', () => {
   beforeEach(async(() => {
@@ -29,11 +32,15 @@ describe('AppComponent', () => {
         }),
         RouterTestingModule,
         InfrastructureModule,
+        SettingsModule,
         CoreModule,
       ],
       declarations: [
         AppComponent
       ],
+      providers: [
+        {provide: ElectronService, useClass: MockElectron}
+      ]
     }).compileComponents();
   }));
   it('should create the app', async(() => {
