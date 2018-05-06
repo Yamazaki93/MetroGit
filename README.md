@@ -1,3 +1,6 @@
+
+<img src="./app/visual/Icon-48.png">
+
 # Metro themed Git UI
 
 MetroGit is a native desktop git app with JIRA, AppVeyor and other tools integrated into one consistent UI. So no more switching windows and jumping between browser tabs 🤓. More integration and feature still yet to come...
@@ -51,6 +54,10 @@ Also, please consider <a class="bmc-button" target="_blank" href="https://www.bu
 ## FAQ and Issues
 
 Checkout the Wiki [FAQ Page](https://github.com/Yamazaki93/MetroGit/wiki/FAQ) for frequently asked questions. If you've found a bug, security issue or want to suggest a feature, feel free to post them to the Issues section (please search for existing issues and FAQ before posting new ones 🙂)
+
+## Contributing
+
+Interested in contributing? Please read our [Contributing Guide](https://github.com/Yamazaki93/MetroGit/wiki/Contributing) and [Code of Conduct](https://github.com/Yamazaki93/MetroGit/blob/master/CODE_OF_CONDUCT.md)
 
 ## License
 
