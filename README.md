@@ -13,6 +13,16 @@ MetroGit is a native desktop git app with JIRA, AppVeyor and other tools integra
  - Credential caching with Windows Credential Manager (through keytar)
  - Repository specific settings
 
+## Built On
+This app is built with some really awsome frameworks, including:
+
+<a href="https://electronjs.org/"><img src="https://camo.githubusercontent.com/627c774e3070482b180c3abd858ef2145d46303b/68747470733a2f2f656c656374726f6e6a732e6f72672f696d616765732f656c656374726f6e2d6c6f676f2e737667" width="250"></a>
+<a href="https://angular.io/"><img src="https://angular.io/assets/images/logos/angular/angular.svg" width="150"></a>
+
+<a href="http://www.nodegit.org/"><img src="https://www.nodegit.org/img/nodegit.svg" width="150"></a>
+
+<a href="https://feathericons.com/"><img src="https://raw.githubusercontent.com/feathericons/feather/master/icons/feather.svg?sanitize=true"> Feathericons</a>
+
 ## Getting Started
 
 ### Downlading and Installation
@@ -40,7 +50,7 @@ Also, please consider <a class="bmc-button" target="_blank" href="https://www.bu
 
 ## FAQ and Issues
 
-Checkout the Wiki page for FAQ. If you've found a bug, security issue or want to suggest a feature, feel free to post them to the Issues section (please search for existing issues and FAQ before posting new ones 🙂)
+Checkout the Wiki [FAQ Page](https://github.com/Yamazaki93/MetroGit/wiki/FAQ) for frequently asked questions. If you've found a bug, security issue or want to suggest a feature, feel free to post them to the Issues section (please search for existing issues and FAQ before posting new ones 🙂)
 
 ## License
 
