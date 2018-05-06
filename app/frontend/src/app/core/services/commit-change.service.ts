@@ -48,6 +48,8 @@ export class CommitChangeService {
           key = keys[0];
         }
         this.defaultKey = key;
+      } else {
+        this.defaultKey = "";
       }
     });
     this.electron.onCD('Repo-StashFailed', (event, arg) => {
