@@ -550,8 +550,8 @@ function stage(paths) {
         }).then(index => {
             let req = [];
             statuses.forEach(st => {
-                if(paths.indexOf(st.path()) !== -1) {
-                    if(st.isDeleted()) {
+                if (paths.indexOf(st.path()) !== -1) {
+                    if (st.isDeleted()) {
                         req.push(index.removeByPath(st.path()));
                     } else {
                         req.push(index.addByPath(st.path()));
@@ -616,20 +616,12 @@ function commitStaged(name, email, message) {
 
 function commit(name, email, message, files) {
     if (Repo && name && email) {
-        let signature = NodeGit.Signature.now(name, email);
-        let sha;
-        notifyBlockingOperation(true, "Commiting...");
-        return Repo.createCommitOnHead(files, signature, signature, message).then(hash => {
-            sha = hash;
-            return fileWatch.getStatus().then(() => {
-                return refreshRepo();
+        return stage(files).then(() => {
+            return Repo.index().then(index => {
+                index.writeTree();
             });
         }).then(() => {
-            notifyBlockingOperation(false);
-            return sha;
-        }).catch(err => {
-            notifyBlockingOperation(false);
-            return Promise.reject(err);
+            return commitStaged(name, email, message)
         });
     } else {
         return Promise.reject('NO_REPO');
