@@ -218,7 +218,7 @@ export class RepoService {
   }
 
   private skipAuthError(detail) {
-    if (!detail.includes('401') && detail !== 'CRED_ISSUE') {
+    if (detail !== 'CRED_ISSUE') {
       this.noti.error("Error", detail);
     }
   }

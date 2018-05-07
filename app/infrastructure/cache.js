@@ -15,13 +15,6 @@ function getCache(fileKey, lines) {
     if(!lines) {
         lines = 100;
     }
-    // fs.readFile(`${cacheDir}/${fileKey}`, 'utf8', (err, data) => {
-    //     if (err) {
-    //         reject('FILE_READ_ERROR');
-    //     } else {
-    //         resolve(data);
-    //     }
-    // });
     return readLastLine.read(`${cacheDir}/${fileKey}`, lines);
 }
 

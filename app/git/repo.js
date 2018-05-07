@@ -15,6 +15,14 @@ function init(win, sett, sec, fw) {
     initPullOptions();
 }
 
+function consolidateAuthError(err) {
+    if(err.message.indexOf('credentials') !== -1 || err.message.indexOf('authentication') !== -1 || err.message.indexOf('401') !== -1) {
+        return Promise.reject('CRED_ISSUE');
+    } else {
+        return Promise.reject(err);
+    }
+}
+
 function initPullOptions() {
     if (!settings.get('gen-pulloption')) {
         settings.update('gen-pulloption', 'ffonly');
@@ -80,11 +88,7 @@ function tryFetch(remote, tries, username, password) {
             }
         }
     }).catch(err => {
-        if(err.message.indexOf('credentials') !== -1) {
-            return Promise.reject('CRED_ISSUE');
-        } else {
-            return Promise.reject(err);
-        }
+        return consolidateAuthError(err);
     });
 }
 
@@ -110,16 +114,9 @@ function tryPush(remote, refs, tries, username, password) {
             certificateCheck: function () {
                 return 1;
             },
-            transferProgress: (prog) => {
-                console.log(prog)
-            }
         }
     }).catch(err => {
-        if(err.message.indexOf('credentials') !== -1) {
-            return Promise.reject('CRED_ISSUE');
-        } else {
-            return Promise.reject(err);
-        }
+        return consolidateAuthError(err);
     });
 }
 
