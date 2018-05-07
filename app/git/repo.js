@@ -550,7 +550,7 @@ function stage(paths) {
         }).then(index => {
             let req = [];
             statuses.forEach(st => {
-                if (paths.indexOf(st.path()) !== -1) {
+                if (paths.indexOf(st.path()) !== -1 || paths.length === 0) {
                     if (st.isDeleted()) {
                         req.push(index.removeByPath(st.path()));
                     } else {
@@ -722,7 +722,9 @@ function checkout(branchName) {
 
 function discardAll() {
     if (Repo) {
-        return Repo.getHeadCommit().then(commit => {
+        return stage([]).then(() => {
+            return Repo.getHeadCommit()
+        }).then(commit => {
             return NodeGit.Reset.reset(Repo, commit, NodeGit.Reset.TYPE.HARD);
         }).then(() => {
             return fileWatch.getStatus();
