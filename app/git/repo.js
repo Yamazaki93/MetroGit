@@ -562,8 +562,7 @@ function stage(paths) {
                 return index.write();
             });
         }).then(() => {
-            fileWatch.getStatus();
-            return Promise.resolve();
+            return fileWatch.getStatus();
         });
     } else {
         return Promise.reject('NO_REPO')
@@ -575,8 +574,7 @@ function unstage(paths) {
         return Repo.getHeadCommit().then(commit => {
             return NodeGit.Reset.default(Repo, commit, paths);
         }).then(() => {
-            fileWatch.getStatus();
-            return Promise.resolve();
+            return fileWatch.getStatus();
         });
     } else {
         return Promise.reject('NO_REPO')
@@ -600,8 +598,7 @@ function commitStaged(name, email, message) {
             return Repo.createCommit("HEAD", signature, signature, message, oid, [ref.target()]);
         }).then(hash => {
             sha = hash;
-            fileWatch.getStatus();
-            return refreshRepo();
+            return Promise.all([refreshRepo(), fileWatch.getStatus()]);
         }).then(() => {
             notifyBlockingOperation(false);
             return sha;
@@ -650,7 +647,7 @@ function stash(name, email, message) {
             }
         }).finally(oid => {
             notifyBlockingOperation(false);
-            return refreshRepo();
+            return Promise.all([refreshRepo(), fileWatch.getStatus()]);
         })
     } else {
         return Promise.reject('NO_REPO');
@@ -667,7 +664,7 @@ function pop(index) {
             return NodeGit.Stash.pop(Repo, index, NodeGit.Stash.APPLY_FLAGS.APPLY_DEFAULT)
         }).finally(oid => {
             notifyBlockingOperation(false);
-            return refreshRepo();
+            return Promise.all([refreshRepo(), fileWatch.getStatus()]);
         })
     } else {
         return Promise.reject('NO_REPO');

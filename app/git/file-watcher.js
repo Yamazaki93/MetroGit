@@ -93,6 +93,7 @@ function getStatus() {
                     renamed: stagedSummary.renamed + unstagedSummary.renamed
                 }
             });
+            return Promise.resolve();
         });
     }
 }
