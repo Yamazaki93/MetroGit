@@ -33,6 +33,14 @@
       "target": "nsis",
       "icon": "build/icon.ico"
     },
+    "mac": {
+      "target": "dmg",
+      "icon": "build/icon.icns",
+      "category": "public.app-category.developer-tools",
+      "publish": {
+        "provider": "github"
+      }
+    },
     "nsis": {
       "license": "../LICENSE"
     },
