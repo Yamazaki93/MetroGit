@@ -65,7 +65,7 @@ function tryFetch(remote, tries, username, password) {
                     if (!helper.isSSH(url)) {
                         if (!username || !password) {
                             window.webContents.send('Repo-CredentialIssue', {});
-                            return null
+                            return NodeGit.Cred.defaultNew();
                         }
                         return NodeGit.Cred.userpassPlaintextNew(username, password);
                     } else {
@@ -73,7 +73,7 @@ function tryFetch(remote, tries, username, password) {
                     }
                 }
                 window.webContents.send('Repo-CredentialIssue', {});
-                return null;
+                return NodeGit.Cred.defaultNew();
             },
             certificateCheck: function () {
                 return 1;
@@ -91,7 +91,7 @@ function tryPush(remote, refs, tries, username, password) {
                     if (!helper.isSSH(url)) {
                         if (!username || !password) {
                             window.webContents.send('Repo-CredentialIssue', {});
-                            return null
+                            return NodeGit.Cred.defaultNew();
                         }
                         return NodeGit.Cred.userpassPlaintextNew(username, password);
                     } else {
@@ -99,7 +99,7 @@ function tryPush(remote, refs, tries, username, password) {
                     }
                 }
                 window.webContents.send('Repo-CredentialIssue', {});
-                return null;
+                return NodeGit.Cred.defaultNew();
             },
             certificateCheck: function () {
                 return 1;
