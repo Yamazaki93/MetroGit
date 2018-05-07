@@ -164,12 +164,13 @@ function pullWrapper(username, password, option) {
             return findMatchingRemote(res);
         }).then(rmt => {
             remoteBranch = rmt;
+            notifyBlockingOperation(true);
             return Repo.getStatus().then((statuses) => {
                 paths = statuses.map(s => s.path());
                 if (paths.length === 0) {
                     return Promise.resolve('NO_WIP')
                 } else {
-                    notifyBlockingOperation(true, "Stashing...");
+                    updateBlockingStatus("Stashing...");
                     return stage(paths).then(() => {
                         stashed = true;
                         return NodeGit.Stash.save(Repo, getCurrentSignature(), "Auto Stash", NodeGit.Stash.FLAGS.DEFAULT);
@@ -177,7 +178,7 @@ function pullWrapper(username, password, option) {
                 }
             })
         }).then(() => {
-            notifyBlockingOperation(true, "Updating branch...");
+            updateBlockingStatus("Updating branch...");
             if (option === 'ffonly') {
                 return pullFFOnly(remoteBranch, currentBranch);
             } else if (option === 'merge') {
@@ -186,8 +187,8 @@ function pullWrapper(username, password, option) {
                 return pullRebase(remoteBranch, currentBranch);
             }
         }).then(result => {
-            notifyBlockingOperation(false);
             if (stashed) {
+                updateBlockingStatus('Popping stashed changes...')
                 return NodeGit.Stash.pop(Repo, 0, NodeGit.Stash.APPLY_FLAGS.APPLY_DEFAULT).then(() => {
                     return result;
                 });
@@ -449,6 +450,12 @@ function notifyBlockingOperation(start, op) {
         } else {
             window.webContents.send('Repo-BlockingOperationEnd', {});
         }
+    }
+}
+
+function updateBlockingStatus(op) {
+    if(window){
+        window.webContents.send('Repo-BlockingUpdate', {operation: op});
     }
 }
 

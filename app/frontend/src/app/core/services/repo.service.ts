@@ -181,6 +181,9 @@ export class RepoService {
     this.electron.onCD('Repo-BlockingOperationEnd', (event, arg) => {
       this.loading.disableLoading();
     });
+    this.electron.onCD('Repo-BlockingUpdate', (event, arg) => {
+      this.loading.updateMessage(arg.operation);
+    });
     this.electron.onCD('Repo-FileStatusRetrieved', (event, arg) => {
       let oldStatus = this._wipCommit.enabled;
       this._wipCommit.fileSummary = arg.summary;
