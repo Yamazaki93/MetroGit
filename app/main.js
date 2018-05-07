@@ -23,9 +23,9 @@ function createWindow() {
     
     // init services
     secureStorage.init(win);
-    cache.init();
     fileWatcher.init(win);
     settingsService.init(win, secureStorage);
+    cache.init();
     repo.init(win, settingsService, secureStorage, fileWatcher);
     autoFetch.init(win, settingsService);
     repoCH.init(repo, settingsService, secureStorage);
