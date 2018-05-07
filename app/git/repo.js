@@ -79,6 +79,12 @@ function tryFetch(remote, tries, username, password) {
                 return 1;
             }
         }
+    }).catch(err => {
+        if(err.message.indexOf('credentials') !== -1) {
+            return Promise.reject('CRED_ISSUE');
+        } else {
+            return Promise.reject(err);
+        }
     });
 }
 
@@ -107,6 +113,12 @@ function tryPush(remote, refs, tries, username, password) {
             transferProgress: (prog) => {
                 console.log(prog)
             }
+        }
+    }).catch(err => {
+        if(err.message.indexOf('credentials') !== -1) {
+            return Promise.reject('CRED_ISSUE');
+        } else {
+            return Promise.reject(err);
         }
     });
 }
