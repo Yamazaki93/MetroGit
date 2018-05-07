@@ -1,9 +1,11 @@
 const { shell, ipcMain } = require('electron');
 
+ipcMain.on('Shell-Open', (event, arg) => {
+    openUrl(arg.url);
+});
+
 function init() {
-    ipcMain.on('Shell-Open', (event, arg) => {
-        openUrl(arg.url);
-    });
+
 }
 
 function openUrl(url) {

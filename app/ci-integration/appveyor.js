@@ -10,13 +10,14 @@ var window;
 var cache;
 var checkPeriodicUpdateHook;
 
+ipcMain.on('CI-RepoChanged', repoChange);
+ipcMain.on('CI-AppVeyorGetLog', getBuildLog);
+
 function init(sett, sec, win, cac) {
     secureStorage = sec;
     settings = sett;
     window = win;
     cache = cac;
-    ipcMain.on('CI-RepoChanged', repoChange);
-    ipcMain.on('CI-AppVeyorGetLog', getBuildLog);
 }
 
 function repoChange(event, arg) {

@@ -8,14 +8,16 @@ var settings;
 var conn;
 var window;
 
+ipcMain.on('JIRA-RepoChanged', initJira);
+ipcMain.on('JIRA-GetIssue', getIssue);
+ipcMain.on('JIRA-UpdateIssue', updateIssue);
+ipcMain.on('JIRA-AddComment', addComment);
+
 function init(sett, sec, win) {
     secureStorage = sec;
     settings = sett;
     window = win;
-    ipcMain.on('JIRA-RepoChanged', initJira);
-    ipcMain.on('JIRA-GetIssue', getIssue);
-    ipcMain.on('JIRA-UpdateIssue', updateIssue);
-    ipcMain.on('JIRA-AddComment', addComment);
+
 }
 
 function initJira(event, arg) {

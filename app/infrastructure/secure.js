@@ -3,13 +3,14 @@ const app = 'MetroGit'
 const { ipcMain } = require('electron');
 var window = null;
 
+ipcMain.on('Secure-ClearCache', (event, arg) => {
+    clearCache().then(() => {
+        event.sender.send('Secure-CacheCleared');
+    });
+})
+
 function init(win) {
     window = win;
-    ipcMain.on('Secure-ClearCache', (event, arg) => {
-        clearCache().then(() => {
-            event.sender.send('Secure-CacheCleared');
-        });
-    })
 }
 
 function getPass(account) {

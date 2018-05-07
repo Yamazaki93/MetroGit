@@ -4,17 +4,18 @@ var settings = null;
 var autoFetchInterval = 1;
 var autoFetch = null;
 
+ipcMain.on('Settings-Set', (event, arg) => {
+    if(arg.app_settings && arg.app_settings['gen-autofetchinterval'] !== undefined){
+        autoFetchInterval = Number(arg.app_settings['gen-autofetchinterval']);
+        registerAutoFetch();   
+    }
+});
+
 function init(win, stt) {
     window = win;
     settings = stt;
     initAutoFetchSettings();
     registerAutoFetch();
-    ipcMain.on('Settings-Set', (event, arg) => {
-        if(arg.app_settings && arg.app_settings['gen-autofetchinterval'] !== undefined){
-            autoFetchInterval = Number(arg.app_settings['gen-autofetchinterval']);
-            registerAutoFetch();   
-        }
-    });
 }
 
 function initAutoFetchSettings(){
@@ -29,7 +30,9 @@ function registerAutoFetch() {
     UnregisterAutoFetch()
     if (autoFetchInterval > 0) {
         autoFetch = setInterval(() => {
-            window.webContents.send('AutoFetch-Timeout');
+            if(window) {
+                window.webContents.send('AutoFetch-Timeout');
+            }
         }, autoFetchInterval * 60 * 1000);
     }
 }

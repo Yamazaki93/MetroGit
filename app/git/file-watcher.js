@@ -4,9 +4,10 @@ var Repo;
 var window = null;
 var refreshInterval;
 
+ipcMain.on('Repo-Open', openRepo);
+
 function init(win) {
     window = win;
-    ipcMain.on('Repo-Open', openRepo);
 }
 
 function openRepo(event, arg) {

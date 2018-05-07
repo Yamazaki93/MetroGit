@@ -4,26 +4,27 @@ var repoService = null;
 var settings = null;
 var secure = null;
 
+ipcMain.on('Repo-Open', openRepo);
+ipcMain.on('Repo-Browse', openBrowseFolderDialog);
+ipcMain.on('Repo-Fetch', fetchRepo);
+ipcMain.on('Repo-SetCred', setCredentials);
+ipcMain.on('Repo-Pull', pull);
+ipcMain.on('Repo-Push', push);
+ipcMain.on('Repo-GetCommit', getCommit);
+ipcMain.on('Repo-Stage', stage);
+ipcMain.on('Repo-Unstage', unstage);
+ipcMain.on('Repo-CommitStaged', commitStaged);
+ipcMain.on('Repo-Commit', commit);
+ipcMain.on('Repo-Stash', stash);
+ipcMain.on('Repo-Pop', pop);
+ipcMain.on('Repo-CreateBranch', createBranch);
+ipcMain.on('Repo-Checkout', checkout);
+ipcMain.on('Repo-DiscardAll', discardAll);
+
 function init(repo, sett, sec) {
     repoService = repo;
     settings = sett;
     secure = sec;
-    ipcMain.on('Repo-Open', openRepo);
-    ipcMain.on('Repo-Browse', openBrowseFolderDialog);
-    ipcMain.on('Repo-Fetch', fetchRepo);
-    ipcMain.on('Repo-SetCred', setCredentials);
-    ipcMain.on('Repo-Pull', pull);
-    ipcMain.on('Repo-Push', push);
-    ipcMain.on('Repo-GetCommit', getCommit);
-    ipcMain.on('Repo-Stage', stage);
-    ipcMain.on('Repo-Unstage', unstage);
-    ipcMain.on('Repo-CommitStaged', commitStaged);
-    ipcMain.on('Repo-Commit', commit);
-    ipcMain.on('Repo-Stash', stash);
-    ipcMain.on('Repo-Pop', pop);
-    ipcMain.on('Repo-CreateBranch', createBranch);
-    ipcMain.on('Repo-Checkout', checkout);
-    ipcMain.on('Repo-DiscardAll', discardAll);
 }
 
 function pull(event, arg) {

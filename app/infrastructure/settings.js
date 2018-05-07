@@ -11,6 +11,24 @@ let repoSettingsObj = {};
 let privContent = "";
 let publicContent = "";
 
+ipcMain.on('Settings-Init', (event, arg) => {
+    notifySettingsUpdated();
+})
+ipcMain.on('Settings-Set', (event, arg) => {
+    if (arg.app_settings) {
+        settingsObj.app_settings = arg.app_settings;
+    }
+    if (arg.repo_settings) {
+        repoSettingsObj = arg.repo_settings;
+    }
+    save();
+    updateSSHKey();
+    notifySettingsUpdated();
+});
+ipcMain.on('Settings-SetSecureRepo', setSecureRepoSetting);
+ipcMain.on('Settings-GetSecureRepo', getSecureRepoSetting);
+ipcMain.on('Settings-BrowseFile', openBrowseFolderDialog)
+
 let save = function () {
     fs.writeFileSync(settingsFile, JSON.stringify(settingsObj), 'utf8');
     saveRepoSettings();
@@ -72,23 +90,7 @@ let init = function (win, sec) {
     } else {
         load(settingsFile);
     }
-    ipcMain.on('Settings-Init', (event, arg) => {
-        notifySettingsUpdated();
-    })
-    ipcMain.on('Settings-Set', (event, arg) => {
-        if (arg.app_settings) {
-            settingsObj.app_settings = arg.app_settings;
-        }
-        if (arg.repo_settings) {
-            repoSettingsObj = arg.repo_settings;
-        }
-        save();
-        updateSSHKey();
-        notifySettingsUpdated();
-    });
-    ipcMain.on('Settings-SetSecureRepo', setSecureRepoSetting);
-    ipcMain.on('Settings-GetSecureRepo', getSecureRepoSetting);
-    ipcMain.on('Settings-BrowseFile', openBrowseFolderDialog)
+
 }
 
 function setSecureRepoSetting(event, arg) {
