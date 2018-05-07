@@ -1,6 +1,6 @@
 {
   "name": "metrogit",
-  "version": "0.1.0-beta",
+  "version": "0.1.1-beta",
   "description": "Metro themed git UI",
   "main": "app/main.js",
   "scripts": {
