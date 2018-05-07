@@ -47,7 +47,7 @@ To build this from the scratch, first install `electron-builder` and `ng` as glo
 
 ## Support this app
 
-Hi there, if you like this app, find it useful or just like this subway map, I'd loved to hear your feedback and experiences. 
+Hi there, if you like this app, find it useful or just like this subway map, I'd loved to hear your feedback and experiences, you can share them with `admin at rhodiumcode.com`. 
 
 Also, please consider <a class="bmc-button" target="_blank" href="https://www.buymeacoffee.com/mjCsGWDTS"><img src="https://www.buymeacoffee.com/assets/img/BMC-btn-logo.svg" alt="Buy me a tea"><span style="margin-left:5px">Buy me a tea</span></a>, I live on black tea basically 😉
 

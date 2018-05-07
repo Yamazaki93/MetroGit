@@ -8,7 +8,6 @@ import * as d3 from 'd3';
 import { Color } from './models/color';
 import { ElectronService } from '../../infrastructure/electron.service';
 import { CiIntegrationService } from '../services/ci-integration.service';
-import { RepoService } from '../services/repo.service';
 
 @Injectable()
 export class D3Service {
@@ -26,7 +25,6 @@ export class D3Service {
   private ciEnabled = false;
   constructor(
     private ci: CiIntegrationService,
-    private repo: RepoService,
   ) {
     ci.enabledChanged.subscribe(en => {
       this.ciEnabled = en;

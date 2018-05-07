@@ -14,7 +14,12 @@ export class LoadingService {
   constructor(
     private noti: NotificationsService
   ) { }
-
+  updateMessage(message) {
+    if (message) {
+      this._message = message;
+      this.messageChange.emit(this._message);
+    }
+  }
   enableLoading(message = "Loading...") {
     if (this._count === 0) {
       this._isBusy = true;

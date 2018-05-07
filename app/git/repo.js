@@ -164,12 +164,13 @@ function pullWrapper(username, password, option) {
             return findMatchingRemote(res);
         }).then(rmt => {
             remoteBranch = rmt;
+            notifyBlockingOperation(true);
             return Repo.getStatus().then((statuses) => {
                 paths = statuses.map(s => s.path());
                 if (paths.length === 0) {
                     return Promise.resolve('NO_WIP')
                 } else {
-                    notifyBlockingOperation(true, "Stashing...");
+                    updateBlockingStatus("Stashing...");
                     return stage(paths).then(() => {
                         stashed = true;
                         return NodeGit.Stash.save(Repo, getCurrentSignature(), "Auto Stash", NodeGit.Stash.FLAGS.DEFAULT);
@@ -177,7 +178,7 @@ function pullWrapper(username, password, option) {
                 }
             })
         }).then(() => {
-            notifyBlockingOperation(true, "Updating branch...");
+            updateBlockingStatus("Updating branch...");
             if (option === 'ffonly') {
                 return pullFFOnly(remoteBranch, currentBranch);
             } else if (option === 'merge') {
@@ -186,8 +187,8 @@ function pullWrapper(username, password, option) {
                 return pullRebase(remoteBranch, currentBranch);
             }
         }).then(result => {
-            notifyBlockingOperation(false);
             if (stashed) {
+                updateBlockingStatus('Popping stashed changes...')
                 return NodeGit.Stash.pop(Repo, 0, NodeGit.Stash.APPLY_FLAGS.APPLY_DEFAULT).then(() => {
                     return result;
                 });
@@ -452,6 +453,12 @@ function notifyBlockingOperation(start, op) {
     }
 }
 
+function updateBlockingStatus(op) {
+    if(window){
+        window.webContents.send('Repo-BlockingUpdate', {operation: op});
+    }
+}
+
 function openRepo(workingDir) {
     let repoName;
     return NodeGit.Repository.open(workingDir).then(res => {
@@ -550,8 +557,8 @@ function stage(paths) {
         }).then(index => {
             let req = [];
             statuses.forEach(st => {
-                if(paths.indexOf(st.path()) !== -1) {
-                    if(st.isDeleted()) {
+                if (paths.indexOf(st.path()) !== -1 || paths.length === 0) {
+                    if (st.isDeleted()) {
                         req.push(index.removeByPath(st.path()));
                     } else {
                         req.push(index.addByPath(st.path()));
@@ -562,8 +569,7 @@ function stage(paths) {
                 return index.write();
             });
         }).then(() => {
-            fileWatch.getStatus();
-            return Promise.resolve();
+            return fileWatch.getStatus();
         });
     } else {
         return Promise.reject('NO_REPO')
@@ -575,8 +581,7 @@ function unstage(paths) {
         return Repo.getHeadCommit().then(commit => {
             return NodeGit.Reset.default(Repo, commit, paths);
         }).then(() => {
-            fileWatch.getStatus();
-            return Promise.resolve();
+            return fileWatch.getStatus();
         });
     } else {
         return Promise.reject('NO_REPO')
@@ -600,8 +605,7 @@ function commitStaged(name, email, message) {
             return Repo.createCommit("HEAD", signature, signature, message, oid, [ref.target()]);
         }).then(hash => {
             sha = hash;
-            fileWatch.getStatus();
-            return refreshRepo();
+            return Promise.all([refreshRepo(), fileWatch.getStatus()]);
         }).then(() => {
             notifyBlockingOperation(false);
             return sha;
@@ -616,20 +620,12 @@ function commitStaged(name, email, message) {
 
 function commit(name, email, message, files) {
     if (Repo && name && email) {
-        let signature = NodeGit.Signature.now(name, email);
-        let sha;
-        notifyBlockingOperation(true, "Commiting...");
-        return Repo.createCommitOnHead(files, signature, signature, message).then(hash => {
-            sha = hash;
-            return fileWatch.getStatus().then(() => {
-                return refreshRepo();
+        return stage(files).then(() => {
+            return Repo.index().then(index => {
+                index.writeTree();
             });
         }).then(() => {
-            notifyBlockingOperation(false);
-            return sha;
-        }).catch(err => {
-            notifyBlockingOperation(false);
-            return Promise.reject(err);
+            return commitStaged(name, email, message)
         });
     } else {
         return Promise.reject('NO_REPO');
@@ -658,7 +654,7 @@ function stash(name, email, message) {
             }
         }).finally(oid => {
             notifyBlockingOperation(false);
-            return refreshRepo();
+            return Promise.all([refreshRepo(), fileWatch.getStatus()]);
         })
     } else {
         return Promise.reject('NO_REPO');
@@ -675,7 +671,7 @@ function pop(index) {
             return NodeGit.Stash.pop(Repo, index, NodeGit.Stash.APPLY_FLAGS.APPLY_DEFAULT)
         }).finally(oid => {
             notifyBlockingOperation(false);
-            return refreshRepo();
+            return Promise.all([refreshRepo(), fileWatch.getStatus()]);
         })
     } else {
         return Promise.reject('NO_REPO');
@@ -730,7 +726,9 @@ function checkout(branchName) {
 
 function discardAll() {
     if (Repo) {
-        return Repo.getHeadCommit().then(commit => {
+        return stage([]).then(() => {
+            return Repo.getHeadCommit()
+        }).then(commit => {
             return NodeGit.Reset.reset(Repo, commit, NodeGit.Reset.TYPE.HARD);
         }).then(() => {
             return fileWatch.getStatus();
