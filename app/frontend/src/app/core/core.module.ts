@@ -37,6 +37,7 @@ import { CiConsoleOutputComponent } from './ci-console-output/ci-console-output.
 import { ForcePushPromptComponent } from './force-push-prompt/force-push-prompt.component';
 import { CommitChangeService } from './services/commit-change.service';
 import { CreateBranchPromptComponent } from './create-branch-prompt/create-branch-prompt.component';
+import { ContextMenuModule } from 'ngx-contextmenu';
 
 
 @NgModule({
@@ -46,6 +47,7 @@ import { CreateBranchPromptComponent } from './create-branch-prompt/create-branc
     FormsModule,
     SimpleNotificationsModule,
     InfrastructureModule,
+    ContextMenuModule,
     JiraModule,
   ],
   entryComponents: [

@@ -16,6 +16,7 @@ import { AuthSettingsComponent } from './settings/auth-settings/auth-settings.co
 import { GeneralSettingsComponent } from './settings/general-settings/general-settings.component';
 import { JiraSettingsComponent } from './settings/jira-settings/jira-settings.component';
 import { TagInputModule } from 'ngx-chips';
+import { ContextMenuModule } from 'ngx-contextmenu';
 
 const appRoutes: Routes = [
   {
@@ -48,6 +49,7 @@ const appRoutes: Routes = [
     BrowserModule,
     BrowserAnimationsModule,
     NgbModule.forRoot(),
+    ContextMenuModule.forRoot(),
     SimpleNotificationsModule.forRoot({
       position: [
         'top',
