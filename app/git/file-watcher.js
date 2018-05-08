@@ -8,6 +8,9 @@ ipcMain.on('Repo-Open', openRepo);
 
 function init(win) {
     window = win;
+    window.on('close', (event) => {
+        clearInterval(refreshInterval);
+    })
 }
 
 function openRepo(event, arg) {

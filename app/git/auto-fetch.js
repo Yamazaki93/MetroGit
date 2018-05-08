@@ -14,6 +14,11 @@ ipcMain.on('Settings-Set', (event, arg) => {
 function init(win, stt) {
     window = win;
     settings = stt;
+
+    window.on('close', (event) => {
+        clearInterval(autoFetch);
+    })
+
     initAutoFetchSettings();
     registerAutoFetch();
 }
