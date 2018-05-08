@@ -272,7 +272,7 @@ export class RepoService {
   }
 
   checkout(shorthand): void {
-    this.electron.ipcRenderer.send('Repo-Checkout', {branch: shorthand});
+    this.electron.ipcRenderer.send('Repo-Checkout', { branch: shorthand });
   }
   retry(): void {
     if (this._pendingOperation) {

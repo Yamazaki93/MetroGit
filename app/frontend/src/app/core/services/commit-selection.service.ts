@@ -73,5 +73,10 @@ export class CommitSelectionService {
       this.selectionChange.emit(this.selectedCommit);
     }
   }
+  reset(commit, mode): void {
+    if (mode === 'hard') {
+      this.electron.ipcRenderer.send('Repo-ResetHard', { commit: commit });
+    }
+  }
 
 }
