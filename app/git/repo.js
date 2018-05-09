@@ -747,6 +747,44 @@ function discardAll() {
     }
 }
 
+function resetHard(commit) {
+    if (Repo) {
+        return stage([]).then(() => {
+            return Repo.getCommit(commit);
+        }).then(commit => {
+            if(!commit) {
+                return Promise.reject('COMMIT_NOT_FOUND');
+            }
+            notifyBlockingOperation(true, "Resetting...")
+            return NodeGit.Reset.reset(Repo, commit, NodeGit.Reset.TYPE.HARD);
+        }).then(() => {
+            notifyBlockingOperation(false);
+            return Promise.all([refreshRepo(), fileWatch.getStatus()]);
+        })
+    } else {
+        return Promise.reject('NO_REPO');
+    }
+}
+
+function resetSoft(commit) {
+    if (Repo) {
+        return stage([]).then(() => {
+            return Repo.getCommit(commit);
+        }).then(commit => {
+            if(!commit) {
+                return Promise.reject('COMMIT_NOT_FOUND');
+            }
+            notifyBlockingOperation(true, "Resetting...")
+            return NodeGit.Reset.reset(Repo, commit, NodeGit.Reset.TYPE.SOFT);
+        }).then(() => {
+            notifyBlockingOperation(false);
+            return Promise.all([refreshRepo(), fileWatch.getStatus()]);
+        })
+    } else {
+        return Promise.reject('NO_REPO');
+    }
+}
+
 module.exports = {
     init: init,
     openRepo: openRepo,
@@ -764,5 +802,7 @@ module.exports = {
     getCommitDetails: getCommitDetails,
     createBranch: createBranch,
     checkout: checkout,
-    discardAll: discardAll
+    discardAll: discardAll,
+    resetHard: resetHard,
+    resetSoft: resetSoft
 }

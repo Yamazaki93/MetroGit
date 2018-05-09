@@ -20,6 +20,8 @@ ipcMain.on('Repo-Pop', pop);
 ipcMain.on('Repo-CreateBranch', createBranch);
 ipcMain.on('Repo-Checkout', checkout);
 ipcMain.on('Repo-DiscardAll', discardAll);
+ipcMain.on('Repo-ResetHard', resetHard);
+ipcMain.on('Repo-ResetSoft', resetSoft);
 
 function init(repo, sett, sec) {
     repoService = repo;
@@ -211,6 +213,26 @@ function discardAll(event, arg) {
     }).catch(err => {
         operationFailed('Repo-DiscardFailed', event, err);
     });
+}
+
+function resetHard(event, arg) {
+    if(arg.commit) {
+        repoService.resetHard(arg.commit).then(res => {
+            event.sender.send('Repo-Resetted', {});
+        }).catch(err => {
+            operationFailed('Repo-ResetFailed', event, err);
+        });
+    }
+}
+
+function resetSoft(event, arg) {
+    if(arg.commit) {
+        repoService.resetSoft(arg.commit).then(res => {
+            event.sender.send('Repo-Resetted', {});
+        }).catch(err => {
+            operationFailed('Repo-ResetFailed', event, err);
+        });
+    }
 }
 
 module.exports = {
