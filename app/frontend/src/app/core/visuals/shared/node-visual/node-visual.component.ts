@@ -39,4 +39,7 @@ export class NodeVisualComponent implements OnDestroy {
   onResetHard() {
     this.selection.reset(this.node.commit.sha, 'hard');
   }
+  onResetSoft() {
+    this.selection.reset(this.node.commit.sha, 'soft');
+  }
 }

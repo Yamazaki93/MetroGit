@@ -23,7 +23,7 @@
   </div>
 </div>
 <context-menu>
-  <ng-template contextMenuItem>
+  <ng-template contextMenuItem (execute)="onResetSoft($event.item.sha)">
     <span class="">Reset Soft: Keep All Changes</span>
   </ng-template>
   <ng-template contextMenuItem (execute)="onResetHard($event.item.sha)">

@@ -81,4 +81,7 @@ export class SubwayStationsComponent implements OnInit, AfterViewInit, OnDestroy
   onResetHard(sha) {
     this.selection.reset(sha, 'hard');
   }
+  onResetSoft(sha) {
+    this.selection.reset(sha, 'soft');
+  }
 }
