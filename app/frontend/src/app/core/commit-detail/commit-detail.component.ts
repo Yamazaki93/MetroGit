@@ -13,6 +13,7 @@ export class CommitDetailComponent implements OnInit {
 
   private toggled = false;
   private loading = false;
+  private fileToggled = true;
   private selectedCommit: CommitDetail = null;
   private selectedTab = "";
   constructor(
@@ -46,5 +47,7 @@ export class CommitDetailComponent implements OnInit {
   goTo(tab): void {
     this.selectedTab = tab;
   }
-
+  closeFilePanel() {
+    this.fileToggled = false;
+  }
 }
