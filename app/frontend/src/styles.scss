@@ -91,6 +91,7 @@ context-menu-content {
         padding: 0 !important;
         border: solid 1px #000;
         box-shadow: 0 0 4px rgba(0, 0, 0, 0.8);
+        background: var(--gray-dark) !important;
         li {
             cursor: pointer;
             padding: 3px;
@@ -99,11 +100,11 @@ context-menu-content {
                 display: block;
                 height: 100%;
                 width: 100%;
-                color: var(--gray-dark);
+                color: #fff;
                 font-size: 13px;
                 &:hover{
                     text-decoration: transparent;
-                    color: var(--gray-dark);
+                    color: #fff;
                 }
             }
             &:hover {
