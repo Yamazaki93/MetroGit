@@ -56,7 +56,7 @@
     </svg>
   </svg:g>
 </svg:g>
-<context-menu [disabled]="node.commit.virtual">
+<context-menu [disabled]="node.commit.virtual || node.commit.isStash">
   <ng-template contextMenuItem>
     <span class="">Reset Soft: Keep All Changes</span>
   </ng-template>
