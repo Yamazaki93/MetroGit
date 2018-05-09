@@ -1,4 +1,4 @@
-import { Component, OnInit, Sanitizer, Input } from '@angular/core';
+import { Component, OnInit, Sanitizer, Input, Output, EventEmitter } from '@angular/core';
 import { D3Service } from '../d3/d3.service';
 import { DomSanitizer } from '@angular/platform-browser';
 import { CommitDetail, WIPCommit } from '../prototypes/commit';
@@ -114,5 +114,7 @@ export class CommitDetailInfoComponent implements OnInit {
       this.newCommitMessage = this.commitChange.defaultKey + '-';
     }
   }
-
+  openFileDetails(file) {
+    this.selection.selectFileDetail(file);
+  }
 }

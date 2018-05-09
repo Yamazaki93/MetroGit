@@ -3,6 +3,7 @@ import { CommitDetail } from '../prototypes/commit';
 import { CommitSelectionService } from '../services/commit-selection.service';
 import { CiIntegrationService } from '../services/ci-integration.service';
 import { JiraIntegrationService } from '../../jira/services/jira-integration.service';
+import { LayoutService } from '../services/layout.service';
 
 @Component({
   selector: 'app-commit-detail',
@@ -20,6 +21,7 @@ export class CommitDetailComponent implements OnInit {
     private selection: CommitSelectionService,
     private ci: CiIntegrationService,
     private jira: JiraIntegrationService,
+    private layout: LayoutService,
   ) {
     selection.selectionChange.subscribe(newSelect => {
       this.selectedCommit = newSelect;
@@ -42,6 +44,7 @@ export class CommitDetailComponent implements OnInit {
 
   toggleDetail(): void {
     this.toggled = !this.toggled;
+    this.layout.isDetailPanelOpen = this.toggled;
   }
 
   goTo(tab): void {
@@ -49,5 +52,6 @@ export class CommitDetailComponent implements OnInit {
   }
   closeFilePanel() {
     this.fileToggled = false;
+    this.layout.isFilePanelOpen = this.fileToggled;
   }
 }

@@ -8,8 +8,10 @@ export class CommitSelectionService {
 
   @Output() selectionChange = new EventEmitter<CommitDetail | WIPCommit>();
   @Output() selectingChange = new EventEmitter<boolean>();
+  @Output() selectedFileChange = new EventEmitter<string>();
 
   selectedCommit: CommitDetail | WIPCommit;
+  private _selectedFile = "";
   private _wipDetail: WIPCommit = {
     sha: "00000",
     author: "",
@@ -58,7 +60,10 @@ export class CommitSelectionService {
     });
   }
 
-
+  selectFileDetail(file) {
+    this._selectedFile = file;
+    this.selectedFileChange.emit(file);
+  }
   select(commit) {
     if (commit && (!this.selectedCommit || commit !== this.selectedCommit.sha)) {
       if (commit === '00000') {
