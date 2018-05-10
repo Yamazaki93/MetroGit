@@ -1,4 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
+import { CommitSelectionService } from '../services/commit-selection.service';
+import { FileDetail } from '../prototypes/file-detail';
 
 @Component({
   selector: 'app-file-view-panel',
@@ -7,7 +9,14 @@ import { Component, OnInit } from '@angular/core';
 })
 export class FileViewPanelComponent implements OnInit {
 
-  constructor() { }
+  detail: FileDetail;
+  constructor(
+    private selection: CommitSelectionService
+  ) {
+    selection.fileDetailChanged.subscribe(detail => {
+      this.detail = detail;
+    });
+  }
 
   ngOnInit() {
   }
