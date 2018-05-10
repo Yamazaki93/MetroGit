@@ -142,9 +142,10 @@ function getFileDetail(event, arg) {
                             lines: []
                         });
                         lines.forEach(function (line) {
+                            let isNewLine = String.fromCharCode(line.origin()) === '<' || String.fromCharCode(line.origin()) === '>' || String.fromCharCode(line.origin()) === '=' 
                             result[result.length - 1].lines.push({
                                 op: String.fromCharCode(line.origin()),
-                                content: String.fromCharCode(line.origin()) === '<' ? line.content().trim() : line.content(),
+                                content: isNewLine ? line.content().trim() : line.content(),
                                 oldLineno: line.oldLineno(),
                                 newLineno: line.newLineno(),
                             });
@@ -152,7 +153,18 @@ function getFileDetail(event, arg) {
                     });
                     return Promise.resolve(result);
                 }).then(result => {
-                    event.sender.send('Repo-FileDetailRetrieved', { paths: file.split('/'), hunks: result });
+                    let linesAdded = 0;
+                    let linesRemoved = 0;
+                    result.forEach(h => {
+                        h.lines.forEach(l => {
+                            if(l.op === '+'){
+                                linesAdded += 1;
+                            } else if(l.op === '-') {
+                                linesRemoved += 1;
+                            }
+                        })
+                    })
+                    event.sender.send('Repo-FileDetailRetrieved', { paths: file.split('/'), hunks: result, summary:{added: linesAdded, removed: linesRemoved} });
                 });
             });
         }

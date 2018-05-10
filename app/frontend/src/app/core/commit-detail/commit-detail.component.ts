@@ -18,6 +18,7 @@ export class CommitDetailComponent implements OnInit {
   private selectedCommit: CommitDetail = null;
   private selectedTab = "";
   private selectedFile = "";
+  private fileSummary = null;
   constructor(
     private selection: CommitSelectionService,
     private ci: CiIntegrationService,
@@ -42,6 +43,9 @@ export class CommitDetailComponent implements OnInit {
       this.selectedFile = newFile;
       this.fileToggled = true;
       this.layout.isFilePanelOpen = true;
+    });
+    selection.fileDetailChanged.subscribe(newdetail => {
+      this.fileSummary = newdetail.summary;
     });
   }
 

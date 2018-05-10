@@ -11,4 +11,8 @@ export interface FileDetail {
             }]
         }
     ];
+    summary: {
+        added: number,
+        removed: number,
+    };
 }

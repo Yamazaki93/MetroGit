@@ -1,3 +1,6 @@
+$line-header-width: 20px;
+$line-content-width: 200px + $line-header-width;
+
 .file-view-container{
     height: 100%;
     .path-container{
@@ -9,7 +12,7 @@
         overflow-y: auto;
     }
     .hunk-headers {
-        width: 215px;
+        width: $line-content-width;
         flex-shrink: 0;
         .hunk{
             border-radius: 5px 0 0 5px;
@@ -40,7 +43,7 @@
             user-select: initial;
         }
         .op{
-            width: 15px;
+            width: $line-header-width;
             text-align: center;
             border-right: solid 1px var(--gray-dark);
             flex-shrink: 0;
