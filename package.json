@@ -8,7 +8,7 @@
     "test": "npm test",
     "postinstall": "electron-builder install-app-deps",
     "pack": "electron-builder --dir",
-    "dist": "electron-builder"
+    "dist": "electron-builder --publish never"
   },
   "repository": {
     "type": "git",
