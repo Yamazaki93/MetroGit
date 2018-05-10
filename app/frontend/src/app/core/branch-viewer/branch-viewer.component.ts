@@ -57,8 +57,6 @@ export class BranchViewerComponent implements OnInit {
     layout.filePanelChanged.subscribe(filePanelOpen => {
       if (this.toggled && filePanelOpen) {
         this.toggleNavigation();
-      } else if (!this.toggled && !filePanelOpen) {
-        this.toggleNavigation();
       }
     });
   }
