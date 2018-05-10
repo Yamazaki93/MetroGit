@@ -54,6 +54,13 @@ export class BranchViewerComponent implements OnInit {
     this.toggled = layout.isNavToggled;
     this.showLocal = layout.isLocalShown;
     this.showRemote = layout.isRemoteShown;
+    layout.filePanelChanged.subscribe(filePanelOpen => {
+      if (this.toggled && filePanelOpen) {
+        this.toggleNavigation();
+      } else if (!this.toggled && !filePanelOpen) {
+        this.toggleNavigation();
+      }
+    });
   }
 
   ngOnInit() {

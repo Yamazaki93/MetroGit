@@ -14,7 +14,7 @@ export class CommitDetailComponent implements OnInit {
 
   private toggled = false;
   private loading = false;
-  private fileToggled = true;
+  private fileToggled = false;
   private selectedCommit: CommitDetail = null;
   private selectedTab = "";
   constructor(
@@ -36,6 +36,10 @@ export class CommitDetailComponent implements OnInit {
     });
     selection.selectingChange.subscribe(selecting => {
       this.loading = selecting;
+    });
+    selection.selectedFileChange.subscribe(newFile => {
+      this.fileToggled = true;
+      this.layout.isFilePanelOpen = true;
     });
   }
 
