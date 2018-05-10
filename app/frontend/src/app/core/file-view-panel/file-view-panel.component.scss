@@ -37,6 +37,7 @@
         background: rgba(0, 0, 0, 0.2);
         .line{
             border-bottom: solid 1px var(--gray-dark);
+            user-select: initial;
         }
         .op{
             width: 15px;
