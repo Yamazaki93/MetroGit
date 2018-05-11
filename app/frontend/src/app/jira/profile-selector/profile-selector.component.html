@@ -1,0 +1,4 @@
+<div class="p-2 rounded bg-dark profile-container">
+  <img [src]="profile.safeAvatarUrl" class="mr-1" width="24px" *ngIf="profile" />
+  <span *ngIf="profile">{{profile.displayName}}</span>
+</div>

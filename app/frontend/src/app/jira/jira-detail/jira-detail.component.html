@@ -39,10 +39,11 @@
     </div>
     <div class="col-3">
       <label>Assignee</label>
-      <div class="p-2 rounded bg-dark profile-container">
+      <!-- <div class="p-2 rounded bg-dark profile-container">
         <img [src]="issue.fields.assignee.safeAvatarUrl" class="mr-1" width="24px" *ngIf="issue.fields.assignee" />
         <span *ngIf="issue.fields.assignee">{{issue.fields.assignee.displayName}}</span>
-      </div>
+      </div> -->
+      <app-profile-selector [profile]="issue.fields.assignee"></app-profile-selector>
     </div>
     <div class="col-3" *ngIf="issue.fields.storyPoints !== undefined">
       <label>Story Points</label>
