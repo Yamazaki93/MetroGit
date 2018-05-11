@@ -71,4 +71,8 @@ export class AppveyorCiService {
     }
   }
 
+  rebuildAppveyor(commit) {
+    this.electron.ipcRenderer.send('CI-AppVeyorRebuild', {});
+  }
+
 }

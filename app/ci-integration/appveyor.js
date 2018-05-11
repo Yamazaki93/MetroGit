@@ -12,6 +12,7 @@ var checkPeriodicUpdateHook;
 
 ipcMain.on('CI-RepoChanged', repoChange);
 ipcMain.on('CI-AppVeyorGetLog', getBuildLog);
+ipcMain.on('CI-AppVeyorRebuild', reBuildAppVeyor);
 
 function init(sett, sec, win, cac) {
     secureStorage = sec;
@@ -121,6 +122,12 @@ function getBuildLog(event, arg) {
                 event.sender.send('CI-AppVeyorLogNotFound', { version: arg.version });
             }
         })
+    }
+}
+
+function reBuildAppVeyor(event, arg) {
+    if (conn) {
+        var i = 1;
     }
 }
 
