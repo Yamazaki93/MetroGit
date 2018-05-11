@@ -40,12 +40,15 @@
   <div class="d-flex no-shrink">
     <div class="full-width">
       <h3>File Diff: {{selectedFile}}
-        <span class="badge badge-success mr-1" *ngIf="fileSummary && fileSummary.added">{{fileSummary.added}} +</span>
-        <span class="badge badge-danger mr-1" *ngIf="fileSummary && fileSummary.removed">{{fileSummary.removed}} -</span>
+        <span class="badge badge-success mr-1" *ngIf="fileDetail && fileDetail.summary.added">{{fileDetail.summary.added}} +</span>
+        <span class="badge badge-danger mr-1" *ngIf="fileDetail && fileDetail.summary.removed">{{fileDetail.summary.removed}} -</span>
       </h3>
     </div>
     <div class="close-btn-container">
       <h3>
+        <a href="javascript:void(0)" class="mr-2" (click)="openExternal()">
+          <i class="icon-external-link"></i>
+        </a>
         <a href="javascript:void(0)" (click)="closeFilePanel()">
           <i class="icon-x"></i>
         </a>
@@ -53,6 +56,6 @@
     </div>
   </div>
   <div class="full-width" style="height: 100%; min-height: 0;">
-    <app-file-view-panel></app-file-view-panel>
+    <app-file-view-panel [detail]="fileDetail"></app-file-view-panel>
   </div>
 </div>

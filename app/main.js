@@ -12,6 +12,7 @@ const shellMisc = require('./infrastructure/shell');
 const cache = require('./infrastructure/cache');
 const fileWatcher = require('./git/file-watcher');
 const updater = require('./infrastructure/auto-updater');
+const externalFile = require('./git/external-file-view');
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
@@ -24,6 +25,7 @@ function createWindow() {
     // init services
     secureStorage.init(win);
     fileWatcher.init(win);
+    externalFile.init(fileWatcher);
     settingsService.init(win, secureStorage);
     cache.init();
     repo.init(win, settingsService, secureStorage, fileWatcher);
@@ -65,6 +67,7 @@ function createWindow() {
     // and load the index.html of the app.
     win.loadURL(url.format({
         pathname:  path.join(__dirname, 'frontend/dist/index.html'),
+        hash: '/git',
         protocol: 'file:',
         slashes: true
     }))

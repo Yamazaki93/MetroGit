@@ -7,7 +7,6 @@ import { SimpleNotificationsModule } from 'angular2-notifications';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { Routes, RouterModule } from '@angular/router';
 import { GitViewComponent } from './core/git-view/git-view.component';
-import { APP_BASE_HREF } from '@angular/common';
 import { InfrastructureModule } from './infrastructure/infrastructure.module';
 import { SettingsModule } from './settings/settings.module';
 import { SettingsPageComponent } from './settings/settings-page/settings-page.component';
@@ -17,6 +16,7 @@ import { GeneralSettingsComponent } from './settings/general-settings/general-se
 import { JiraSettingsComponent } from './settings/jira-settings/jira-settings.component';
 import { TagInputModule } from 'ngx-chips';
 import { ContextMenuModule } from 'ngx-contextmenu';
+import { ExternalFileViewerComponent } from './core/external-file-viewer/external-file-viewer.component';
 
 const appRoutes: Routes = [
   {
@@ -37,7 +37,15 @@ const appRoutes: Routes = [
     ]
   },
   { path: 'git', component: GitViewComponent },
-  { path: '', redirectTo: 'git', pathMatch: 'full' },
+  {
+    path: 'file',
+    children: [
+      {
+        path: '**', component: ExternalFileViewerComponent
+      },
+    ]
+  },
+  { path: '', redirectTo: 'git', pathMatch: 'full' }
 ];
 
 @NgModule({

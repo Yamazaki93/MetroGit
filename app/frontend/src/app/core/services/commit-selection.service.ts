@@ -67,10 +67,13 @@ export class CommitSelectionService {
     });
   }
 
-  selectFileDetail(file) {
+  selectFileDetail(file, sha = null) {
+    if (!sha) {
+      sha = this.selectedCommit.sha;
+    }
     this._selectedFile = file;
     this.selectedFileChange.emit(file);
-    this.electron.ipcRenderer.send('Repo-GetFileDetail', { file: file, commit: this.selectedCommit.sha });
+    this.electron.ipcRenderer.send('Repo-GetFileDetail', { file: file, commit: sha });
   }
   select(commit) {
     if (commit && (!this.selectedCommit || commit !== this.selectedCommit.sha)) {
@@ -85,6 +88,9 @@ export class CommitSelectionService {
       this.selectedCommit = null;
       this.selectionChange.emit(this.selectedCommit);
     }
+  }
+  openExternalFileView(file) {
+    this.electron.ipcRenderer.send('Repo-OpenExternalFile', {file: file, commit: this.selectedCommit.sha});
   }
   reset(commit, mode): void {
     if (mode === 'hard') {

@@ -9,13 +9,10 @@ import { FileDetail } from '../prototypes/file-detail';
 })
 export class FileViewPanelComponent implements OnInit {
 
-  detail: FileDetail;
+  @Input() detail: FileDetail;
   constructor(
-    private selection: CommitSelectionService
   ) {
-    selection.fileDetailChanged.subscribe(detail => {
-      this.detail = detail;
-    });
+
   }
 
   ngOnInit() {

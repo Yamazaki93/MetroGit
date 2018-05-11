@@ -174,4 +174,5 @@ function getFileDetail(event, arg) {
 module.exports = {
     init: init,
     getStatus: getStatus,
+    getFileDetail: getFileDetail,
 }

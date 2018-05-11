@@ -4,6 +4,7 @@ import { CommitSelectionService } from '../services/commit-selection.service';
 import { CiIntegrationService } from '../services/ci-integration.service';
 import { JiraIntegrationService } from '../../jira/services/jira-integration.service';
 import { LayoutService } from '../services/layout.service';
+import { FileDetail } from '../prototypes/file-detail';
 
 @Component({
   selector: 'app-commit-detail',
@@ -18,7 +19,7 @@ export class CommitDetailComponent implements OnInit {
   private selectedCommit: CommitDetail = null;
   private selectedTab = "";
   private selectedFile = "";
-  private fileSummary = null;
+  private fileDetail: FileDetail;
   constructor(
     private selection: CommitSelectionService,
     private ci: CiIntegrationService,
@@ -45,7 +46,7 @@ export class CommitDetailComponent implements OnInit {
       this.layout.isFilePanelOpen = true;
     });
     selection.fileDetailChanged.subscribe(newdetail => {
-      this.fileSummary = newdetail.summary;
+      this.fileDetail = newdetail;
     });
   }
 
@@ -63,5 +64,8 @@ export class CommitDetailComponent implements OnInit {
   closeFilePanel() {
     this.fileToggled = false;
     this.layout.isFilePanelOpen = this.fileToggled;
+  }
+  openExternal() {
+    this.selection.openExternalFileView(this.selectedFile);
   }
 }
