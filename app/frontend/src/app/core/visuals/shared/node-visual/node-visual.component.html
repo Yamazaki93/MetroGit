@@ -67,7 +67,7 @@
   <ng-template contextMenuItem (execute)="onPopStash()" *ngIf="node.commit.isStash">
     <span>Pop Stash</span>
   </ng-template>
-  <ng-template contextMenuItem *ngIf="node.commit.isStash">
+  <ng-template contextMenuItem (execute)="onApplyStash()" *ngIf="node.commit.isStash">
     <span>Apply Stash</span>
   </ng-template>
   <ng-template contextMenuItem (execute)="onDeleteStash()" *ngIf="node.commit.isStash">

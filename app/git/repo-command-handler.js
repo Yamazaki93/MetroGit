@@ -17,6 +17,7 @@ ipcMain.on('Repo-CommitStaged', commitStaged);
 ipcMain.on('Repo-Commit', commit);
 ipcMain.on('Repo-Stash', stash);
 ipcMain.on('Repo-Pop', pop);
+ipcMain.on('Repo-Apply', apply);
 ipcMain.on('Repo-CreateBranch', createBranch);
 ipcMain.on('Repo-Checkout', checkout);
 ipcMain.on('Repo-DiscardAll', discardAll);
@@ -185,6 +186,13 @@ function pop(event, arg) {
         } else {
             operationFailed('Repo-PopFailed', event, err);
         }
+    });
+}
+function apply(event, arg) {
+    repoService.apply(arg.index).then(res => {
+        event.sender.send('Repo-Applied', {});
+    }).catch(err => {
+        operationFailed('Repo-ApplyFailed', event, err);
     });
 }
 

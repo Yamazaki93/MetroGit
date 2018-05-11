@@ -693,6 +693,23 @@ function pop(index) {
     }
 }
 
+function apply(index) {
+    if (Repo) {
+        if (index < 0) {
+            index = 0;
+        }
+        notifyBlockingOperation(true, "Applying Stash...");
+        return Repo.refreshIndex().then(() => {
+            return NodeGit.Stash.apply(Repo, index, NodeGit.Stash.APPLY_FLAGS.APPLY_DEFAULT)
+        }).finally(oid => {
+            notifyBlockingOperation(false);
+            return Promise.all([refreshRepo(), fileWatch.getStatus()]);
+        })
+    } else {
+        return Promise.reject('NO_REPO');
+    }
+}
+
 function deleteStash(index) {
     if (Repo) {
         return NodeGit.Stash.drop(Repo, index).then(() => {
@@ -821,5 +838,6 @@ module.exports = {
     discardAll: discardAll,
     resetHard: resetHard,
     resetSoft: resetSoft,
-    deleteStash: deleteStash
+    deleteStash: deleteStash,
+    apply: apply
 }
