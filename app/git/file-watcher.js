@@ -1,10 +1,12 @@
 const { ipcMain } = require('electron');
+const path = require('path');
 const NodeGit = require('nodegit');
 var Repo;
 var window = null;
 var refreshInterval;
 
 ipcMain.on('Repo-Open', openRepo);
+ipcMain.on('Repo-GetFileDetail', getFileDetail)
 
 function init(win) {
     window = win;
@@ -102,7 +104,75 @@ function getStatus() {
     }
 }
 
+function getFileDetail(event, arg) {
+    if (Repo && arg.file && arg.commit) {
+        let file = arg.file;
+        if (arg.commit !== '00000') {
+            Repo.getCommit(arg.commit).then(x => {
+                return x.getDiff().then(diffs => {
+                    diff = diffs[0]
+                    return diff.findSimilar({ renameThreshold: 50 }).then(() => {
+                        return diff.patches();
+                    });
+                }).then(patches => {
+                    let patch;
+                    patches.forEach(p => {
+                        if (p.newFile().path() === arg.file) {
+                            patch = p;
+                        }
+                    });
+                    if (patch) {
+                        return patch.hunks()
+                    } else {
+                        return Promise.reject('FILE_NOT_FOUND');
+                    }
+                }).then(hunks => {
+                    let req = [];
+                    hunks.forEach(function (hunk) {
+                        req.push(hunk.lines());
+                    });
+                    return Promise.all(req);
+                }).then(hunks => {
+                    // console.log("diff", patch.oldFile().path(),
+                    //     patch.newFile().path());
+                    // console.log(hunk.header().trim());
+                    let result = [];
+                    hunks.forEach(lines => {
+                        result.push({
+                            lines: []
+                        });
+                        lines.forEach(function (line) {
+                            let isNewLine = String.fromCharCode(line.origin()) === '<' || String.fromCharCode(line.origin()) === '>' || String.fromCharCode(line.origin()) === '=' 
+                            result[result.length - 1].lines.push({
+                                op: String.fromCharCode(line.origin()),
+                                content: isNewLine ? line.content().trim() : line.content(),
+                                oldLineno: line.oldLineno(),
+                                newLineno: line.newLineno(),
+                            });
+                        });
+                    });
+                    return Promise.resolve(result);
+                }).then(result => {
+                    let linesAdded = 0;
+                    let linesRemoved = 0;
+                    result.forEach(h => {
+                        h.lines.forEach(l => {
+                            if(l.op === '+'){
+                                linesAdded += 1;
+                            } else if(l.op === '-') {
+                                linesRemoved += 1;
+                            }
+                        })
+                    })
+                    event.sender.send('Repo-FileDetailRetrieved', { paths: file.split('/'), hunks: result, summary:{added: linesAdded, removed: linesRemoved} });
+                });
+            });
+        }
+    }
+}
+
 module.exports = {
     init: init,
     getStatus: getStatus,
+    getFileDetail: getFileDetail,
 }

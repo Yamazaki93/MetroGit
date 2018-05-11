@@ -2,14 +2,19 @@ import { Injectable, EventEmitter, Output } from '@angular/core';
 import { ElectronService } from '../../infrastructure/electron.service';
 import { CommitDetail, WIPCommit } from '../prototypes/commit';
 import { CiIntegrationService } from './ci-integration.service';
+import { FileDetail } from '../prototypes/file-detail';
 
 @Injectable()
 export class CommitSelectionService {
 
   @Output() selectionChange = new EventEmitter<CommitDetail | WIPCommit>();
   @Output() selectingChange = new EventEmitter<boolean>();
+  @Output() selectedFileChange = new EventEmitter<string>();
+  @Output() fileDetailChanged = new EventEmitter<FileDetail>();
 
   selectedCommit: CommitDetail | WIPCommit;
+  private _selectedFile = "";
+  private _fileDetail: FileDetail;
   private _wipDetail: WIPCommit = {
     sha: "00000",
     author: "",
@@ -56,9 +61,20 @@ export class CommitSelectionService {
         this.selectionChange.emit(this.selectedCommit);
       }
     });
+    this.electron.onCD('Repo-FileDetailRetrieved', (event, arg) => {
+      this._fileDetail = arg;
+      this.fileDetailChanged.emit(this._fileDetail);
+    });
   }
 
-
+  selectFileDetail(file, sha = null) {
+    if (!sha) {
+      sha = this.selectedCommit.sha;
+    }
+    this._selectedFile = file;
+    this.selectedFileChange.emit(file);
+    this.electron.ipcRenderer.send('Repo-GetFileDetail', { file: file, commit: sha });
+  }
   select(commit) {
     if (commit && (!this.selectedCommit || commit !== this.selectedCommit.sha)) {
       if (commit === '00000') {
@@ -72,6 +88,9 @@ export class CommitSelectionService {
       this.selectedCommit = null;
       this.selectionChange.emit(this.selectedCommit);
     }
+  }
+  openExternalFileView(file) {
+    this.electron.ipcRenderer.send('Repo-OpenExternalFile', {file: file, commit: this.selectedCommit.sha});
   }
   reset(commit, mode): void {
     if (mode === 'hard') {
