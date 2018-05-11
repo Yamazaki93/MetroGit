@@ -97,8 +97,8 @@ export class CommitChangeService {
       this.electron.ipcRenderer.send('Repo-Stash', { name: name, email: email, message: message });
     }
   }
-  pop(): void {
-    this.electron.ipcRenderer.send('Repo-Pop', {});
+  pop(index = -1): void {
+    this.electron.ipcRenderer.send('Repo-Pop', {index: index});
   }
   discardAll(): void {
     this.electron.ipcRenderer.send('Repo-DiscardAll', {});

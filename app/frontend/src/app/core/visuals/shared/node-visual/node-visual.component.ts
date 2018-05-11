@@ -4,6 +4,7 @@ import { D3Service } from '../../../d3/d3.service';
 import { CommitSelectionService } from '../../../services/commit-selection.service';
 import { Subscription } from 'rxjs/Subscription';
 import { ContextMenuComponent } from 'ngx-contextmenu';
+import { CommitChangeService } from '../../../services/commit-change.service';
 
 @Component({
   // tslint:disable-next-line:component-selector
@@ -16,12 +17,12 @@ export class NodeVisualComponent implements OnDestroy {
   // tslint:disable-next-line:no-input-rename
   @Input('nodeVisual') node: Node;
   @Input('graphWidth') graphWidth = 500;
-  @ViewChild(ContextMenuComponent) public basicMenu: ContextMenuComponent;
+  @ViewChild('commitMenu') public basicMenu: ContextMenuComponent;
   private selected = false;
   private subs: Subscription;
-  constructor(private cdr: ChangeDetectorRef, private selection: CommitSelectionService) {
-    this.subs = selection.selectionChange.subscribe(commit => {
-      if (commit && commit.sha === this.node.commit.sha) {
+  constructor(private cdr: ChangeDetectorRef, private selection: CommitSelectionService, private commit: CommitChangeService) {
+    this.subs = selection.selectionChange.subscribe(cmt => {
+      if (cmt && cmt.sha === this.node.commit.sha) {
         this.selected = true;
       } else {
         this.selected = false;
@@ -41,5 +42,8 @@ export class NodeVisualComponent implements OnDestroy {
   }
   onResetSoft() {
     this.selection.reset(this.node.commit.sha, 'soft');
+  }
+  onPopStash() {
+    this.commit.pop(this.node.commit.stashIndex);
   }
 }
