@@ -1,5 +1,34 @@
 .profile-container {
     white-space: nowrap;
     text-overflow: ellipsis;
-    overflow: hidden;
+    position: relative;
+    cursor: pointer;
+    .profiles {
+        z-index: 1;
+        min-width: 130px;
+        display: none;
+        position: absolute;
+        top: 35px;
+        background: #FFF;
+        border-radius: 5px;
+        right: 0;
+        min-width: 100%;
+        min-height: 20px;
+        max-height: 300px;
+        overflow-y: auto;
+        border: solid 2px var(--gray);
+        &.toggled {
+            display: block;
+        }
+        .user {
+            color: var(--gray-dark);
+            cursor: pointer;
+            img{
+                border-radius: 50%;
+            }
+            &:hover {
+                background: rgba(0, 0, 0, 0.2);
+            }
+        }
+    }
 }

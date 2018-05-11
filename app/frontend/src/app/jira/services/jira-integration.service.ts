@@ -3,6 +3,7 @@ import { ElectronService } from '../../infrastructure/electron.service';
 import { Issue } from '../models/issue';
 import { NotificationsService } from 'angular2-notifications';
 import { StatusBarService } from '../../infrastructure/status-bar.service';
+import { Profile } from '../models/profile';
 
 @Injectable()
 export class JiraIntegrationService {
@@ -10,6 +11,7 @@ export class JiraIntegrationService {
   @Output() issueRetrieved: EventEmitter<Issue> = new EventEmitter<Issue>();
   @Output() subtaskRetrieved: EventEmitter<Issue> = new EventEmitter<Issue>();
   @Output() enabledChanged = new EventEmitter<boolean>();
+  @Output() assignableRetrieved = new EventEmitter<{ key: string, result: Profile[] }>();
   enabled = false;
   private jiraKeys = [];
   private resolutions = [];
@@ -51,6 +53,9 @@ export class JiraIntegrationService {
     electron.onCD('JIRA-CAPTCHARequired', (event, arg) => {
       noti.warn("JIRA Limiting", "You have triggered JIRA's CAPTCHA detection, please login using your browser and solve the challenge before attempting more requests");
     });
+    electron.onCD('JIRA-AssignableUsersRetrieved', (event, arg) => {
+      this.assignableRetrieved.emit(arg.result);
+    });
   }
   parseKeyFromMessage(message, detail) {
     if (this.jiraKeys.length > 0) {
@@ -79,7 +84,7 @@ export class JiraIntegrationService {
     this.electron.ipcRenderer.send('JIRA-GetIssue', { key: key });
   }
   addComment(key, body) {
-    this.electron.ipcRenderer.send('JIRA-AddComment', {key: key, body: body});
+    this.electron.ipcRenderer.send('JIRA-AddComment', { key: key, body: body });
   }
   updateIssue(key, fields, transition) {
     let data = {};
@@ -89,6 +94,9 @@ export class JiraIntegrationService {
     if (transition) {
       data['transition'] = transition;
     }
-    this.electron.ipcRenderer.send('JIRA-UpdateIssue', {key: key, data: data});
+    this.electron.ipcRenderer.send('JIRA-UpdateIssue', { key: key, data: data });
+  }
+  findAssignableUsers(key) {
+    this.electron.ipcRenderer.send('JIRA-GetAssignableUsers', { key: key });
   }
 }

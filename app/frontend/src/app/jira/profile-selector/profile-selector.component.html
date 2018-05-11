@@ -1,4 +1,13 @@
-<div class="p-2 rounded bg-dark profile-container">
+<div class="p-2 rounded bg-dark profile-container" (click)="toggleSelection()">
   <img [src]="profile.safeAvatarUrl" class="mr-1" width="24px" *ngIf="profile" />
   <span *ngIf="profile">{{profile.displayName}}</span>
+  <div class="profiles" [class.toggled]="toggled">
+    <div class="mt-2" *ngIf="loading">
+      <app-spinner [size]="20" [enabled]="loading"></app-spinner>
+    </div>
+    <div class="user p-1" *ngFor="let user of users">
+      <img [src]="user.safeAvatarUrl" class="mr-1" width="24px" />
+      <span>{{user.displayName}}</span>
+    </div>
+  </div>
 </div>

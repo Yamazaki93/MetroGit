@@ -12,6 +12,7 @@ ipcMain.on('JIRA-RepoChanged', initJira);
 ipcMain.on('JIRA-GetIssue', getIssue);
 ipcMain.on('JIRA-UpdateIssue', updateIssue);
 ipcMain.on('JIRA-AddComment', addComment);
+ipcMain.on('JIRA-GetAssignableUsers', findAssignableUsers);
 
 function init(sett, sec, win) {
     secureStorage = sec;
@@ -46,10 +47,10 @@ function initJira(event, arg) {
                         } else {
                             window.webContents.send('JIRA-OperationFailed', {});
                         }
-                    } else if(error.code === 'ECONNABORTED') {
-                        window.webContents.send('JIRA-Timeout', {error: error})
+                    } else if (error.code === 'ECONNABORTED') {
+                        window.webContents.send('JIRA-Timeout', { error: error })
                     } else {
-                        window.webContents.send('JIRA-Error', {error: error});
+                        window.webContents.send('JIRA-Error', { error: error });
                     }
                     return Promise.reject(error);
                 });
@@ -84,7 +85,7 @@ function addComment(event, arg) {
 }
 
 function getJiraIssue(key) {
-    if(conn) {
+    if (conn) {
         return conn.get(`/issue/${key}?expand=renderedFields,names,transitions`).then(result => {
             result.data.fields.description = result.data.renderedFields.description;
             return result;
@@ -103,7 +104,7 @@ function getResolution() {
 }
 
 function updateIssue(event, arg) {
-    if(conn && arg.key && arg.data) {
+    if (conn && arg.key && arg.data) {
         return conn.post(`/issue/${arg.key}/transitions`, arg.data).then(result => {
             return getIssue(event, arg);
         })
@@ -117,6 +118,15 @@ function checkStoryFields(expandedResult) {
             expandedResult.data.fields.storyPoints = expandedResult.data.fields[k];
         }
     })
+}
+
+function findAssignableUsers(event, arg) {
+    if (conn && arg.key) {
+        return conn.get(`/user/assignable/search?issueKey=${arg.key}`).then(result => {
+            let resp = { key: arg.key, result: result.data };
+            event.sender.send('JIRA-AssignableUsersRetrieved', { result: resp });
+        })
+    }
 }
 
 module.exports = {

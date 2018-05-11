@@ -43,7 +43,7 @@
         <img [src]="issue.fields.assignee.safeAvatarUrl" class="mr-1" width="24px" *ngIf="issue.fields.assignee" />
         <span *ngIf="issue.fields.assignee">{{issue.fields.assignee.displayName}}</span>
       </div> -->
-      <app-profile-selector [profile]="issue.fields.assignee"></app-profile-selector>
+      <app-profile-selector [key]="issue.key" [profile]="issue.fields.assignee"></app-profile-selector>
     </div>
     <div class="col-3" *ngIf="issue.fields.storyPoints !== undefined">
       <label>Story Points</label>

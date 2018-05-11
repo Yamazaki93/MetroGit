@@ -1,5 +1,7 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, HostListener, ElementRef } from '@angular/core';
 import { Profile } from '../models/profile';
+import { JiraIntegrationService } from '../services/jira-integration.service';
+import { DomSanitizer } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-profile-selector',
@@ -9,9 +11,41 @@ import { Profile } from '../models/profile';
 export class ProfileSelectorComponent implements OnInit {
 
   @Input() profile: Profile;
-  constructor() { }
+  @Input() key: string;
+  @HostListener('document:click') click = this.onClick;
+  private toggled = false;
+  private loading = false;
+  private users: Profile[] = [];
+  constructor(
+    private jira: JiraIntegrationService,
+    private eref: ElementRef,
+    private sanitizer: DomSanitizer,
+  ) {
+    jira.assignableRetrieved.subscribe(data => {
+      if (data.key === this.key) {
+        this.users = data.result;
+        this.users.forEach(user => {
+          user.safeAvatarUrl = this.sanitizer.bypassSecurityTrustUrl(user.avatarUrls['24x24']);
+        });
+        this.loading = false;
+      }
+    });
+  }
 
   ngOnInit() {
   }
 
+  onClick($event) {
+    if (!this.eref.nativeElement.contains(event.target)) {
+      this.toggled = false;
+    }
+  }
+  toggleSelection() {
+    this.toggled = !this.toggled;
+    if (this.toggled && this.key) {
+      this.loading = true;
+      this.users = [];
+      this.jira.findAssignableUsers(this.key);
+    }
+  }
 }
