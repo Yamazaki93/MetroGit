@@ -49,6 +49,11 @@
       <div class="full-width">
         <h5>AppVeyor - build {{appveyor.buildResults[commit.sha].build}}: {{getStatusShort(appveyor.buildResults[commit.sha].status)}}</h5>
       </div>
+      <div class="external-link mr-2" placement="left" container="body" ngbTooltip="Rebuild in AppVeyor">
+        <h5>
+            <i class="icon-play"></i>
+        </h5>
+      </div>
       <div class="external-link mr-2" placement="left" container="body" ngbTooltip="Open in AppVeyor" (click)="openAppveyor($event)">
         <h5>
           <i class="icon-external-link"></i>
