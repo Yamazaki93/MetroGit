@@ -205,9 +205,10 @@ function pullWrapper(username, password, option) {
                 return result;
             }
         }).then(result => {
-            notifyBlockingOperation(false);
             refreshRepo();
             return result;
+        }).finally(() => {
+            notifyBlockingOperation(false);
         });
     } else {
         return Promise.reject('NO_REPO')
