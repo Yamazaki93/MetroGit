@@ -122,7 +122,11 @@ function checkStoryFields(expandedResult) {
 
 function findAssignableUsers(event, arg) {
     if (conn && arg.key) {
-        return conn.get(`/user/assignable/search?issueKey=${arg.key}`).then(result => {
+        let url = `/user/assignable/search?issueKey=${arg.key}`;
+        if (arg.search) {
+            url += '&username=' + arg.search;
+        }
+        return conn.get(url).then(result => {
             let resp = { key: arg.key, result: result.data };
             event.sender.send('JIRA-AssignableUsersRetrieved', { result: resp });
         })
