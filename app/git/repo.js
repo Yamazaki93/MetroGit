@@ -603,7 +603,9 @@ function commitStaged(name, email, message) {
         let signature = NodeGit.Signature.now(name, email);
         let oid;
         let sha;
-        return Repo.index().then(index => {
+        return Repo.refreshIndex().then(() => {
+            return Repo.index()
+        }).then(index => {
             return index.write().then(() => {
                 return index.writeTree();
             });
