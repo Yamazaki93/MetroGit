@@ -17,11 +17,13 @@ ipcMain.on('Repo-CommitStaged', commitStaged);
 ipcMain.on('Repo-Commit', commit);
 ipcMain.on('Repo-Stash', stash);
 ipcMain.on('Repo-Pop', pop);
+ipcMain.on('Repo-Apply', apply);
 ipcMain.on('Repo-CreateBranch', createBranch);
 ipcMain.on('Repo-Checkout', checkout);
 ipcMain.on('Repo-DiscardAll', discardAll);
 ipcMain.on('Repo-ResetHard', resetHard);
 ipcMain.on('Repo-ResetSoft', resetSoft);
+ipcMain.on('Repo-DeleteStash', deleteStash);
 
 function init(repo, sett, sec) {
     repoService = repo;
@@ -186,6 +188,13 @@ function pop(event, arg) {
         }
     });
 }
+function apply(event, arg) {
+    repoService.apply(arg.index).then(res => {
+        event.sender.send('Repo-Applied', {});
+    }).catch(err => {
+        operationFailed('Repo-ApplyFailed', event, err);
+    });
+}
 
 function createBranch(event, arg) {
     if (arg.name && arg.commit) {
@@ -231,6 +240,16 @@ function resetSoft(event, arg) {
             event.sender.send('Repo-Resetted', {});
         }).catch(err => {
             operationFailed('Repo-ResetFailed', event, err);
+        });
+    }
+}
+
+function deleteStash(event, arg) {
+    if(arg.index !== undefined) {
+        repoService.deleteStash(arg.index).then(res => {
+            event.sender.send('Repo-StashDeleted', {});
+        }).catch(err => {
+            operationFailed('Repo-DeleteStashFailed', event, err);
         });
     }
 }

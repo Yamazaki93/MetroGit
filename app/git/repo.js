@@ -297,6 +297,7 @@ function getCommits() {
                 let commits = [];
                 let stashIndicies = [];
                 res.forEach(x => {
+                    let stashIndex = -1;
                     let isStash = false;
                     let parents = x.parents().map(p => p.toString());
                     if (stashes.indexOf(x.sha()) !== -1) {
@@ -307,6 +308,7 @@ function getCommits() {
                                 stashIndicies.push(x.parents()[i].toString());
                             }
                         }
+                        stashIndex = stashes.indexOf(x.sha());
                     }
                     let cmt = {
                         sha: x.sha(),
@@ -319,6 +321,7 @@ function getCommits() {
                         author: x.author().name(),
                         parents: parents,
                         isStash: isStash,
+                        stashIndex: stashIndex,
                     }
                     if (stashIndicies.indexOf(cmt.sha) === -1) {
                         commits.push(cmt);
@@ -675,7 +678,7 @@ function stash(name, email, message) {
 
 function pop(index) {
     if (Repo) {
-        if (index === undefined) {
+        if (index < 0) {
             index = 0;
         }
         notifyBlockingOperation(true, "Popping Stash...");
@@ -685,6 +688,33 @@ function pop(index) {
             notifyBlockingOperation(false);
             return Promise.all([refreshRepo(), fileWatch.getStatus()]);
         })
+    } else {
+        return Promise.reject('NO_REPO');
+    }
+}
+
+function apply(index) {
+    if (Repo) {
+        if (index < 0) {
+            index = 0;
+        }
+        notifyBlockingOperation(true, "Applying Stash...");
+        return Repo.refreshIndex().then(() => {
+            return NodeGit.Stash.apply(Repo, index, NodeGit.Stash.APPLY_FLAGS.APPLY_DEFAULT)
+        }).finally(oid => {
+            notifyBlockingOperation(false);
+            return Promise.all([refreshRepo(), fileWatch.getStatus()]);
+        })
+    } else {
+        return Promise.reject('NO_REPO');
+    }
+}
+
+function deleteStash(index) {
+    if (Repo) {
+        return NodeGit.Stash.drop(Repo, index).then(() => {
+            return Promise.all([refreshRepo(), fileWatch.getStatus()]);
+        });
     } else {
         return Promise.reject('NO_REPO');
     }
@@ -807,5 +837,7 @@ module.exports = {
     checkout: checkout,
     discardAll: discardAll,
     resetHard: resetHard,
-    resetSoft: resetSoft
+    resetSoft: resetSoft,
+    deleteStash: deleteStash,
+    apply: apply
 }

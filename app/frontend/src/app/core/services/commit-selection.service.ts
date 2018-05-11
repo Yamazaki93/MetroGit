@@ -41,6 +41,7 @@ export class CommitSelectionService {
     },
     virtual: true,
     isStash: false,
+    stashIndex: -1,
   };
   constructor(
     private electron: ElectronService,

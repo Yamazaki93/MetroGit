@@ -22,7 +22,8 @@ export class SubwayStationsComponent implements OnInit, AfterViewInit, OnDestroy
     this._commits = cmts;
     this.cdr.detectChanges();
   }
-  @ViewChild(ContextMenuComponent) public basicMenu: ContextMenuComponent;
+  @ViewChild('commitMenu') public basicMenu: ContextMenuComponent;
+  @ViewChild('stashMenu') public stashMenu: ContextMenuComponent;
 
 
   private _commits: Commit[];
@@ -72,7 +73,13 @@ export class SubwayStationsComponent implements OnInit, AfterViewInit, OnDestroy
       this.ctxService.show.next({
         contextMenu: this.basicMenu,
         event: $event,
-        item: item
+        item: item,
+      });
+    } else if (item.isStash) {
+      this.ctxService.show.next({
+        contextMenu: this.stashMenu,
+        event: $event,
+        item: item,
       });
     }
     $event.preventDefault();
@@ -83,5 +90,14 @@ export class SubwayStationsComponent implements OnInit, AfterViewInit, OnDestroy
   }
   onResetSoft(sha) {
     this.selection.reset(sha, 'soft');
+  }
+  onPopStash(index) {
+    this.commitChange.pop(index);
+  }
+  onApplyStash(index) {
+    this.commitChange.apply(index);
+  }
+  onDeleteStash(index) {
+    this.commitChange.deleteStash(index);
   }
 }

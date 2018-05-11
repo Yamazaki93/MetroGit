@@ -8,6 +8,7 @@ export interface Commit {
     ci: string;
     virtual: boolean;
     isStash: boolean;
+    stashIndex: number;
 }
 
 export interface CommitDetail extends Commit {
