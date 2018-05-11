@@ -68,4 +68,14 @@ export class CommitDetailComponent implements OnInit {
   openExternal() {
     this.selection.openExternalFileView(this.selectedFile);
   }
+  getShortenedPath(path) {
+    if (path.length > 55) {
+      let front = path.substring(0, 20);
+      let over = path.length - 55 - 3;
+      let back = path.substring(20 + over, path.length);
+      return `${front}...${back}`;
+    } else {
+      return path;
+    }
+  }
 }

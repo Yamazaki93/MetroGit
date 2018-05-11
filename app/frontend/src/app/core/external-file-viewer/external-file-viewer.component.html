@@ -1,7 +1,7 @@
 <div class="file-panel p-3 d-flex flex-column">
   <div class="d-flex no-shrink">
     <div class="full-width">
-      <h3>File Diff: {{path}} @ {{sha.substring(0, 6)}}
+      <h3>{{path}} @ {{sha.substring(0, 6)}}
         <span class="badge badge-success mr-1" *ngIf="fileDetail && fileDetail.summary.added">{{fileDetail.summary.added}} +</span>
         <span class="badge badge-danger mr-1" *ngIf="fileDetail && fileDetail.summary.removed">{{fileDetail.summary.removed}} -</span>
       </h3>
