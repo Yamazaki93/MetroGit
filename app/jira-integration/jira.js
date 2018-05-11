@@ -13,6 +13,7 @@ ipcMain.on('JIRA-GetIssue', getIssue);
 ipcMain.on('JIRA-UpdateIssue', updateIssue);
 ipcMain.on('JIRA-AddComment', addComment);
 ipcMain.on('JIRA-GetAssignableUsers', findAssignableUsers);
+ipcMain.on('JIRA-AssignIssue', assignIssue);
 
 function init(sett, sec, win) {
     secureStorage = sec;
@@ -130,6 +131,14 @@ function findAssignableUsers(event, arg) {
             let resp = { key: arg.key, result: result.data };
             event.sender.send('JIRA-AssignableUsersRetrieved', { result: resp });
         })
+    }
+}
+
+function assignIssue(event, arg) {
+    if (conn && arg.key && arg.name) {
+        return conn.put(`/issue/${arg.key}/assignee`, {name: arg.name}).then(result => {
+            getIssue(event, arg);
+        });
     }
 }
 

@@ -117,7 +117,7 @@ export class JiraDetailComponent implements OnInit, OnDestroy {
       this.electron.openUrlExternal(`${baseLinks[0]}/browse/${this.issue.key}`);
     }
   }
-  onTransitioning() {
+  onRequestPosted() {
     this.loading = true;
   }
   addComment() {

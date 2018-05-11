@@ -99,4 +99,7 @@ export class JiraIntegrationService {
   findAssignableUsers(key, search = "") {
     this.electron.ipcRenderer.send('JIRA-GetAssignableUsers', { key: key, search: search });
   }
+  assignIssue(key, name) {
+    this.electron.ipcRenderer.send('JIRA-AssignIssue', { key: key, name: name });
+  }
 }

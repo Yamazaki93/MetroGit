@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, HostListener, ElementRef } from '@angular/core';
+import { Component, OnInit, Input, HostListener, ElementRef, Output, EventEmitter } from '@angular/core';
 import { Profile } from '../models/profile';
 import { JiraIntegrationService } from '../services/jira-integration.service';
 import { DomSanitizer } from '@angular/platform-browser';
@@ -13,6 +13,7 @@ export class ProfileSelectorComponent implements OnInit {
   @Input() profile: Profile;
   @Input() key: string;
   @HostListener('document:click') click = this.onClick;
+  @Output() profileSelected = new EventEmitter();
   private toggled = false;
   private loading = false;
   private users: Profile[] = [];
@@ -47,7 +48,7 @@ export class ProfileSelectorComponent implements OnInit {
     if (this.toggled && this.key) {
       this.loading = true;
       this.users = [];
-      this.jira.findAssignableUsers(this.key);
+      this.jira.findAssignableUsers(this.key, this.searchName);
     }
   }
   onInputClick($event) {
@@ -56,5 +57,9 @@ export class ProfileSelectorComponent implements OnInit {
   onSearchChanged() {
     this.loading = true;
     this.jira.findAssignableUsers(this.key, this.searchName);
+  }
+  onSelectProfile(name) {
+    this.profileSelected.emit();
+    this.jira.assignIssue(this.key, name);
   }
 }

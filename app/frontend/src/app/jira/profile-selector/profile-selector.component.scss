@@ -1,7 +1,10 @@
 .profile-container {
-    white-space: nowrap;
-    text-overflow: ellipsis;
     position: relative;
+    .name-container {
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+    }
     cursor: pointer;
     .profiles {
         z-index: 1;
@@ -23,7 +26,7 @@
         .user {
             color: var(--gray-dark);
             cursor: pointer;
-            img{
+            img {
                 border-radius: 50%;
             }
             &:hover {

@@ -1,16 +1,18 @@
 <div class="p-2 rounded bg-dark profile-container" (click)="toggleSelection()">
-  <img [src]="profile.safeAvatarUrl" class="mr-1" width="24px" *ngIf="profile" />
-  <span *ngIf="profile">{{profile.displayName}}</span>
+  <div class="name-container">
+    <img [src]="profile.safeAvatarUrl" class="mr-1" width="24px" *ngIf="profile" />
+    <span *ngIf="profile">{{profile.displayName}}</span>
+  </div>
   <div class="profiles" [class.toggled]="toggled">
     <div class="p-1">
       <input [(ngModel)]="searchName" (input)="onSearchChanged()" class="form-control" type="text" (click)="onInputClick($event)"
-        placeholder="Search...">
+        placeholder="Type to search...">
     </div>
     <div class="mt-2" *ngIf="loading">
       <app-spinner [size]="20" [enabled]="loading"></app-spinner>
     </div>
     <div *ngIf="!loading">
-      <div class="user d-flex p-1" *ngFor="let user of users">
+      <div class="user d-flex p-1" *ngFor="let user of users" (click)="onSelectProfile(user.name)">
         <div>
           <img [src]="user.safeAvatarUrl" class="mr-1" width="32px" />
         </div>
