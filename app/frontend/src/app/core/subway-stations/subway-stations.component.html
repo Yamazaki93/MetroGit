@@ -1,5 +1,6 @@
 <div class="commit-info-container">
-  <div class="commit-info" [style.height.px]="height" *ngFor="let commit of _commits" [id]="'commit-info-' + commit.sha" (click)="select(commit.sha)" (contextmenu)="tryOpenMenu($event, commit)">
+  <div class="commit-info" [style.height.px]="height" *ngFor="let commit of _commits" [id]="'commit-info-' + commit.sha" (click)="select(commit.sha)"
+    (contextmenu)="tryOpenMenu($event, commit)">
     <div class="background" [class.selected]="commit.sha === selected"></div>
     <div class="commit-info-detail-container d-flex">
       <div class="ml-1 committer text-center" [style.background]="getColorByAuthor(commit)" *ngIf="!commit.virtual">
@@ -22,11 +23,22 @@
     </div>
   </div>
 </div>
-<context-menu>
+<context-menu #commitMenu>
   <ng-template contextMenuItem (execute)="onResetSoft($event.item.sha)">
     <span class="">Reset Soft: Keep All Changes</span>
   </ng-template>
   <ng-template contextMenuItem (execute)="onResetHard($event.item.sha)">
     <span class="text-danger">Reset Hard: Discard All Changes</span>
+  </ng-template>
+</context-menu>
+<context-menu #stashMenu>
+  <ng-template contextMenuItem (execute)="onPopStash($event.item.stashIndex)">
+    <span>Pop Stash</span>
+  </ng-template>
+  <ng-template contextMenuItem (execute)="onApplyStash($event.item.stashIndex)">
+    <span>Apply Stash</span>
+  </ng-template>
+  <ng-template contextMenuItem (execute)="onDeleteStash($event.item.stashIndex)">
+    <span class="text-danger">Delete Stash</span>
   </ng-template>
 </context-menu>
