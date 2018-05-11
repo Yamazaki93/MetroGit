@@ -22,6 +22,7 @@ ipcMain.on('Repo-Checkout', checkout);
 ipcMain.on('Repo-DiscardAll', discardAll);
 ipcMain.on('Repo-ResetHard', resetHard);
 ipcMain.on('Repo-ResetSoft', resetSoft);
+ipcMain.on('Repo-DeleteStash', deleteStash);
 
 function init(repo, sett, sec) {
     repoService = repo;
@@ -231,6 +232,16 @@ function resetSoft(event, arg) {
             event.sender.send('Repo-Resetted', {});
         }).catch(err => {
             operationFailed('Repo-ResetFailed', event, err);
+        });
+    }
+}
+
+function deleteStash(event, arg) {
+    if(arg.index !== undefined) {
+        repoService.deleteStash(arg.index).then(res => {
+            event.sender.send('Repo-StashDeleted', {});
+        }).catch(err => {
+            operationFailed('Repo-DeleteStashFailed', event, err);
         });
     }
 }

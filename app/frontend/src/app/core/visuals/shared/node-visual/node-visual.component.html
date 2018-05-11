@@ -70,7 +70,7 @@
   <ng-template contextMenuItem *ngIf="node.commit.isStash">
     <span>Apply Stash</span>
   </ng-template>
-  <ng-template contextMenuItem *ngIf="node.commit.isStash">
+  <ng-template contextMenuItem (execute)="onDeleteStash()" *ngIf="node.commit.isStash">
     <span class="text-danger">Delete Stash</span>
   </ng-template>
 </context-menu>

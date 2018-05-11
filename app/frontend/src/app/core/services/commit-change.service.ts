@@ -98,7 +98,10 @@ export class CommitChangeService {
     }
   }
   pop(index = -1): void {
-    this.electron.ipcRenderer.send('Repo-Pop', {index: index});
+    this.electron.ipcRenderer.send('Repo-Pop', { index: index });
+  }
+  deleteStash(index): void {
+    this.electron.ipcRenderer.send('Repo-DeleteStash', { index: index });
   }
   discardAll(): void {
     this.electron.ipcRenderer.send('Repo-DiscardAll', {});

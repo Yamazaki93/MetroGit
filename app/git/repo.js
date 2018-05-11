@@ -693,6 +693,16 @@ function pop(index) {
     }
 }
 
+function deleteStash(index) {
+    if (Repo) {
+        return NodeGit.Stash.drop(Repo, index).then(() => {
+            return Promise.all([refreshRepo(), fileWatch.getStatus()]);
+        });
+    } else {
+        return Promise.reject('NO_REPO');
+    }
+}
+
 function createBranch(name, commit, force) {
     if (Repo) {
         if (force === undefined) {
@@ -810,5 +820,6 @@ module.exports = {
     checkout: checkout,
     discardAll: discardAll,
     resetHard: resetHard,
-    resetSoft: resetSoft
+    resetSoft: resetSoft,
+    deleteStash: deleteStash
 }

@@ -46,4 +46,7 @@ export class NodeVisualComponent implements OnDestroy {
   onPopStash() {
     this.commit.pop(this.node.commit.stashIndex);
   }
+  onDeleteStash() {
+    this.commit.deleteStash(this.node.commit.stashIndex);
+  }
 }
