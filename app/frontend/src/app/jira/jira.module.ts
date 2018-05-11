@@ -8,6 +8,8 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { TransitionControlComponent } from './transition-control/transition-control.component';
 import { AddCommentPromptComponent } from './add-comment-prompt/add-comment-prompt.component';
 import { FormsModule } from '@angular/forms';
+import { ProfileSelectorComponent } from './profile-selector/profile-selector.component';
+import { ProfileFilterPipe } from './profile-selector/profile-filter';
 
 
 @NgModule({
@@ -24,6 +26,6 @@ import { FormsModule } from '@angular/forms';
     AddCommentPromptComponent
   ],
   exports: [ JiraDetailComponent ],
-  declarations: [JiraDetailComponent, JiraRichTextComponent, TransitionControlComponent, AddCommentPromptComponent]
+  declarations: [JiraDetailComponent, JiraRichTextComponent, TransitionControlComponent, AddCommentPromptComponent, ProfileSelectorComponent, ProfileFilterPipe]
 })
 export class JiraModule { }
