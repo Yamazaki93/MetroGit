@@ -6,6 +6,7 @@ export class LayoutService {
   isNavToggled = true;
   isLocalShown = true;
   isRemoteShown = true;
+  isTagsShown = true;
   isDetailPanelOpen = false;
 
   set isFilePanelOpen(val) {

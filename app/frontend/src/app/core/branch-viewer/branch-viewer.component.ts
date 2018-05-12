@@ -22,6 +22,7 @@ export class BranchViewerComponent implements OnInit {
   branchTarget = "";
   showLocal = true;
   showRemote = true;
+  showTags = true;
   @ViewChild('openRepoPanel') openRepoPanel: OpenRepoPanelComponent;
   constructor(
     private repoService: RepoService,
@@ -78,6 +79,10 @@ export class BranchViewerComponent implements OnInit {
   }
   toggleOpenRepo(): void {
     this.openRepoPanel.toggled = !this.openRepoPanel.toggled;
+  }
+  toggleOpenTags(): void {
+    this.showTags = !this.showTags;
+    this.layout.isTagsShown = this.showTags;
   }
   goToSettings(): void {
     this.route.navigateByUrl('/settings');
