@@ -81,7 +81,7 @@ export class BranchViewerComponent implements OnInit {
   toggleOpenRepo(): void {
     this.openRepoPanel.toggled = !this.openRepoPanel.toggled;
   }
-  toggleOpenTags(): void {
+  toggleTags(): void {
     this.showTags = !this.showTags;
     this.layout.isTagsShown = this.showTags;
   }
