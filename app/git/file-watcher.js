@@ -1,4 +1,5 @@
 const { ipcMain } = require('electron');
+const { requireArgParams } = require('../infrastructure/handler-helper');
 const path = require('path');
 const NodeGit = require('nodegit');
 var Repo;
@@ -6,7 +7,7 @@ var window = null;
 var refreshInterval;
 
 ipcMain.on('Repo-Open', openRepo);
-ipcMain.on('Repo-GetFileDetail', getFileDetailWrapper)
+ipcMain.on('Repo-GetFileDetail', requireArgParams(getFileDetailWrapper, ['file', 'commit']))
 
 function init(win) {
     window = win;
@@ -105,7 +106,7 @@ function getStatus() {
 }
 
 function getFileDetailWrapper(event, arg) {
-    if (Repo && arg.file && arg.commit) {
+    if (Repo) {
         getFileDetail(arg.file, arg.commit).then(result => {
             event.sender.send('Repo-FileDetailRetrieved', result);
         })
