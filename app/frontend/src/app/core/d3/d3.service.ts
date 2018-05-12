@@ -210,7 +210,7 @@ export class D3Service {
       branchLines.forEach(bl => {
         if (!node.processed) {
           // now a bl can be closed if all the commits in there is after this node
-          let allAfter = bl.nodes.every(bln => nodes.indexOf(bln) > nodes.indexOf(node));
+          // let allAfter = bl.nodes.every(bln => nodes.indexOf(bln) > nodes.indexOf(node));
           // check if any parent is above this node but that node is after this node
           // let's see if this works better
           // let parentAbove = bl.nodes.find(bln => {
@@ -220,8 +220,11 @@ export class D3Service {
           //     return (!bln.commit.parents.every(parent => nodes.indexOf(nodeDict[parent]) > nodes.indexOf(node)) && nodes.indexOf(bln) > nodes.indexOf(node));
           //   }
           // });
-          if (allAfter) {
-            bl.open = false;
+          let lastCross = !bl.nodes[bl.nodes.length - 1].commit.parents.every(parent => {
+            return nodes.indexOf(nodeDict[parent]) > nodes.indexOf(node);
+          });
+          if (lastCross) {
+            //bl.open = false;
           }
 
           if (!bl.open) {
@@ -259,26 +262,31 @@ export class D3Service {
     function processParents(n: Node, bl: BranchLine) {
       // pecial case for it's parents, always put the first with itself
       let parent0 = nodeDict[n.commit.parents[0]];
+      let processGrandparent0 = false;
       if (parent0 && !parent0.processed) {
         bl.nodes.push(parent0);
         if (nodeDict[n.commit.parents[0]].commit.parents.length > 1) {
-          processParents(nodeDict[n.commit.parents[0]], bl);
+          processGrandparent0 = true;
         }
         nodeDict[n.commit.parents[0]].processed = true;
       }
       // if there's a second parent, try to place that too
       let parent1 = nodeDict[n.commit.parents[1]];
+      let newbl;
+      let processGrandparent = false;
       if (parent1 && !parent1.processed) {
         if (!placeNodeInExisting(parent1)) {
-          let processGrandparent = false;
           if (parent1.commit.parents.length > 1) {
             processGrandparent = true;
           }
-          let newbl = placeNodeInNewOrClosed(parent1);
-          if (processGrandparent) {
-            processParents(parent1, newbl);
-          }
+          newbl = placeNodeInNewOrClosed(parent1);
         }
+      }
+      if (processGrandparent0) {
+        processParents(nodeDict[n.commit.parents[0]], bl);
+      }
+      if (processGrandparent) {
+        processParents(parent1, newbl);
       }
     }
     nodes.forEach((n, i) => {
