@@ -209,9 +209,18 @@ export class D3Service {
       let addedToBl = null;
       branchLines.forEach(bl => {
         if (!node.processed) {
-          // now a bl can be closed if all commits in there is after this node
-          let allAfter = bl.nodes.every(bln => nodes.indexOf(bln) > nodes.indexOf(node));
-          if (allAfter) {
+          // now a bl can be closed if all the commits in there is after this node
+          // let allAfter = bl.nodes.every(bln => nodes.indexOf(bln) > nodes.indexOf(node));
+          // check if any parent is above this node but that node is after this node
+          // let's see if this works better
+          let parentAbove = bl.nodes.find(bln => {
+            if (!bln.commit.parents.length) {
+              return false;
+            } else {
+              return (!bln.commit.parents.every(parent => nodes.indexOf(nodeDict[parent]) > nodes.indexOf(node)) && nodes.indexOf(bln) > nodes.indexOf(node));
+            }
+          });
+          if (!parentAbove) {
             bl.open = false;
           }
 
