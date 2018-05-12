@@ -63,7 +63,7 @@ export class BranchListComponent implements OnInit, AfterViewInit {
     if (paths.length === 1) {
       if (folder.items.map(_ => _.display).indexOf(paths[0]) === -1) {
         branch.padding = 15;
-        branch.icon = 'git-branch';
+        branch.icon = branch.isTag ? 'tag' : 'git-branch';
         branch.display = paths[0];
         folder.items.push(branch);
         folder.items.sort(this.order);

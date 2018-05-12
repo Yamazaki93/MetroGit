@@ -17,6 +17,7 @@ export class BranchViewerComponent implements OnInit {
   refs = [];
   remote = [];
   local = [];
+  tags = [];
   repoName = "";
   branchName = "";
   branchTarget = "";
@@ -94,11 +95,14 @@ export class BranchViewerComponent implements OnInit {
   updateReferences(refs) {
     this.remote = [];
     this.local = [];
+    this.tags = [];
     refs.forEach((r) => {
       if (r.isRemote) {
         this.remote.push(r);
       } else if (r.isBranch) {
         this.local.push(r);
+      } else if (r.isTag) {
+        this.tags.push(r);
       }
     });
   }

@@ -423,6 +423,7 @@ function getReferences() {
                     target: ref.target().toString(),
                     isBranch: ref.isBranch(),
                     isRemote: ref.isRemote(),
+                    isTag: ref.isTag(),
                     name: ref.name(),
                     shorthand: ref.shorthand(),
                     display: display
