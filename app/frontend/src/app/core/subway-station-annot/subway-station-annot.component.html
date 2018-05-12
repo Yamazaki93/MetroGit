@@ -8,10 +8,11 @@
         <span class="ml-1">{{branch.names[0].display}}</span>
         <span class="ml-2" *ngIf="branch.names.length > 1">1+</span>
       </li>
-      <li class="detail" [style.background-color]="branch.color" *ngFor="let name of branch.names" (dblclick)="checkout(name)">
+      <li class="detail mb-1" [style.background-color]="branch.color" *ngFor="let name of branch.names" (dblclick)="checkout(name)">
         <i class="icon-check mr-1" *ngIf="name.current"></i>
         <i class="icon-cloud mr-1" *ngIf="name.isRemote"></i>
         <i class="icon-monitor mr-1" *ngIf="name.isBranch"></i>
+        <i class="icon-tag" *ngIf="name.isTag"></i>
         <span class="ml-1">{{name.display}}</span>
       </li>
     </ul>

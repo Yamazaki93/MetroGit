@@ -9,6 +9,7 @@ import { Prompt } from '../../infrastructure/prompt';
 export class TagPromptComponent implements OnInit, Prompt {
 
   toClose = new EventEmitter();
+  toCreate = new EventEmitter<{sha: string, name: string}>();
   sha = "";
   private tagName = "";
   constructor() { }
@@ -17,7 +18,8 @@ export class TagPromptComponent implements OnInit, Prompt {
   }
 
   enter() {
-
+    this.toCreate.emit({sha: this.sha, name: this.tagName});
+    this.toClose.emit();
   }
   close() {
     this.toClose.emit();

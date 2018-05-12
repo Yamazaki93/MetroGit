@@ -418,6 +418,8 @@ function getReferences() {
                 } else if (ref.isRemote()) {
                     let names = ref.shorthand().split('/');
                     display = names.splice(1, names.length).join('/');
+                } else if (ref.isTag()) {
+                    display = ref.shorthand();
                 }
                 return {
                     target: ref.target().toString(),
@@ -823,7 +825,9 @@ function createTag(targetCommit, name) {
     if(Repo) {
         let signature = getCurrentSignature();
         return Repo.getCommit(targetCommit).then(cmt => {
-            return NodeGit.Tag.create(Repo, name, cmt, signature);
+            return NodeGit.Tag.createLightweight(Repo, name, cmt, 1);
+        }).then(() => {
+            return refreshRepo();
         });
     } else {
         return Promise.reject('NO_REPO')

@@ -106,5 +106,8 @@ export class CommitSelectionService {
   createTag(commit): void {
     let compt = this.promptInj.injectComponent(TagPromptComponent);
     compt.sha = commit;
+    compt.toCreate.subscribe(info => {
+      this.electron.ipcRenderer.send('Repo-CreateTag', {targetCommit: info.sha, name: info.name});
+    });
   }
 }

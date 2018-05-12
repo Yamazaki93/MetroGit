@@ -50,7 +50,9 @@ export class SubwayStationAnnotComponent implements OnInit {
   }
 
   checkout(branchInfo) {
-    this.repo.checkout(branchInfo.shorthand);
+    if (!branchInfo.isTag) {
+      this.repo.checkout(branchInfo.shorthand);
+    }
   }
 
   updateBranchInfo(): void {

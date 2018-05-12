@@ -257,7 +257,7 @@ function deleteStash(event, arg) {
 
 function createTag(event, arg) {
     if(arg.targetCommit && arg.name) {
-        repoService.createTag(arg.name, arg.targetCommit).then(res => {
+        repoService.createTag(arg.targetCommit, arg.name).then(res => {
             event.sender.send('Repo-TagCreated', {});
         }).catch(err => {
             operationFailed('Repo-CreateTagFailed', event, err);
