@@ -30,6 +30,9 @@
   <ng-template contextMenuItem (execute)="onResetHard($event.item.sha)">
     <span class="text-danger">Reset Hard: Discard All Changes</span>
   </ng-template>
+  <ng-template contextMenuItem (execute)="onCreateTag($event.item.sha)">
+    <span>Create Tag Here</span>
+  </ng-template>
 </context-menu>
 <context-menu #stashMenu>
   <ng-template contextMenuItem (execute)="onPopStash($event.item.stashIndex)">
