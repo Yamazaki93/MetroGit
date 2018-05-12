@@ -96,7 +96,9 @@ export class SubwayStationAnnotComponent implements OnInit {
       }
     });
   }
-
+  trackBy(index, item) {
+    return item.target;
+  }
 }
 
 interface BranchInfo {
