@@ -3,6 +3,8 @@ import { ElectronService } from '../../infrastructure/electron.service';
 import { CommitDetail, WIPCommit } from '../prototypes/commit';
 import { CiIntegrationService } from './ci-integration.service';
 import { FileDetail } from '../prototypes/file-detail';
+import { PromptInjectorService } from '../../infrastructure/prompt-injector.service';
+import { TagPromptComponent } from '../tag-prompt/tag-prompt.component';
 
 @Injectable()
 export class CommitSelectionService {
@@ -45,6 +47,7 @@ export class CommitSelectionService {
   };
   constructor(
     private electron: ElectronService,
+    private promptInj: PromptInjectorService,
   ) {
     this.electron.onCD('Repo-CommitDetailRetrieved', (event, arg) => {
       this.selectedCommit = arg.commit;
@@ -100,5 +103,8 @@ export class CommitSelectionService {
       this.electron.ipcRenderer.send('Repo-ResetSoft', { commit: commit });
     }
   }
-
+  createTag(commit): void {
+    let compt = this.promptInj.injectComponent(TagPromptComponent);
+    compt.sha = commit;
+  }
 }

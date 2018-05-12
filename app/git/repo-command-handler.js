@@ -24,6 +24,7 @@ ipcMain.on('Repo-DiscardAll', discardAll);
 ipcMain.on('Repo-ResetHard', resetHard);
 ipcMain.on('Repo-ResetSoft', resetSoft);
 ipcMain.on('Repo-DeleteStash', deleteStash);
+ipcMain.on('Repo-CreateTag', createTag);
 
 function init(repo, sett, sec) {
     repoService = repo;
@@ -250,6 +251,16 @@ function deleteStash(event, arg) {
             event.sender.send('Repo-StashDeleted', {});
         }).catch(err => {
             operationFailed('Repo-DeleteStashFailed', event, err);
+        });
+    }
+}
+
+function createTag(event, arg) {
+    if(arg.targetCommit && arg.name) {
+        repoService.createTag(arg.name, arg.targetCommit).then(res => {
+            event.sender.send('Repo-TagCreated', {});
+        }).catch(err => {
+            operationFailed('Repo-CreateTagFailed', event, err);
         });
     }
 }

@@ -63,6 +63,9 @@
   <ng-template contextMenuItem (execute)="onResetHard()" *ngIf="!node.commit.isStash">
     <span class="text-danger">Reset Hard: Discard All Changes</span>
   </ng-template>
+  <ng-template contextMenuItem (execute)="onCreateTag()" *ngIf="!node.commit.isStash">
+    <span>Create Tag Here</span>
+  </ng-template>
   <!-- Stash -->
   <ng-template contextMenuItem (execute)="onPopStash()" *ngIf="node.commit.isStash">
     <span>Pop Stash</span>

@@ -819,6 +819,17 @@ function resetSoft(commit) {
     }
 }
 
+function createTag(targetCommit, name) {
+    if(Repo) {
+        let signature = getCurrentSignature();
+        return Repo.getCommit(targetCommit).then(cmt => {
+            return NodeGit.Tag.create(Repo, name, cmt, signature);
+        });
+    } else {
+        return Promise.reject('NO_REPO')
+    }
+}
+
 module.exports = {
     init: init,
     openRepo: openRepo,
@@ -840,5 +851,6 @@ module.exports = {
     resetHard: resetHard,
     resetSoft: resetSoft,
     deleteStash: deleteStash,
-    apply: apply
+    apply: apply,
+    createTag: createTag,
 }

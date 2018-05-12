@@ -40,6 +40,7 @@ import { CreateBranchPromptComponent } from './create-branch-prompt/create-branc
 import { ContextMenuModule } from 'ngx-contextmenu';
 import { FileViewPanelComponent } from './file-view-panel/file-view-panel.component';
 import { ExternalFileViewerComponent } from './external-file-viewer/external-file-viewer.component';
+import { TagPromptComponent } from './tag-prompt/tag-prompt.component';
 
 
 @NgModule({
@@ -57,8 +58,9 @@ import { ExternalFileViewerComponent } from './external-file-viewer/external-fil
     SshPasswordPromptComponent,
     ForcePushPromptComponent,
     CreateBranchPromptComponent,
+    TagPromptComponent,
   ],
-  declarations: [BranchViewerComponent, GitViewComponent, SubwayComponent, SubwayStationsComponent, SubwayMapVisualComponent, NodeVisualComponent, LinkVisualComponent, SubwayStationAnnotComponent, ActionToolbarComponent, OpenRepoPanelComponent, StatusBarComponent, PromptComponent, EnterLoginPromptComponent, PromptContainerDirective, BranchListComponent, BranchItemComponent, SshPasswordPromptComponent, CommitDetailComponent, CommitDetailInfoComponent, CommitDetailCiComponent, CiConsoleOutputComponent, ForcePushPromptComponent, CreateBranchPromptComponent, FileViewPanelComponent, ExternalFileViewerComponent],
+  declarations: [BranchViewerComponent, GitViewComponent, SubwayComponent, SubwayStationsComponent, SubwayMapVisualComponent, NodeVisualComponent, LinkVisualComponent, SubwayStationAnnotComponent, ActionToolbarComponent, OpenRepoPanelComponent, StatusBarComponent, PromptComponent, EnterLoginPromptComponent, PromptContainerDirective, BranchListComponent, BranchItemComponent, SshPasswordPromptComponent, CommitDetailComponent, CommitDetailInfoComponent, CommitDetailCiComponent, CiConsoleOutputComponent, ForcePushPromptComponent, CreateBranchPromptComponent, FileViewPanelComponent, ExternalFileViewerComponent, TagPromptComponent],
   exports: [RouterModule],
   providers: [D3Service, RepoService, LayoutService, CredentialsService, CiIntegrationService, CommitSelectionService, AppveyorCiService, CommitChangeService],
 })
