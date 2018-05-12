@@ -12,14 +12,21 @@ function init(fw){
 function open(event, arg) {
     if(arg.file && arg.commit) {
         let win = new BrowserWindow({});
-        win.setMenu(null);
-        win.loadURL(url.format({
+        //win.setMenu(null);
+        let address = url.format({
             pathname:  path.join(__dirname, '../frontend/dist/index.html'),
-            hash: `/file/${arg.commit}/${arg.file}`,
+            hash: `/file/${arg.commit}`,
             protocol: 'file:',
             slashes: true,
-        }))
+        });
+        win.webContents.once('did-finish-load', () => {
+            fileWatch.getFileDetail(arg.file, arg.commit).then(result => {
+                win.webContents.send('Repo-FileDetailRetrieved', result);
+            })
+        })
+        win.loadURL(address);
         win.maximize();
+
     }
 }
 
