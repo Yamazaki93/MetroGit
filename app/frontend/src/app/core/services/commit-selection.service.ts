@@ -5,6 +5,7 @@ import { CiIntegrationService } from './ci-integration.service';
 import { FileDetail } from '../prototypes/file-detail';
 import { PromptInjectorService } from '../../infrastructure/prompt-injector.service';
 import { TagPromptComponent } from '../tag-prompt/tag-prompt.component';
+import { NotificationsService } from 'angular2-notifications';
 
 @Injectable()
 export class CommitSelectionService {
@@ -48,6 +49,7 @@ export class CommitSelectionService {
   constructor(
     private electron: ElectronService,
     private promptInj: PromptInjectorService,
+    private noti: NotificationsService,
   ) {
     this.electron.onCD('Repo-CommitDetailRetrieved', (event, arg) => {
       this.selectedCommit = arg.commit;
@@ -68,6 +70,9 @@ export class CommitSelectionService {
     this.electron.onCD('Repo-FileDetailRetrieved', (event, arg) => {
       this._fileDetail = arg;
       this.fileDetailChanged.emit(this._fileDetail);
+    });
+    this.electron.onCD('Repo-TagCreated', (event, arg) => {
+      this.noti.success("Tag Created", `Tag ${arg.name} created successfully. Click here to publish it to remote`);
     });
   }
 

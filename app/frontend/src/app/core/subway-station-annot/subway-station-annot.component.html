@@ -5,6 +5,7 @@
         <i class="icon-check mr-1" *ngIf="branch.names[0].current"></i>
         <i class="icon-cloud mr-1" *ngIf="branch.names[0].isRemote"></i>
         <i class="icon-monitor mr-1" *ngIf="branch.names[0].isBranch"></i>
+        <i class="icon-tag" *ngIf="branch.names[0].isTag"></i>
         <span class="ml-1">{{branch.names[0].display}}</span>
         <span class="ml-2" *ngIf="branch.names.length > 1">1+</span>
       </li>
