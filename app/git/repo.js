@@ -293,7 +293,7 @@ function getCommits() {
             stashes.push(id.toString());
             walker.push(id);
         }).then(() => {
-            return walker.getCommits(2500).then(res => {
+            return walker.getCommits(500).then(res => {
                 let commits = [];
                 let stashIndicies = [];
                 res.forEach(x => {
