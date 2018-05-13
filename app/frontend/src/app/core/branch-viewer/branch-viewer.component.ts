@@ -63,18 +63,9 @@ export class BranchViewerComponent implements OnInit {
         this.toggleNavigation();
       }
     });
-    this.hotkeys.add(new Hotkey('shift+left', (event: KeyboardEvent): boolean => {
-      if (this.toggled) {
-        this.toggleNavigation();
-      }
-      return false;
-    }, undefined, "Minimize left panel"));
-    this.hotkeys.add(new Hotkey('shift+right', (event: KeyboardEvent): boolean => {
-      if (!this.toggled) {
-        this.toggleNavigation();
-      }
-      return false;
-    }, undefined, "Expand left panel"));
+    layout.navPanelChanged.subscribe(navOpen => {
+      this.toggled = navOpen;
+    });
   }
 
   ngOnInit() {
