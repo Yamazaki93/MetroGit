@@ -8,6 +8,7 @@ import { NotificationsService } from 'angular2-notifications';
 import { Router } from '@angular/router';
 import { CredentialsService } from '../services/credentials.service';
 import { CommitChangeService } from '../services/commit-change.service';
+import { HotkeysService, Hotkey } from 'angular2-hotkeys';
 
 @Component({
   selector: 'app-commit-detail-info',
@@ -39,7 +40,7 @@ export class CommitDetailInfoComponent implements OnInit {
     private selection: CommitSelectionService,
     private noti: NotificationsService,
     private cred: CredentialsService,
-    private commitChange: CommitChangeService
+    private commitChange: CommitChangeService,
   ) {
     this.newCommitMessage = this.commitChange.newCommitMessage;
     this.newCommitDetail = this.commitChange.newCommitDetail;
@@ -101,13 +102,7 @@ export class CommitDetailInfoComponent implements OnInit {
     this.commitChange.discardAll();
   }
   commitChanges() {
-    if (!(<WIPCommit>this.commit).staged.length) {
-      let unstagedPath = (<WIPCommit>this.commit).unstaged.map(s => s.path);
-      this.commitChange.commit(unstagedPath);
-    } else {
-      let stagedPaths = (<WIPCommit>this.commit).staged.map(s => s.path);
-      this.commitChange.commitStaged();
-    }
+    this.commitChange.tryCommit();
   }
   fillKeyIfNeeded() {
     if (this._message.length === 0 && this.commitChange.defaultKey) {
@@ -116,5 +111,11 @@ export class CommitDetailInfoComponent implements OnInit {
   }
   openFileDetails(file) {
     this.selection.selectFileDetail(file);
+  }
+  onKeyDown($event) {
+    // keyboard code 83 = s;
+    if ($event.keyCode === 83 && $event.ctrlKey) {
+      this.commitChange.tryCommit();
+    }
   }
 }

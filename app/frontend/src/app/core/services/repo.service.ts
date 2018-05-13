@@ -9,6 +9,7 @@ import { Router } from '@angular/router';
 import { ForcePushPromptComponent } from '../force-push-prompt/force-push-prompt.component';
 import { CommitChangeService } from './commit-change.service';
 import { CreateBranchPromptComponent } from '../create-branch-prompt/create-branch-prompt.component';
+import { HotkeysService, Hotkey } from 'angular2-hotkeys';
 
 @Injectable()
 export class RepoService {
@@ -56,7 +57,8 @@ export class RepoService {
     private promptIj: PromptInjectorService,
     private cred: CredentialsService,
     private route: Router,
-    private commitChange: CommitChangeService
+    private commitChange: CommitChangeService,
+    private hotkeys: HotkeysService,
   ) {
   }
 
@@ -132,7 +134,7 @@ export class RepoService {
         this.skipAuthError(arg.detail);
       }
       this.pulled.emit();
-      this._pendingOperation = this.pullFFOnly;
+      this._pendingOperation = this.pull;
     });
     this.electron.onCD('Repo-PushFailed', (event, arg) => {
       if (arg.detail === 'FORCE_REQUIRED') {
@@ -213,6 +215,14 @@ export class RepoService {
     this.commitChange.messageChange.subscribe(msg => {
       this._wipCommit.message = msg;
     });
+    this.hotkeys.add(new Hotkey('ctrl+shift+up', (event: KeyboardEvent): boolean => {
+      this.push();
+      return false;
+    }, undefined, "Push"));
+    this.hotkeys.add(new Hotkey('ctrl+shift+down', (event: KeyboardEvent): boolean => {
+      this.pull();
+      return false;
+    }, undefined, "Pull"));
   }
 
   getCommitsWithWIP() {
@@ -266,7 +276,7 @@ export class RepoService {
     this.electron.ipcRenderer.send('Repo-Fetch', { username: this.cred.username, password: this.cred.password });
   }
 
-  pullFFOnly(): void {
+  pull(): void {
     this.electron.ipcRenderer.send('Repo-Pull', { username: this.cred.username, password: this.cred.password, option: this.pulloption });
   }
 

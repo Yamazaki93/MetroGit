@@ -44,7 +44,7 @@ export class ActionToolbarComponent implements OnInit {
 
   pull() {
     this.pulling = true;
-    this.repo.pullFFOnly();
+    this.repo.pull();
   }
   push() {
     this.pushing = true;

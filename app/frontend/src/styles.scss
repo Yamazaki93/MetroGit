@@ -121,3 +121,11 @@ context-menu-content {
         height: 1px;
     }
 }
+
+.cfp-hotkeys-close{
+    border: none !important;
+    &:hover{
+        background: transparent !important;
+        color: var(--blue) !important;
+    }
+}
