@@ -3,6 +3,9 @@ import { ElectronService } from '../../infrastructure/electron.service';
 import { CredentialsService } from './credentials.service';
 import { NotificationsService } from 'angular2-notifications';
 import { Router } from '@angular/router';
+import { HotkeysService, Hotkey } from 'angular2-hotkeys';
+import { CommitSelectionService } from './commit-selection.service';
+import { WIPCommit } from '../prototypes/commit';
 
 @Injectable()
 export class CommitChangeService {
@@ -27,11 +30,14 @@ export class CommitChangeService {
   }
   private _message = "";
   private _detail = "";
+  private selectedCommit: WIPCommit;
   constructor(
     private electron: ElectronService,
     private cred: CredentialsService,
     private route: Router,
-    private noti: NotificationsService
+    private noti: NotificationsService,
+    private cmtSelect: CommitSelectionService,
+    private hotkeys: HotkeysService,
   ) {
     this.electron.onCD('Repo-Committed', (event, arg) => {
       this.newCommitMessage = "";
@@ -66,6 +72,27 @@ export class CommitChangeService {
     this.electron.onCD('Repo-Stashed', (event, arg) => {
       this.stashed.emit();
     });
+    cmtSelect.selectionChange.subscribe(newSelect => {
+      if (<WIPCommit>newSelect) {
+        this.selectedCommit = newSelect;
+      } else {
+        this.selectedCommit = null;
+      }
+    });
+    this.hotkeys.add(new Hotkey('ctrl+s', (event: KeyboardEvent): boolean => {
+      if (this.newCommitMessage.length && this.selectedCommit) {
+        if (this.selectedCommit.staged.length) {
+          this.commitStaged();
+        } else {
+          this.commit(this.selectedCommit.unstaged.map(us => us.path));
+        }
+      }
+      return false;
+    }, undefined, "Commit staged changes / all unstaged files"));
+  }
+
+  init() {
+
   }
   stage(paths): void {
     this.electron.ipcRenderer.send('Repo-Stage', { paths: paths });

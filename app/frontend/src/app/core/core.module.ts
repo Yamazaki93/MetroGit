@@ -42,6 +42,7 @@ import { FileViewPanelComponent } from './file-view-panel/file-view-panel.compon
 import { ExternalFileViewerComponent } from './external-file-viewer/external-file-viewer.component';
 import { TagPromptComponent } from './tag-prompt/tag-prompt.component';
 import { MapSeparatorComponent } from './map-separator/map-separator.component';
+import { HotkeyModule } from 'angular2-hotkeys';
 
 
 @NgModule({
@@ -50,6 +51,7 @@ import { MapSeparatorComponent } from './map-separator/map-separator.component';
     NgbModule,
     FormsModule,
     SimpleNotificationsModule,
+    HotkeyModule,
     InfrastructureModule,
     ContextMenuModule,
     JiraModule,

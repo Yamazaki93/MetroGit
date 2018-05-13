@@ -8,6 +8,7 @@ import { NotificationsService } from 'angular2-notifications';
 import { Router } from '@angular/router';
 import { CredentialsService } from '../services/credentials.service';
 import { CommitChangeService } from '../services/commit-change.service';
+import { HotkeysService, Hotkey } from 'angular2-hotkeys';
 
 @Component({
   selector: 'app-commit-detail-info',
@@ -39,7 +40,7 @@ export class CommitDetailInfoComponent implements OnInit {
     private selection: CommitSelectionService,
     private noti: NotificationsService,
     private cred: CredentialsService,
-    private commitChange: CommitChangeService
+    private commitChange: CommitChangeService,
   ) {
     this.newCommitMessage = this.commitChange.newCommitMessage;
     this.newCommitDetail = this.commitChange.newCommitDetail;

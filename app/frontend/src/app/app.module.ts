@@ -72,7 +72,7 @@ const appRoutes: Routes = [
       theClass: 'top-noti'
     }),
     HotkeyModule.forRoot({
-      cheatSheetHotkey: 'ctrl+shift+/',
+      cheatSheetHotkey: '?',
     }),
     InfrastructureModule,
     CoreModule,
