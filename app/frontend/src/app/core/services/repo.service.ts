@@ -215,11 +215,11 @@ export class RepoService {
     this.commitChange.messageChange.subscribe(msg => {
       this._wipCommit.message = msg;
     });
-    this.hotkeys.add(new Hotkey('ctrl+enter', (event: KeyboardEvent): boolean => {
+    this.hotkeys.add(new Hotkey('ctrl+shift+up', (event: KeyboardEvent): boolean => {
       this.push();
       return false;
     }, undefined, "Push"));
-    this.hotkeys.add(new Hotkey('ctrl+p', (event: KeyboardEvent): boolean => {
+    this.hotkeys.add(new Hotkey('ctrl+shift+down', (event: KeyboardEvent): boolean => {
       this.pull();
       return false;
     }, undefined, "Pull"));

@@ -83,6 +83,14 @@ export class CommitChangeService {
       this.tryCommit();
       return false;
     }, undefined, "Commit staged changes (or all unstaged files if no files staged)"));
+    this.hotkeys.add(new Hotkey('ctrl+down', (event: KeyboardEvent): boolean => {
+      this.stash();
+      return false;
+    }, undefined, "Stash"));
+    this.hotkeys.add(new Hotkey('ctrl+up', (event: KeyboardEvent): boolean => {
+      this.pop();
+      return false;
+    }, undefined, "Pop latest stash"));
   }
 
   init() {
