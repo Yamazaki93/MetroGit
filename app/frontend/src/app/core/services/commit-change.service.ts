@@ -80,15 +80,9 @@ export class CommitChangeService {
       }
     });
     this.hotkeys.add(new Hotkey('ctrl+s', (event: KeyboardEvent): boolean => {
-      if (this.newCommitMessage.length && this.selectedCommit) {
-        if (this.selectedCommit.staged.length) {
-          this.commitStaged();
-        } else {
-          this.commit(this.selectedCommit.unstaged.map(us => us.path));
-        }
-      }
+      this.tryCommit();
       return false;
-    }, undefined, "Commit staged changes / all unstaged files"));
+    }, undefined, "Commit staged changes (or all unstaged files if no files staged)"));
   }
 
   init() {
@@ -135,6 +129,15 @@ export class CommitChangeService {
   }
   discardAll(): void {
     this.electron.ipcRenderer.send('Repo-DiscardAll', {});
+  }
+  tryCommit(): void {
+    if (this.newCommitMessage.length && this.selectedCommit) {
+      if (this.selectedCommit.staged.length) {
+        this.commitStaged();
+      } else {
+        this.commit(this.selectedCommit.unstaged.map(us => us.path));
+      }
+    }
   }
   private checkProfileExists(): boolean {
     let noProfile = !this.cred.name || !this.cred.email;

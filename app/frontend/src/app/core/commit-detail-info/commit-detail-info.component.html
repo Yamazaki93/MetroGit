@@ -29,13 +29,13 @@
       <div class="message-title-container p-2">
         <h5 *ngIf="!commit.virtual">{{commit.message}}</h5>
         <div class="d-flex">
-          <input *ngIf="commit.virtual" [(ngModel)]="newCommitMessage" (focus)="fillKeyIfNeeded()" name="newMessage" type="text" placeholder="Commit Message...">
+          <input *ngIf="commit.virtual" (keydown)="onKeyDown($event)" [(ngModel)]="newCommitMessage" (focus)="fillKeyIfNeeded()" name="newMessage" type="text" placeholder="Commit Message...">
           <h5 class="ml-1 word-count" *ngIf="newCommitMessage.length > 30" [class.text-warning]="newCommitMessage.length > 50">{{50 - newCommitMessage.length}}</h5>
         </div>
       </div>
       <div class="message-content-container p-2">
         <ng-container *ngIf="commit.detail && !commit.virtual">{{commit.detail}}</ng-container>
-        <textarea *ngIf="commit.virtual" [(ngModel)]="newCommitDetail" (change)="setCommitMessages()" name="newDetail"></textarea>
+        <textarea *ngIf="commit.virtual" (keydown)="onKeyDown($event)" [(ngModel)]="newCommitDetail" (change)="setCommitMessages()" name="newDetail"></textarea>
       </div>
     </div>
   </div>

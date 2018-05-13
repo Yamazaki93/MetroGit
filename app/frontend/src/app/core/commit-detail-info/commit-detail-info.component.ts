@@ -102,13 +102,7 @@ export class CommitDetailInfoComponent implements OnInit {
     this.commitChange.discardAll();
   }
   commitChanges() {
-    if (!(<WIPCommit>this.commit).staged.length) {
-      let unstagedPath = (<WIPCommit>this.commit).unstaged.map(s => s.path);
-      this.commitChange.commit(unstagedPath);
-    } else {
-      let stagedPaths = (<WIPCommit>this.commit).staged.map(s => s.path);
-      this.commitChange.commitStaged();
-    }
+    this.commitChange.tryCommit();
   }
   fillKeyIfNeeded() {
     if (this._message.length === 0 && this.commitChange.defaultKey) {
@@ -117,5 +111,11 @@ export class CommitDetailInfoComponent implements OnInit {
   }
   openFileDetails(file) {
     this.selection.selectFileDetail(file);
+  }
+  onKeyDown($event) {
+    // keyboard code 83 = s;
+    if ($event.keyCode === 83 && $event.ctrlKey) {
+      this.commitChange.tryCommit();
+    }
   }
 }
