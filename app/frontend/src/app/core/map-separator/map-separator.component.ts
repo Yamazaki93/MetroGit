@@ -18,6 +18,7 @@ export class MapSeparatorComponent implements OnInit {
   private _commits: Commit[];
   private separators = [
     new Sep(moment().subtract(1, 'hour')),
+    new Sep(moment().subtract(6, 'hour')),
     new Sep(moment().subtract(12, 'hour')),
     new Sep(moment().subtract(1, 'day')),
     new Sep(moment().subtract(2, 'day')),
@@ -32,6 +33,8 @@ export class MapSeparatorComponent implements OnInit {
     new Sep(moment().subtract(2, 'month')),
     new Sep(moment().subtract(3, 'month')),
     new Sep(moment().subtract(4, 'month')),
+    new Sep(moment().subtract(5, 'month')),
+    new Sep(moment().subtract(6, 'month')),
   ];
   private height = Node.height;
   constructor() { }
