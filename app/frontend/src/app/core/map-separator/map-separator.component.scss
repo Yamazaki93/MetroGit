@@ -4,6 +4,7 @@
     position: absolute;
     z-index: -1;
     .separator{
+        opacity: 0.6;
         text-align: left;
         border-top: solid 1px var(--gray);
         color: var(--gray);
@@ -12,7 +13,7 @@
         width: 100%;
         line-height: 10px;
         small{
-            font-size: 10px;
+            font-size: 12px;
         }
     }
 }

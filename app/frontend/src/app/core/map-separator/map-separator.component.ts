@@ -78,11 +78,11 @@ class Sep {
     let diffDay = moment().diff(this.time, 'day');
     let diffMonth = moment().diff(this.time, 'month');
     if (diffMonth) {
-      return `${diffMonth} months ago`;
+      return `${diffMonth} month${diffMonth > 1 ? 's' : ''} ago`;
     } else if (diffDay) {
-      return `${diffDay} days ago`;
+      return `${diffDay} day${diffDay > 1 ? 's' : ''} ago`;
     } else if (diffHr) {
-      return `${diffHr} hours ago`;
+      return `${diffHr} hour${diffHr > 1 ? 's' : ''} ago`;
     }
   }
 }
