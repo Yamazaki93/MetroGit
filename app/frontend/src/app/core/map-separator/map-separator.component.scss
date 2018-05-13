@@ -1,0 +1,22 @@
+.separator-container{
+    width:100%;
+    top: 7px;
+    position: absolute;
+    z-index: -1;
+    .separator{
+        opacity: 0.6;
+        text-align: left;
+        border-top: solid 1px var(--gray);
+        color: var(--gray);
+        padding-left: 35px;
+        position: absolute;
+        width: 100%;
+        line-height: 10px;
+        small{
+            font-size: 12px;
+        }
+    }
+}
+.hidden{
+    display: none;
+}
