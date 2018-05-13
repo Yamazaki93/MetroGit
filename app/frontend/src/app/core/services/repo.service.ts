@@ -134,7 +134,7 @@ export class RepoService {
         this.skipAuthError(arg.detail);
       }
       this.pulled.emit();
-      this._pendingOperation = this.pullFFOnly;
+      this._pendingOperation = this.pull;
     });
     this.electron.onCD('Repo-PushFailed', (event, arg) => {
       if (arg.detail === 'FORCE_REQUIRED') {
@@ -219,6 +219,10 @@ export class RepoService {
       this.push();
       return false;
     }, undefined, "Push"));
+    this.hotkeys.add(new Hotkey('ctrl+p', (event: KeyboardEvent): boolean => {
+      this.pull();
+      return false;
+    }, undefined, "Pull"));
   }
 
   getCommitsWithWIP() {
@@ -272,7 +276,7 @@ export class RepoService {
     this.electron.ipcRenderer.send('Repo-Fetch', { username: this.cred.username, password: this.cred.password });
   }
 
-  pullFFOnly(): void {
+  pull(): void {
     this.electron.ipcRenderer.send('Repo-Pull', { username: this.cred.username, password: this.cred.password, option: this.pulloption });
   }
 
