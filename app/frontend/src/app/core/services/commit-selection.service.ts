@@ -71,9 +71,6 @@ export class CommitSelectionService {
       this._fileDetail = arg;
       this.fileDetailChanged.emit(this._fileDetail);
     });
-    this.electron.onCD('Repo-TagCreated', (event, arg) => {
-      this.noti.success("Tag Created", `Tag ${arg.name} created successfully. Click here to publish it to remote`);
-    });
   }
 
   selectFileDetail(file, sha = null) {

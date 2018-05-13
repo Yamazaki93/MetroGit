@@ -771,6 +771,26 @@ function createTag(targetCommit, name) {
     });
 }
 
+function pushTag(username, password, name) {
+    return checkSSHKey().then(() => {
+        return getCurrentFirstRemote()
+    }).then(remote => {
+        firstRemote = remote;
+        return tryFetch(remote, 1, username, password);
+    }).then(rmt => {
+        notifyBlockingOperation(true, "Pushing Tag...");
+        // force push by adding a plus sign
+        let ref = `+refs/tags/${name}:refs/tags/${name}`
+        return tryPush(firstRemote, [ref], 1, username, password);
+    }).then(() => {
+        notifyBlockingOperation(false);
+        refreshRepo();
+    }).catch(err => {
+        notifyBlockingOperation(false);
+        return Promise.reject(err);
+    });
+}
+
 module.exports = {
     init: init,
     openRepo: openRepo,
@@ -794,4 +814,5 @@ module.exports = {
     deleteStash: requireRepo(deleteStash),
     apply: requireRepo(apply),
     createTag: requireRepo(createTag),
+    pushTag: requireRepo(pushTag),
 }
