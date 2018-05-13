@@ -782,7 +782,7 @@ function pushTag(username, password, name, toDelete) {
         return getCurrentFirstRemote()
     }).then(remote => {
         firstRemote = remote;
-        notifyBlockingOperation(true, "Updating Tag...");
+        notifyBlockingOperation(true, "Updating Remote Tag...");
         // force push by adding a plus sign
         let ref = `:refs/tags/${name}`;
         if (!toDelete) {

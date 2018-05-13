@@ -1,7 +1,15 @@
-<div [class.branch-folder]="item.items" [class.branch]="!item.items" (click)="onClick($event)" [class.toggled]="toggled" [style.padding-left.px]="item.padding">
+<div [class.branch-folder]="item.items" [class.branch]="!item.items" (click)="onClick($event)" [class.toggled]="toggled"
+  [style.padding-left.px]="item.padding" (contextmenu)="tryOpenMenu($event, item)">
   <div [style.background]="item.color" *ngIf="!item.items" class="color-marker"></div>
-  <span><i [class]="'icon-' + item.icon + ' mr-2'"></i></span>
+  <span>
+    <i [class]="'icon-' + item.icon + ' mr-2'"></i>
+  </span>
   <span>{{item.display}}</span>
   <span class="expand" [class.icon-chevron-up]="toggled" [class.icon-chevron-down]="!toggled" *ngIf="item.items"></span>
   <app-branch-item [item]="subItem" *ngFor="let subItem of item.items; trackBy: trackBy"></app-branch-item>
 </div>
+<context-menu #tagMenu>
+  <ng-template contextMenuItem (execute)="onDeleteTag($event.item.shorthand)">
+    <span class="text-danger">Delete Tag</span>
+  </ng-template>
+</context-menu>
