@@ -764,16 +764,11 @@ function requireRepo(wrapped) {
 }
 
 function createTag(targetCommit, name) {
-    if(Repo) {
-        let signature = getCurrentSignature();
-        return Repo.getCommit(targetCommit).then(cmt => {
-            return NodeGit.Tag.createLightweight(Repo, name, cmt, 1);
-        }).then(() => {
-            return refreshRepo();
-        });
-    } else {
-        return Promise.reject('NO_REPO')
-    }
+    return Repo.getCommit(targetCommit).then(cmt => {
+        return NodeGit.Tag.createLightweight(Repo, name, cmt, 1);
+    }).then(() => {
+        return refreshRepo();
+    });
 }
 
 module.exports = {
@@ -797,6 +792,6 @@ module.exports = {
     resetHard: requireRepo(resetHard),
     resetSoft: requireRepo(resetSoft),
     deleteStash: requireRepo(deleteStash),
-    apply: requireRepo(apply)
-    createTag: createTag,
+    apply: requireRepo(apply),
+    createTag: requireRepo(createTag),
 }

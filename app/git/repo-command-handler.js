@@ -25,7 +25,7 @@ ipcMain.on('Repo-DiscardAll', discardAll);
 ipcMain.on('Repo-ResetHard', requireArgParams(resetHard, ['commit']));
 ipcMain.on('Repo-ResetSoft', requireArgParams(resetSoft, ['commit']));
 ipcMain.on('Repo-DeleteStash', requireArgParams(deleteStash, ['index']));
-ipcMain.on('Repo-CreateTag', createTag);
+ipcMain.on('Repo-CreateTag', requireArgParams(createTag, ['targetCommit', 'name']));
 
 function init(repo, sett, sec) {
     repoService = repo;
