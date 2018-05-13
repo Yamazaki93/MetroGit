@@ -5,6 +5,7 @@ import { RepoService } from '../services/repo.service';
 import { Router } from '@angular/router';
 import { LayoutService } from '../services/layout.service';
 import { D3Service } from '../d3/d3.service';
+import { HotkeysService, Hotkey } from 'angular2-hotkeys';
 
 @Component({
   selector: 'app-branch-viewer',
@@ -29,7 +30,8 @@ export class BranchViewerComponent implements OnInit {
     private repoService: RepoService,
     private route: Router,
     private layout: LayoutService,
-    private d3: D3Service
+    private d3: D3Service,
+    private hotkeys: HotkeysService,
   ) {
     this.repoService.repoChange.subscribe(info => {
       let that = this;
@@ -61,6 +63,18 @@ export class BranchViewerComponent implements OnInit {
         this.toggleNavigation();
       }
     });
+    this.hotkeys.add(new Hotkey('shift+left', (event: KeyboardEvent): boolean => {
+      if (this.toggled) {
+        this.toggleNavigation();
+      }
+      return false;
+    }, undefined, "Minimize left panel"));
+    this.hotkeys.add(new Hotkey('shift+right', (event: KeyboardEvent): boolean => {
+      if (!this.toggled) {
+        this.toggleNavigation();
+      }
+      return false;
+    }, undefined, "Expand left panel"));
   }
 
   ngOnInit() {

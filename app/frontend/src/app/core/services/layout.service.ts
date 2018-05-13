@@ -1,4 +1,5 @@
 import { Injectable, EventEmitter, Output } from '@angular/core';
+import { HotkeysService, Hotkey } from 'angular2-hotkeys';
 
 @Injectable()
 export class LayoutService {
@@ -23,6 +24,6 @@ export class LayoutService {
 
   private _file = false;
 
-  constructor() { }
+  constructor() {  }
 
 }
