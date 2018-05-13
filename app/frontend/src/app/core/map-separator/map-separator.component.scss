@@ -1,0 +1,21 @@
+.separator-container{
+    width:100%;
+    top: 7px;
+    position: absolute;
+    z-index: -1;
+    .separator{
+        text-align: left;
+        border-top: solid 1px var(--gray);
+        color: var(--gray);
+        padding-left: 35px;
+        position: absolute;
+        width: 100%;
+        line-height: 10px;
+        small{
+            font-size: 10px;
+        }
+    }
+}
+.hidden{
+    display: none;
+}
