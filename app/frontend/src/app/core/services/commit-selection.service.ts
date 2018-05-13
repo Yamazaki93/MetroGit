@@ -96,7 +96,7 @@ export class CommitSelectionService {
     }
   }
   openExternalFileView(file) {
-    this.electron.ipcRenderer.send('Repo-OpenExternalFile', {file: file, commit: this.selectedCommit.sha});
+    this.electron.ipcRenderer.send('Repo-OpenExternalFile', { file: file, commit: this.selectedCommit.sha });
   }
   reset(commit, mode): void {
     if (mode === 'hard') {
@@ -109,7 +109,10 @@ export class CommitSelectionService {
     let compt = this.promptInj.injectComponent(TagPromptComponent);
     compt.sha = commit;
     compt.toCreate.subscribe(info => {
-      this.electron.ipcRenderer.send('Repo-CreateTag', {targetCommit: info.sha, name: info.name});
+      this.electron.ipcRenderer.send('Repo-CreateTag', { targetCommit: info.sha, name: info.name });
     });
+  }
+  deleteTag(name): void {
+    this.electron.ipcRenderer.send('Repo-DeleteTag', { name: name });
   }
 }

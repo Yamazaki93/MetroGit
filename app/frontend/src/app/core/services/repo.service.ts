@@ -280,8 +280,8 @@ export class RepoService {
   checkout(shorthand): void {
     this.electron.ipcRenderer.send('Repo-Checkout', { branch: shorthand });
   }
-  pushTag(name): void {
-    this.electron.ipcRenderer.send('Repo-PushTag', { username: this.cred.username, password: this.cred.password, name: name });
+  pushTag(name, toDelete = false): void {
+    this.electron.ipcRenderer.send('Repo-PushTag', { username: this.cred.username, password: this.cred.password, name: name, delete: toDelete });
   }
   retry(): void {
     if (this._pendingOperation) {

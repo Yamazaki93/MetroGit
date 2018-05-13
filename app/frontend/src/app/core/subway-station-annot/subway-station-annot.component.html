@@ -9,7 +9,7 @@
         <span class="">{{branch.names[0].display}}</span>
         <span class="ml-2" *ngIf="branch.names.length > 1">1+</span>
       </li>
-      <li class="detail mb-1" [style.background-color]="branch.color" *ngFor="let name of branch.names" (dblclick)="checkout(name)">
+      <li class="detail mb-1" [style.background-color]="branch.color" *ngFor="let name of branch.names" (dblclick)="checkout(name)" (contextmenu)="tryOpenMenu($event, name)">
         <i class="icon-check mr-1" *ngIf="name.current"></i>
         <i class="icon-cloud mr-1" *ngIf="name.isRemote"></i>
         <i class="icon-monitor mr-1" *ngIf="name.isBranch"></i>
@@ -18,5 +18,9 @@
       </li>
     </ul>
   </div>
-
 </div>
+<context-menu #tagMenu>
+  <ng-template contextMenuItem (execute)="onDeleteTag($event.item.shorthand)">
+    <span class="text-danger">Delete Tag</span>
+  </ng-template>
+</context-menu>

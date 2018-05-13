@@ -771,16 +771,27 @@ function createTag(targetCommit, name) {
     });
 }
 
-function pushTag(username, password, name) {
+function deleteTag(name) {
+    return NodeGit.Tag.delete(Repo, name).then(() => {
+        return refreshRepo();
+    })
+}
+
+function pushTag(username, password, name, toDelete) {
     return checkSSHKey().then(() => {
         return getCurrentFirstRemote()
     }).then(remote => {
         firstRemote = remote;
         return tryFetch(remote, 1, username, password);
     }).then(rmt => {
-        notifyBlockingOperation(true, "Pushing Tag...");
+        notifyBlockingOperation(true, "Updating Tag...");
         // force push by adding a plus sign
-        let ref = `+refs/tags/${name}:refs/tags/${name}`
+        let ref = `refs/tags/${name}:refs/tags/${name}`;
+        if (toDelete) {
+            ref = '-' + ref;
+        } else {
+            ref = '+' + ref;
+        }
         return tryPush(firstRemote, [ref], 1, username, password);
     }).then(() => {
         notifyBlockingOperation(false);
@@ -814,5 +825,6 @@ module.exports = {
     deleteStash: requireRepo(deleteStash),
     apply: requireRepo(apply),
     createTag: requireRepo(createTag),
+    deleteTag: requireRepo(deleteTag),
     pushTag: requireRepo(pushTag),
 }
