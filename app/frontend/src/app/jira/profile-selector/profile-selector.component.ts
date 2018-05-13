@@ -27,7 +27,6 @@ export class ProfileSelectorComponent implements OnInit {
       if (data.key === this.key) {
         this.users = data.result;
         this.users.forEach(user => {
-          user.key = '@' + user.key;
           user.safeAvatarUrl = this.sanitizer.bypassSecurityTrustUrl(user.avatarUrls['32x32']);
         });
         this.loading = false;
