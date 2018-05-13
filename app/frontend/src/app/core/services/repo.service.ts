@@ -203,6 +203,10 @@ export class RepoService {
         this.pushTag(arg.name);
       });
     });
+    this.electron.onCD('Repo-TagDeleted', (event, arg) => {
+      let n = this.noti.success("Tag Deleted", `Tag ${arg.name} deleted successfully.`);
+      this.pushTag(arg.name, true);
+    });
     this.cred.credentialChange.subscribe(newCreds => {
       this.retry();
     });
