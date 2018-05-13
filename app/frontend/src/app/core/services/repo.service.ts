@@ -197,6 +197,16 @@ export class RepoService {
       }
       this.wipInfoChange.emit();
     });
+    this.electron.onCD('Repo-TagCreated', (event, arg) => {
+      let n = this.noti.success("Tag Created", `Tag ${arg.name} created successfully. Click here to publish it to remote`);
+      n.click.subscribe(() => {
+        this.pushTag(arg.name);
+      });
+    });
+    this.electron.onCD('Repo-TagDeleted', (event, arg) => {
+      let n = this.noti.success("Tag Deleted", `Tag ${arg.name} deleted successfully.`);
+      this.pushTag(arg.name, true);
+    });
     this.cred.credentialChange.subscribe(newCreds => {
       this.retry();
     });
@@ -273,6 +283,9 @@ export class RepoService {
 
   checkout(shorthand): void {
     this.electron.ipcRenderer.send('Repo-Checkout', { branch: shorthand });
+  }
+  pushTag(name, toDelete = false): void {
+    this.electron.ipcRenderer.send('Repo-PushTag', { username: this.cred.username, password: this.cred.password, name: name, delete: toDelete });
   }
   retry(): void {
     if (this._pendingOperation) {

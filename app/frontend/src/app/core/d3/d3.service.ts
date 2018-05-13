@@ -224,7 +224,7 @@ export class D3Service {
             return nodes.indexOf(nodeDict[parent]) > nodes.indexOf(node);
           });
           if (lastCross) {
-            //bl.open = false;
+            // bl.open = false;
           }
 
           if (!bl.open) {

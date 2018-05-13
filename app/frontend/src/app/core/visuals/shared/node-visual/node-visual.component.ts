@@ -52,4 +52,7 @@ export class NodeVisualComponent implements OnDestroy {
   onDeleteStash() {
     this.commit.deleteStash(this.node.commit.stashIndex);
   }
+  onCreateTag() {
+    this.selection.createTag(this.node.commit.sha);
+  }
 }

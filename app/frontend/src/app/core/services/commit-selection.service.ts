@@ -3,6 +3,9 @@ import { ElectronService } from '../../infrastructure/electron.service';
 import { CommitDetail, WIPCommit } from '../prototypes/commit';
 import { CiIntegrationService } from './ci-integration.service';
 import { FileDetail } from '../prototypes/file-detail';
+import { PromptInjectorService } from '../../infrastructure/prompt-injector.service';
+import { TagPromptComponent } from '../tag-prompt/tag-prompt.component';
+import { NotificationsService } from 'angular2-notifications';
 
 @Injectable()
 export class CommitSelectionService {
@@ -45,6 +48,8 @@ export class CommitSelectionService {
   };
   constructor(
     private electron: ElectronService,
+    private promptInj: PromptInjectorService,
+    private noti: NotificationsService,
   ) {
     this.electron.onCD('Repo-CommitDetailRetrieved', (event, arg) => {
       this.selectedCommit = arg.commit;
@@ -91,7 +96,7 @@ export class CommitSelectionService {
     }
   }
   openExternalFileView(file) {
-    this.electron.ipcRenderer.send('Repo-OpenExternalFile', {file: file, commit: this.selectedCommit.sha});
+    this.electron.ipcRenderer.send('Repo-OpenExternalFile', { file: file, commit: this.selectedCommit.sha });
   }
   reset(commit, mode): void {
     if (mode === 'hard') {
@@ -100,5 +105,14 @@ export class CommitSelectionService {
       this.electron.ipcRenderer.send('Repo-ResetSoft', { commit: commit });
     }
   }
-
+  createTag(commit): void {
+    let compt = this.promptInj.injectComponent(TagPromptComponent);
+    compt.sha = commit;
+    compt.toCreate.subscribe(info => {
+      this.electron.ipcRenderer.send('Repo-CreateTag', { targetCommit: info.sha, name: info.name });
+    });
+  }
+  deleteTag(name): void {
+    this.electron.ipcRenderer.send('Repo-DeleteTag', { name: name });
+  }
 }

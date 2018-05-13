@@ -1,0 +1,8 @@
+<form class="form-inline" name="credentialForm">
+  <h5 class="mr-2">Enter tag name @ {{sha.substring(0, 6)}}</h5>
+  <div class="form-group mx-sm-3 mb-2">
+    <input type="text" class="form-control form-control-sm" placeholder="Tag name" [(ngModel)]="tagName" name="tagName">
+  </div>
+  <a class="btn btn-success btn-sm mb-2 mr-2" (click)="enter()">Create</a>
+  <a class="btn btn-secondary btn-sm mb-2" (click)="close()">Cancel</a>
+</form>

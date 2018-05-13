@@ -1,5 +1,7 @@
-import { Component, OnInit, Input, HostBinding } from '@angular/core';
+import { Component, OnInit, Input, HostBinding, ViewChild } from '@angular/core';
 import { D3Service } from '../d3/d3.service';
+import { ContextMenuService, ContextMenuComponent } from 'ngx-contextmenu';
+import { CommitSelectionService } from '../services/commit-selection.service';
 
 @Component({
   selector: 'app-branch-item',
@@ -10,8 +12,11 @@ export class BranchItemComponent implements OnInit {
 
   @Input() item;
   @HostBinding('class.toggled') toggled = true;
+  @ViewChild('tagMenu') tagMenu: ContextMenuComponent;
   constructor(
-    private d3: D3Service
+    private d3: D3Service,
+    private ctxService: ContextMenuService,
+    private commitSelection: CommitSelectionService,
   ) { }
 
   ngOnInit() {
@@ -29,5 +34,18 @@ export class BranchItemComponent implements OnInit {
   trackBy(index, item) {
     return item.display;
   }
-
+  tryOpenMenu($event: MouseEvent, item: any) {
+    if (item.isTag) {
+      this.ctxService.show.next({
+        contextMenu: this.tagMenu,
+        event: $event,
+        item: item,
+      });
+    }
+    $event.preventDefault();
+    $event.stopPropagation();
+  }
+  onDeleteTag(name) {
+    this.commitSelection.deleteTag(name);
+  }
 }

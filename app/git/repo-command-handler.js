@@ -25,6 +25,9 @@ ipcMain.on('Repo-DiscardAll', discardAll);
 ipcMain.on('Repo-ResetHard', requireArgParams(resetHard, ['commit']));
 ipcMain.on('Repo-ResetSoft', requireArgParams(resetSoft, ['commit']));
 ipcMain.on('Repo-DeleteStash', requireArgParams(deleteStash, ['index']));
+ipcMain.on('Repo-CreateTag', requireArgParams(createTag, ['targetCommit', 'name']));
+ipcMain.on('Repo-DeleteTag', requireArgParams(deleteTag, ['name']));
+ipcMain.on('Repo-PushTag', requireArgParams(pushTag, ['username', 'password', 'name']));
 
 function init(repo, sett, sec) {
     repoService = repo;
@@ -226,6 +229,30 @@ function deleteStash(event, arg) {
         event.sender.send('Repo-StashDeleted', {});
     }).catch(err => {
         operationFailed('Repo-DeleteStashFailed', event, err);
+    });
+}
+
+function createTag(event, arg) {
+    repoService.createTag(arg.targetCommit, arg.name).then(res => {
+        event.sender.send('Repo-TagCreated', { name: arg.name });
+    }).catch(err => {
+        operationFailed('Repo-CreateTagFailed', event, err);
+    });
+}
+
+function deleteTag(event, arg) {
+    repoService.deleteTag(arg.name).then(res => {
+        event.sender.send('Repo-TagDeleted', { name: arg.name });
+    }).catch(err => {
+        operationFailed('Repo-DeleteTagFailed', event, err);
+    });
+}
+
+function pushTag(event, arg) {
+    repoService.pushTag(arg.username, arg.password, arg.name, arg.delete).then(res => {
+        event.sender.send('Repo-TagPushed', { name: arg.name });
+    }).catch(err => {
+        operationFailed('Repo-PushTagFailed', event, err);
     });
 }
 

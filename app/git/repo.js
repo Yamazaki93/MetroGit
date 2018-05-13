@@ -402,11 +402,14 @@ function getReferences() {
                 } else if (ref.isRemote()) {
                     let names = ref.shorthand().split('/');
                     display = names.splice(1, names.length).join('/');
+                } else if (ref.isTag()) {
+                    display = ref.shorthand();
                 }
                 return {
                     target: ref.target().toString(),
                     isBranch: ref.isBranch(),
                     isRemote: ref.isRemote(),
+                    isTag: ref.isTag(),
                     name: ref.name(),
                     shorthand: ref.shorthand(),
                     display: display
@@ -760,6 +763,41 @@ function requireRepo(wrapped) {
     }
 }
 
+function createTag(targetCommit, name) {
+    return Repo.getCommit(targetCommit).then(cmt => {
+        return NodeGit.Tag.createLightweight(Repo, name, cmt, 1);
+    }).then(() => {
+        return refreshRepo();
+    });
+}
+
+function deleteTag(name) {
+    return NodeGit.Tag.delete(Repo, name).then(() => {
+        return refreshRepo();
+    })
+}
+
+function pushTag(username, password, name, toDelete) {
+    return checkSSHKey().then(() => {
+        return getCurrentFirstRemote()
+    }).then(remote => {
+        firstRemote = remote;
+        notifyBlockingOperation(true, "Updating Remote Tag...");
+        // force push by adding a plus sign
+        let ref = `:refs/tags/${name}`;
+        if (!toDelete) {
+            ref = `+refs/tags/${name}` + ref;
+        }
+        return tryPush(firstRemote, [ref], 1, username, password);
+    }).then(() => {
+        notifyBlockingOperation(false);
+        refreshRepo();
+    }).catch(err => {
+        notifyBlockingOperation(false);
+        return Promise.reject(err);
+    });
+}
+
 module.exports = {
     init: init,
     openRepo: openRepo,
@@ -781,5 +819,8 @@ module.exports = {
     resetHard: requireRepo(resetHard),
     resetSoft: requireRepo(resetSoft),
     deleteStash: requireRepo(deleteStash),
-    apply: requireRepo(apply)
+    apply: requireRepo(apply),
+    createTag: requireRepo(createTag),
+    deleteTag: requireRepo(deleteTag),
+    pushTag: requireRepo(pushTag),
 }

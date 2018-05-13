@@ -17,11 +17,13 @@ export class BranchViewerComponent implements OnInit {
   refs = [];
   remote = [];
   local = [];
+  tags = [];
   repoName = "";
   branchName = "";
   branchTarget = "";
   showLocal = true;
   showRemote = true;
+  showTags = true;
   @ViewChild('openRepoPanel') openRepoPanel: OpenRepoPanelComponent;
   constructor(
     private repoService: RepoService,
@@ -79,6 +81,10 @@ export class BranchViewerComponent implements OnInit {
   toggleOpenRepo(): void {
     this.openRepoPanel.toggled = !this.openRepoPanel.toggled;
   }
+  toggleTags(): void {
+    this.showTags = !this.showTags;
+    this.layout.isTagsShown = this.showTags;
+  }
   goToSettings(): void {
     this.route.navigateByUrl('/settings');
   }
@@ -89,11 +95,14 @@ export class BranchViewerComponent implements OnInit {
   updateReferences(refs) {
     this.remote = [];
     this.local = [];
+    this.tags = [];
     refs.forEach((r) => {
       if (r.isRemote) {
         this.remote.push(r);
       } else if (r.isBranch) {
         this.local.push(r);
+      } else if (r.isTag) {
+        this.tags.push(r);
       }
     });
   }

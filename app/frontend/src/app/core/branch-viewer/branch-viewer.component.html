@@ -12,8 +12,10 @@
       <span class="nav-text">{{repoName}}</span>
     </h4>
   </div>
-  <div class="repo-info-container smooth action-button" placement="right" ngbTooltip="Current Branch" container="body" *ngIf="branchName !== ''" (click)="goToCurrentBranch()">
-    <h4><i class="icon-git-branch mr-3"></i>{{branchName}}</h4>
+  <div class="repo-info-container smooth action-button" placement="right" ngbTooltip="Current Branch" container="body" *ngIf="branchName !== ''"
+    (click)="goToCurrentBranch()">
+    <h4>
+      <i class="icon-git-branch mr-3"></i>{{branchName}}</h4>
   </div>
   <div style="height: 100%;position: relative;">
     <ul class="main-nav-list">
@@ -35,6 +37,15 @@
           </h4>
         </a>
         <app-branch-list [branches]="remote"></app-branch-list>
+      </li>
+      <li *ngIf="repoName !== ''" class="expandable smooth" [class.toggled]="showTags">
+        <a class="smooth-1 action-button" (click)="toggleTags()">
+          <h4>
+            <span class="icon-tag mr-3"></span>
+            <span class="nav-text">Tags</span>
+          </h4>
+        </a>
+        <app-branch-list [branches]="tags" [itemIcon]="'tag'"></app-branch-list>
       </li>
     </ul>
   </div>
