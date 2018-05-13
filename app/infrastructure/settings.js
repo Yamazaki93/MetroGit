@@ -3,6 +3,7 @@ const homeDir = require('os').homedir();
 const appDir = homeDir + '/MetroGit/';
 const uuid = require('uuid');
 const { ipcMain, dialog } = require('electron');
+const { requireArgParams } = require('../infrastructure/handler-helper');
 let window;
 let secureStorage;
 let settingsFile;
@@ -25,8 +26,8 @@ ipcMain.on('Settings-Set', (event, arg) => {
     updateSSHKey();
     notifySettingsUpdated();
 });
-ipcMain.on('Settings-SetSecureRepo', setSecureRepoSetting);
-ipcMain.on('Settings-GetSecureRepo', getSecureRepoSetting);
+ipcMain.on('Settings-SetSecureRepo', requireArgParams(setSecureRepoSetting, ['key', 'value']));
+ipcMain.on('Settings-GetSecureRepo', requireArgParams(getSecureRepoSetting, ['key']));
 ipcMain.on('Settings-BrowseFile', openBrowseFolderDialog)
 
 let save = function () {
@@ -94,15 +95,15 @@ let init = function (win, sec) {
 }
 
 function setSecureRepoSetting(event, arg) {
-    if(arg.key && arg.value && settingsObj.currentRepo){
+    if (settingsObj.currentRepo) {
         secureStorage.setPass(`${arg.key}@${settingsObj.currentRepo.id}`, arg.value)
     }
 }
 
-function getSecureRepoSetting(event, arg){
-    if(arg.key && settingsObj.currentRepo){
+function getSecureRepoSetting(event, arg) {
+    if (settingsObj.currentRepo) {
         secureStorage.getPass(`${arg.key}@${settingsObj.currentRepo.id}`).then(value => {
-            if(!value) {
+            if (!value) {
                 value = "";
             }
             event.returnValue = value;

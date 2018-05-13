@@ -38,12 +38,7 @@ const appRoutes: Routes = [
   },
   { path: 'git', component: GitViewComponent },
   {
-    path: 'file',
-    children: [
-      {
-        path: '**', component: ExternalFileViewerComponent
-      },
-    ]
+    path: 'file/:sha', component: ExternalFileViewerComponent
   },
   { path: '', redirectTo: 'git', pathMatch: 'full' }
 ];

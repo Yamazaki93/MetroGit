@@ -1,29 +1,30 @@
 const { ipcMain, dialog } = require('electron');
 const helper = require('./repo-helpers')
+const { requireArgParams } = require('../infrastructure/handler-helper');
 var repoService = null;
 var settings = null;
 var secure = null;
 
-ipcMain.on('Repo-Open', openRepo);
+ipcMain.on('Repo-Open', requireArgParams(openRepo, ['workingDir']));
 ipcMain.on('Repo-Browse', openBrowseFolderDialog);
-ipcMain.on('Repo-Fetch', fetchRepo);
-ipcMain.on('Repo-SetCred', setCredentials);
-ipcMain.on('Repo-Pull', pull);
-ipcMain.on('Repo-Push', push);
-ipcMain.on('Repo-GetCommit', getCommit);
-ipcMain.on('Repo-Stage', stage);
-ipcMain.on('Repo-Unstage', unstage);
-ipcMain.on('Repo-CommitStaged', commitStaged);
-ipcMain.on('Repo-Commit', commit);
-ipcMain.on('Repo-Stash', stash);
+ipcMain.on('Repo-Fetch', requireArgParams(fetchRepo, ['username', 'password']));
+ipcMain.on('Repo-SetCred', requireArgParams(setCredentials, ['username', 'password']));
+ipcMain.on('Repo-Pull', requireArgParams(pull, ['username', 'password', 'option']));
+ipcMain.on('Repo-Push', requireArgParams(push, ['username', 'password']));
+ipcMain.on('Repo-GetCommit', requireArgParams(getCommit, ['commit']));
+ipcMain.on('Repo-Stage', requireArgParams(stage, ['paths']));
+ipcMain.on('Repo-Unstage', requireArgParams(unstage, ['paths']));
+ipcMain.on('Repo-CommitStaged', requireArgParams(commitStaged, ['name', 'email', 'message']));
+ipcMain.on('Repo-Commit', requireArgParams(commit, ['name', 'email', 'message', 'files']));
+ipcMain.on('Repo-Stash', requireArgParams(stash, ['name', 'email', 'message']));
 ipcMain.on('Repo-Pop', pop);
 ipcMain.on('Repo-Apply', apply);
-ipcMain.on('Repo-CreateBranch', createBranch);
-ipcMain.on('Repo-Checkout', checkout);
+ipcMain.on('Repo-CreateBranch', requireArgParams(createBranch, ['name', 'commit']));
+ipcMain.on('Repo-Checkout', requireArgParams(checkout, ['branch']));
 ipcMain.on('Repo-DiscardAll', discardAll);
-ipcMain.on('Repo-ResetHard', resetHard);
-ipcMain.on('Repo-ResetSoft', resetSoft);
-ipcMain.on('Repo-DeleteStash', deleteStash);
+ipcMain.on('Repo-ResetHard', requireArgParams(resetHard, ['commit']));
+ipcMain.on('Repo-ResetSoft', requireArgParams(resetSoft, ['commit']));
+ipcMain.on('Repo-DeleteStash', requireArgParams(deleteStash, ['index']));
 ipcMain.on('Repo-CreateTag', createTag);
 
 function init(repo, sett, sec) {
@@ -57,29 +58,23 @@ function getCommit(event, arg) {
 }
 
 function openRepo(event, arg) {
-    if (!arg.workingDir) {
-        event.sender.send('Repo-OpenFailed', { error: 'REQUIRE_PATH' })
-    } else {
-        repoService.openRepo(arg.workingDir).then(() => {
-            getStoredCredentials(event);
-        }).catch(function (err) {
-            event.sender.send('Repo-OpenFailed', { error: 'OPEN_ERROR', detail_message: err })
-        });
-    }
+    repoService.openRepo(arg.workingDir).then(() => {
+        getStoredCredentials(event);
+    }).catch(function (err) {
+        event.sender.send('Repo-OpenFailed', { error: 'OPEN_ERROR', detail_message: err })
+    });
 }
 
 function setCredentials(event, arg) {
-    if (arg.password && arg.username !== undefined) {
-        settings.updateRepoSetting('auth-username', arg.username);
-        repoService.getCurrentFirstRemote().then(remote => {
-            let url = remote.url();
-            if (!helper.isSSH(url)) {
-                secure.setPass(`${arg.username}@${url}`, arg.password);
-            } else {
-                secure.setPass(`${url}`, arg.password);
-            }
-        })
-    }
+    settings.updateRepoSetting('auth-username', arg.username);
+    repoService.getCurrentFirstRemote().then(remote => {
+        let url = remote.url();
+        if (!helper.isSSH(url)) {
+            secure.setPass(`${arg.username}@${url}`, arg.password);
+        } else {
+            secure.setPass(`${url}`, arg.password);
+        }
+    })
 }
 
 function getStoredCredentials(event) {
@@ -129,53 +124,43 @@ function operationFailed(op, event, res, payload) {
 }
 
 function stage(event, arg) {
-    if (arg.paths) {
-        repoService.stage(arg.paths).then(res => {
+    repoService.stage(arg.paths).then(res => {
 
-        }).catch(err => {
-            operationFailed('Repo-StageFail', event, err);
-        });
-    }
+    }).catch(err => {
+        operationFailed('Repo-StageFail', event, err);
+    });
 }
 
 function unstage(event, arg) {
-    if (arg.paths) {
-        repoService.unstage(arg.paths).then(res => {
+    repoService.unstage(arg.paths).then(res => {
 
-        }).catch(err => {
-            operationFailed('Repo-UnstageFail', event, err);
-        });
-    }
+    }).catch(err => {
+        operationFailed('Repo-UnstageFail', event, err);
+    });
 }
 
 function commitStaged(event, arg) {
-    if (arg.name && arg.email && arg.message) {
-        repoService.commitStaged(arg.name, arg.email, arg.message).then(res => {
-            event.sender.send('Repo-Committed', { sha: res });
-        }).catch(err => {
-            operationFailed('Repo-CommitFail', event, err);
-        });
-    }
+    repoService.commitStaged(arg.name, arg.email, arg.message).then(res => {
+        event.sender.send('Repo-Committed', { sha: res });
+    }).catch(err => {
+        operationFailed('Repo-CommitFail', event, err);
+    });
 }
 
 function commit(event, arg) {
-    if (arg.name && arg.email && arg.message && arg.files) {
-        repoService.commit(arg.name, arg.email, arg.message, arg.files).then(res => {
-            event.sender.send('Repo-Committed', { sha: res });
-        }).catch(err => {
-            operationFailed('Repo-CommitFail', event, err);
-        });
-    }
+    repoService.commit(arg.name, arg.email, arg.message, arg.files).then(res => {
+        event.sender.send('Repo-Committed', { sha: res });
+    }).catch(err => {
+        operationFailed('Repo-CommitFail', event, err);
+    });
 }
 
 function stash(event, arg) {
-    if (arg.name && arg.email && arg.message) {
-        repoService.stash(arg.name, arg.email, arg.message).then(res => {
-            event.sender.send('Repo-Stashed', {});
-        }).catch(err => {
-            operationFailed('Repo-StashFailed', event, err);
-        });
-    }
+    repoService.stash(arg.name, arg.email, arg.message).then(res => {
+        event.sender.send('Repo-Stashed', {});
+    }).catch(err => {
+        operationFailed('Repo-StashFailed', event, err);
+    });
 }
 
 function pop(event, arg) {
@@ -198,23 +183,19 @@ function apply(event, arg) {
 }
 
 function createBranch(event, arg) {
-    if (arg.name && arg.commit) {
-        repoService.createBranch(arg.name, arg.commit, arg.force).then(res => {
-            event.sender.send('Repo-BranchCreated', {});
-        }).catch(err => {
-            operationFailed('Repo-BranchCreateFailed', event, err);
-        });
-    }
+    repoService.createBranch(arg.name, arg.commit, arg.force).then(res => {
+        event.sender.send('Repo-BranchCreated', {});
+    }).catch(err => {
+        operationFailed('Repo-BranchCreateFailed', event, err);
+    });
 }
 
 function checkout(event, arg) {
-    if (arg.branch) {
-        repoService.checkout(arg.branch).then(res => {
-            event.sender.send('Repo-Checkedout', {});
-        }).catch(err => {
-            operationFailed('Repo-CheckoutFailed', event, err);
-        });
-    }
+    repoService.checkout(arg.branch).then(res => {
+        event.sender.send('Repo-Checkedout', {});
+    }).catch(err => {
+        operationFailed('Repo-CheckoutFailed', event, err);
+    });
 }
 
 function discardAll(event, arg) {
@@ -226,33 +207,27 @@ function discardAll(event, arg) {
 }
 
 function resetHard(event, arg) {
-    if(arg.commit) {
-        repoService.resetHard(arg.commit).then(res => {
-            event.sender.send('Repo-Resetted', {});
-        }).catch(err => {
-            operationFailed('Repo-ResetFailed', event, err);
-        });
-    }
+    repoService.resetHard(arg.commit).then(res => {
+        event.sender.send('Repo-Resetted', {});
+    }).catch(err => {
+        operationFailed('Repo-ResetFailed', event, err);
+    });
 }
 
 function resetSoft(event, arg) {
-    if(arg.commit) {
-        repoService.resetSoft(arg.commit).then(res => {
-            event.sender.send('Repo-Resetted', {});
-        }).catch(err => {
-            operationFailed('Repo-ResetFailed', event, err);
-        });
-    }
+    repoService.resetSoft(arg.commit).then(res => {
+        event.sender.send('Repo-Resetted', {});
+    }).catch(err => {
+        operationFailed('Repo-ResetFailed', event, err);
+    });
 }
 
 function deleteStash(event, arg) {
-    if(arg.index !== undefined) {
-        repoService.deleteStash(arg.index).then(res => {
-            event.sender.send('Repo-StashDeleted', {});
-        }).catch(err => {
-            operationFailed('Repo-DeleteStashFailed', event, err);
-        });
-    }
+    repoService.deleteStash(arg.index).then(res => {
+        event.sender.send('Repo-StashDeleted', {});
+    }).catch(err => {
+        operationFailed('Repo-DeleteStashFailed', event, err);
+    });
 }
 
 function createTag(event, arg) {

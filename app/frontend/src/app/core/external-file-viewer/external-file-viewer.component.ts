@@ -20,13 +20,12 @@ export class ExternalFileViewerComponent implements OnInit {
     private loading: LoadingService,
   ) {
     this.loading.enableLoading("Loading File...");
-    this.route.url.subscribe(url => {
-      this.sha = url.shift().toString();
-      this.path = url.join('/');
-      this.getFileDetail();
+    this.route.params.subscribe(params => {
+      this.sha = params['sha'];
     });
     this.selection.fileDetailChanged.subscribe(detail => {
       this.fileDetail = detail;
+      this.path = detail.path;
       this.loading.disableLoading();
     });
   }
@@ -34,8 +33,8 @@ export class ExternalFileViewerComponent implements OnInit {
   ngOnInit() {
   }
 
-  getFileDetail() {
-    this.selection.selectFileDetail(this.path, this.sha);
-  }
+  // getFileDetail() {
+  //   this.selection.selectFileDetail(this.path, this.sha);
+  // }
 
 }

@@ -1,6 +1,7 @@
 
 export interface FileDetail {
     paths: string[];
+    path: string;
     hunks: [
         {
             lines: [{
