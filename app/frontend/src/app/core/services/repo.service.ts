@@ -9,6 +9,7 @@ import { Router } from '@angular/router';
 import { ForcePushPromptComponent } from '../force-push-prompt/force-push-prompt.component';
 import { CommitChangeService } from './commit-change.service';
 import { CreateBranchPromptComponent } from '../create-branch-prompt/create-branch-prompt.component';
+import { HotkeysService, Hotkey } from 'angular2-hotkeys';
 
 @Injectable()
 export class RepoService {
@@ -56,7 +57,8 @@ export class RepoService {
     private promptIj: PromptInjectorService,
     private cred: CredentialsService,
     private route: Router,
-    private commitChange: CommitChangeService
+    private commitChange: CommitChangeService,
+    private hotkeys: HotkeysService,
   ) {
   }
 
@@ -213,6 +215,10 @@ export class RepoService {
     this.commitChange.messageChange.subscribe(msg => {
       this._wipCommit.message = msg;
     });
+    this.hotkeys.add(new Hotkey('ctrl+enter', (event: KeyboardEvent): boolean => {
+      this.push();
+      return false;
+    }, undefined, "Push"));
   }
 
   getCommitsWithWIP() {
