@@ -216,11 +216,15 @@ export class RepoService {
       this._wipCommit.message = msg;
     });
     this.hotkeys.add(new Hotkey('ctrl+shift+up', (event: KeyboardEvent): boolean => {
-      this.push();
+      if (!this.loading.isBusy) {
+        this.push();
+      }
       return false;
     }, undefined, "Push"));
     this.hotkeys.add(new Hotkey('ctrl+shift+down', (event: KeyboardEvent): boolean => {
-      this.pull();
+      if (!this.loading.isBusy) {
+        this.pull();
+      }
       return false;
     }, undefined, "Pull"));
   }

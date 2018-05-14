@@ -6,6 +6,7 @@ import { Router } from '@angular/router';
 import { HotkeysService, Hotkey } from 'angular2-hotkeys';
 import { CommitSelectionService } from './commit-selection.service';
 import { WIPCommit } from '../prototypes/commit';
+import { LoadingService } from '../../infrastructure/loading-service.service';
 
 @Injectable()
 export class CommitChangeService {
@@ -38,6 +39,7 @@ export class CommitChangeService {
     private noti: NotificationsService,
     private cmtSelect: CommitSelectionService,
     private hotkeys: HotkeysService,
+    private loading: LoadingService,
   ) {
     this.electron.onCD('Repo-Committed', (event, arg) => {
       this.newCommitMessage = "";
@@ -80,15 +82,21 @@ export class CommitChangeService {
       }
     });
     this.hotkeys.add(new Hotkey('ctrl+s', (event: KeyboardEvent): boolean => {
-      this.tryCommit();
+      if (!this.loading.isBusy) {
+        this.tryCommit();
+      }
       return false;
     }, undefined, "Commit staged changes (or all unstaged files if no files staged)"));
     this.hotkeys.add(new Hotkey('ctrl+down', (event: KeyboardEvent): boolean => {
-      this.stash();
+      if (!this.loading.isBusy) {
+        this.stash();
+      }
       return false;
     }, undefined, "Stash"));
     this.hotkeys.add(new Hotkey('ctrl+up', (event: KeyboardEvent): boolean => {
-      this.pop();
+      if (!this.loading.isBusy) {
+        this.pop();
+      }
       return false;
     }, undefined, "Pop latest stash"));
   }
