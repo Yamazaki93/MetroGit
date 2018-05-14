@@ -32,7 +32,7 @@ This app is built with some really awsome frameworks, including:
 
 #### Github Releases
 
-To start using this app, go to Releases, download and run the latest setup.exe and off you go.
+To start using this app, go to Releases, download and run the latest setup.exe or dmg and off you go.
 
 #### Building
 

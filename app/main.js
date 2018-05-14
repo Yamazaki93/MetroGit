@@ -62,6 +62,17 @@ function createWindow() {
                     }
                 },
             ]
+        },
+        {
+            label: "Help",
+            submenu: [
+                {
+                    label: "Release Notes",
+                    click(item, focusedWindow) {
+                        releaseNote.openReleaseNote();
+                    }
+                },
+            ]
         }
     ];
     const mainMenu = Menu.buildFromTemplate(menuTemplate);

@@ -28,5 +28,6 @@ function openReleaseNote(){
 }
 
 module.exports = {
-    init: init
+    init: init,
+    openReleaseNote: openReleaseNote,
 }
