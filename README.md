@@ -38,18 +38,23 @@ To start using this app, go to Releases, download and run the latest setup.exe a
 
 This app is built on: NodeJS 8.10
 
-To build this from the scratch, first install npm package `electron-builder` and `ng` as global dependencies, then follow the following steps:
+To build this from the scratch, global dependencies `electron-builder` and `@angular/cli` is needed. 
+
+  - You can install global dependencies via `npm install -g electron-builder @angular/cli`
+
+After installing correct dependencies, do the following.
  
   1. Clone this repo
   2. `cd` into this repo, `yarn install`
   3. `cd app/frontend`
   4. `yarn install`
   5. `cd ../..` back to project root directory
-  5. `.\build.ps1` (for windows) or `.\build.sh` (for Mac)
+  6. `.\build.ps1` (for windows) or `.\build.sh` (for Mac)
+  7. The output is in `dist` folder
 
 ## Support this app
 
-Hi there, if you like this app, find it useful or just like this subway map, I'd loved to hear your feedback and experiences, you can share them with `admin at rhodiumcode.com`. 
+Hi there, if you like this app, find it useful or just like this subway map, I'd loved to hear your feedback and experiences, you can share them with `admin@rhodiumcode.com`
 
 Also, please consider <a class="bmc-button" target="_blank" href="https://www.buymeacoffee.com/mjCsGWDTS"><img src="https://www.buymeacoffee.com/assets/img/BMC-btn-logo.svg" alt="Buy me a tea"><span style="margin-left:5px">Buy me a tea</span></a>, I live on black tea basically 😉
 
@@ -63,4 +68,4 @@ Interested in contributing? Please read our [Contributing Guide](https://github.
 
 ## License
 
-MIT
+MIT © Ming-Hung (Michael) Lu
