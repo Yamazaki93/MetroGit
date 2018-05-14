@@ -79,9 +79,12 @@ class Sep {
   get display(): string {
     let diffHr = moment().diff(this.time, 'hour');
     let diffDay = moment().diff(this.time, 'day');
+    let diffWeek = moment().diff(this.time, 'week');
     let diffMonth = moment().diff(this.time, 'month');
     if (diffMonth) {
       return `${diffMonth} month${diffMonth > 1 ? 's' : ''} ago`;
+    } else if (diffWeek) {
+      return `${diffWeek} week${diffWeek > 1 ? 's' : ''} ago`;
     } else if (diffDay) {
       return `${diffDay} day${diffDay > 1 ? 's' : ''} ago`;
     } else if (diffHr) {
