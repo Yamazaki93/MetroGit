@@ -36,7 +36,7 @@ function createWindow() {
     appveyorService.init(settingsService, secureStorage, win, cache);
     jiraService.init(settingsService, secureStorage, win);
     shellMisc.init();
-    updater.init(win);
+    updater.init(win, settingsService);
 
     const menuTemplate = [
         {
