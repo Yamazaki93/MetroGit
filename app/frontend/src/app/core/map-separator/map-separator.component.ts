@@ -44,6 +44,10 @@ export class MapSeparatorComponent implements OnInit {
 
   processSeparators() {
     this.separators.map(sep => { sep.visible = false; });
+    for (let j = 0; j < this.separators.length; j++) {
+      // update times
+      this.separators[j].time.add(moment().diff(this.separators[j].baseTime, 'second'), 'seconds');
+    }
     for (let i = 1; i < this._commits.length; i++) {
       let cmt = this._commits[i];
       let cmtTime = moment(cmt.date);
@@ -72,8 +76,10 @@ class Sep {
   visible = false;
   commit = "";
   time: moment.Moment;
+  baseTime: moment.Moment;
   constructor(t: moment.Moment) {
     this.time = t;
+    this.baseTime = moment();
   }
 
   get display(): string {
