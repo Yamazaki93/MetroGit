@@ -19,8 +19,8 @@ export class RepoService {
   @Output() branchChange = new EventEmitter<Branch>();
   @Output() commitsChange = new EventEmitter<any[]>();
   @Output() refChange = new EventEmitter<any>();
-  @Output() pulled = new EventEmitter<any>();
-  @Output() pushed = new EventEmitter<any>();
+  @Output() pulling = new EventEmitter<boolean>();
+  @Output() pushing = new EventEmitter<boolean>();
   @Output() posUpdate = new EventEmitter<{ ahead: number, behind: number }>();
 
   commits: any[] = [];
@@ -74,7 +74,7 @@ export class RepoService {
       this.posUpdate.emit(this.currentPos);
     });
     this.electron.onCD('Repo-Pulled', (event, arg) => {
-      this.pulled.emit();
+      this.pulling.emit(false);
       if (arg.result === 'UP_TO_DATE') {
         this.noti.info("Up to date", "Your local branch is up-to-date with the remote");
       } else {
@@ -82,7 +82,7 @@ export class RepoService {
       }
     });
     this.electron.onCD('Repo-Pushed', (event, arg) => {
-      this.pushed.emit();
+      this.pushing.emit(false);
       this.noti.success("Pushed", "Successfully pushed to remote");
     });
     this.electron.onCD('Repo-CommitsUpdated', (event, arg) => {
@@ -133,7 +133,7 @@ export class RepoService {
       } else {
         this.skipAuthError(arg.detail);
       }
-      this.pulled.emit();
+      this.pulling.emit(false);
       this._pendingOperation = this.pull;
     });
     this.electron.onCD('Repo-PushFailed', (event, arg) => {
@@ -155,7 +155,7 @@ export class RepoService {
       } else {
         this.skipAuthError(arg.detail);
       }
-      this.pushed.emit();
+      this.pushing.emit(false);
     });
     this.electron.onCD('Settings-EffectiveUpdated', (event, arg) => {
       this.pulloption = arg['gen-pulloption'];
@@ -281,10 +281,12 @@ export class RepoService {
   }
 
   pull(): void {
+    this.pulling.emit(true);
     this.electron.ipcRenderer.send('Repo-Pull', { username: this.cred.username, password: this.cred.password, option: this.pulloption });
   }
 
   push(force = false): void {
+    this.pushing.emit(true);
     this.electron.ipcRenderer.send('Repo-Push', { username: this.cred.username, password: this.cred.password, force: force });
   }
 
