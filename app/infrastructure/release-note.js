@@ -6,12 +6,12 @@ var settings;
 
 function init(sett, win) {
     settings = sett;
-    if(!settings.get('show-release-note')) {
+    //if(!settings.get('show-release-note')) {
         settings.update('show-release-note', true);
         win.webContents.once('did-finish-load', () => {
             openReleaseNote();
         })
-    }
+    //}
 }
 
 function openReleaseNote(){
