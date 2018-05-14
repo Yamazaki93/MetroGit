@@ -13,6 +13,7 @@ const cache = require('./infrastructure/cache');
 const fileWatcher = require('./git/file-watcher');
 const updater = require('./infrastructure/auto-updater');
 const externalFile = require('./git/external-file-view');
+const releaseNote = require('./infrastructure/release-note');
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
@@ -27,6 +28,7 @@ function createWindow() {
     fileWatcher.init(win);
     externalFile.init(fileWatcher);
     settingsService.init(win, secureStorage);
+    releaseNote.init(settingsService, win);
     cache.init();
     repo.init(win, settingsService, secureStorage, fileWatcher);
     autoFetch.init(win, settingsService);
