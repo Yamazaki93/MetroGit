@@ -46,7 +46,8 @@ export class MapSeparatorComponent implements OnInit {
     this.separators.map(sep => { sep.visible = false; });
     for (let j = 0; j < this.separators.length; j++) {
       // update times
-      this.separators[j].time.add(moment().diff(this.separators[j].baseTime, 'second'), 'seconds');
+      this.separators[j].time.add(moment().diff(this.separators[j].baseTime, 'second'), 'second');
+      this.separators[j].baseTime = moment();
     }
     for (let i = 1; i < this._commits.length; i++) {
       let cmt = this._commits[i];
