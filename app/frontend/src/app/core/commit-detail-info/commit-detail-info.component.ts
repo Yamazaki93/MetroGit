@@ -109,8 +109,8 @@ export class CommitDetailInfoComponent implements OnInit {
       this.newCommitMessage = this.commitChange.defaultKey + '-';
     }
   }
-  openFileDetails(file) {
-    this.selection.selectFileDetail(file);
+  openFileDetails(file, commit = null) {
+    this.selection.selectFileDetail(file, commit);
   }
   onKeyDown($event) {
     // keyboard code 83 = s;

@@ -91,7 +91,7 @@
       <a class="btn-success btn-sm btn" [class.disabled]="!commit.unstaged.length" (click)="stageAll()">Stage All</a>
     </div>
     <div class="modified-file-list p-2">
-      <div class="modified-file-entry p-1 d-flex" *ngFor="let file of commit.unstaged; trackBy: wipFileTrack">
+      <div class="modified-file-entry p-1 d-flex" *ngFor="let file of commit.unstaged; trackBy: wipFileTrack"  (click)="openFileDetails(file.path, 'workdir')">
         <div>
           <span class="mr-2 text-warning" *ngIf="file.isModified">
             <i class="icon-file-text"></i>
@@ -132,7 +132,7 @@
       <a class="btn-danger btn-sm btn" [class.disabled]="!commit.staged.length" (click)="unstageAll()">Unstage All</a>
     </div>
     <div class="modified-file-list p-2">
-      <div class="modified-file-entry p-1" *ngFor="let file of commit.staged; trackBy: wipFileTrack">
+      <div class="modified-file-entry p-1" *ngFor="let file of commit.staged; trackBy: wipFileTrack" (click)="openFileDetails(file.path, 'tree')">
         <div>
           <span class="mr-2 text-warning" *ngIf="file.isModified">
             <i class="icon-file-text"></i>

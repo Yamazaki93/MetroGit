@@ -109,40 +109,61 @@ function getFileDetailWrapper(event, arg) {
     if (Repo) {
         getFileDetail(arg.file, arg.commit).then(result => {
             event.sender.send('Repo-FileDetailRetrieved', result);
+        }).catch(err => {
+            console.log(err);
         })
     }
 }
 
 function getFileDetail(path, commit) {
-    if (commit !== '00000') {
+    if (commit !== 'tree' && commit !== 'workdir') {
         return Repo.getCommit(commit).then(x => {
             return x.getDiff().then(diffs => {
                 diff = diffs[0]
-                return diff.findSimilar({ renameThreshold: 50 }).then(() => {
-                    return diff.patches();
-                });
-            }).then(patches => {
-                let patch;
-                patches.forEach(p => {
-                    if (p.newFile().path() === path) {
-                        patch = p;
-                    }
-                });
-                if (patch) {
-                    return patch.hunks()
-                } else {
-                    return Promise.reject('FILE_NOT_FOUND');
-                }
-            }).then(hunks => {
+                return diff
+            }).then(diff => {
+                return processDiff(diff, path);
+            })
+        });
+    } else if(commit === 'workdir') {
+        return Repo.index().then(index => {
+            return NodeGit.Diff.indexToWorkdir(Repo, index);
+        }).then(diff => {
+            return processDiff(diff, path);
+        })
+    } else {
+        let index;
+        return Repo.index().then(ind => {
+            index = ind;
+            return Repo.getHeadCommit().then(cmt => {
+                return cmt.getTree()
+            });
+        }).then(tree => {
+            return NodeGit.Diff.treeToIndex(Repo, tree, index);
+        }).then(diff => {
+            return processDiff(diff, path);
+        })
+    }
+}
+
+function processDiff(diff, path) {
+    return diff.findSimilar({ renameThreshold: 50 }).then(() => {
+        return diff.patches();
+    }).then(patches => {
+        let patch;
+        patches.forEach(p => {
+            if (p.newFile().path() === path) {
+                patch = p;
+            }
+        });
+        if (patch) {
+            return patch.hunks().then(hunks => {
                 let req = [];
                 hunks.forEach(function (hunk) {
                     req.push(hunk.lines());
                 });
                 return Promise.all(req);
             }).then(hunks => {
-                // console.log("diff", patch.oldFile().path(),
-                //     patch.newFile().path());
-                // console.log(hunk.header().trim());
                 let result = [];
                 hunks.forEach(lines => {
                     result.push({
@@ -173,10 +194,10 @@ function getFileDetail(path, commit) {
                 })
                 return { path: path, paths: path.split('/'), hunks: result, summary: { added: linesAdded, removed: linesRemoved } };
             });
-        });
-    } else {
-        return Promise.resolve();
-    }
+        } else {
+            return Promise.reject('FILE_NOT_FOUND');
+        }
+    });
 }
 
 module.exports = {
