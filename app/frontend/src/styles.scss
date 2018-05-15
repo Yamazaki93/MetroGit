@@ -129,3 +129,12 @@ context-menu-content {
         color: var(--blue) !important;
     }
 }
+
+.jira-issue-macro {
+    background: var(--gray-dark);
+    padding: 2px;
+    border-radius: 4px;
+    a img {
+        margin-top: -3px;
+    }
+}
