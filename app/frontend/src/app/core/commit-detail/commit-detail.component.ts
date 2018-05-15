@@ -65,8 +65,8 @@ export class CommitDetailComponent implements OnInit {
     this.fileToggled = false;
     this.layout.isFilePanelOpen = this.fileToggled;
   }
-  openExternal() {
-    this.selection.openExternalFileView(this.selectedFile);
+  openExternal(commit) {
+    this.selection.openExternalFileView(this.selectedFile, commit);
   }
   getShortenedPath(path) {
     if (path.length > 55) {

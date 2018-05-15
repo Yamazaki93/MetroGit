@@ -95,8 +95,11 @@ export class CommitSelectionService {
       this.selectionChange.emit(this.selectedCommit);
     }
   }
-  openExternalFileView(file) {
-    this.electron.ipcRenderer.send('Repo-OpenExternalFile', { file: file, commit: this.selectedCommit.sha });
+  openExternalFileView(file, sha = null) {
+    if (!sha) {
+      sha = this.selectedCommit.sha;
+    }
+    this.electron.ipcRenderer.send('Repo-OpenExternalFile', { file: file, commit: sha });
   }
   reset(commit, mode): void {
     if (mode === 'hard') {

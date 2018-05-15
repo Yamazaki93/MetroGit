@@ -126,14 +126,18 @@ function getFileDetail(path, commit) {
             })
         });
     } else if(commit === 'workdir') {
-        return Repo.index().then(index => {
+        return Repo.refreshIndex().then(() => {
+            return Repo.index();
+        }).then(index => {
             return NodeGit.Diff.indexToWorkdir(Repo, index);
         }).then(diff => {
-            return processDiff(diff, path);
+            return processDiff(diff, path, commit);
         })
     } else {
         let index;
-        return Repo.index().then(ind => {
+        return Repo.refreshIndex().then(() => {
+            return Repo.index();
+        }).then(ind => {
             index = ind;
             return Repo.getHeadCommit().then(cmt => {
                 return cmt.getTree()
@@ -141,12 +145,12 @@ function getFileDetail(path, commit) {
         }).then(tree => {
             return NodeGit.Diff.treeToIndex(Repo, tree, index);
         }).then(diff => {
-            return processDiff(diff, path);
+            return processDiff(diff, path, commit);
         })
     }
 }
 
-function processDiff(diff, path) {
+function processDiff(diff, path, commit) {
     return diff.findSimilar({ renameThreshold: 50 }).then(() => {
         return diff.patches();
     }).then(patches => {
@@ -192,7 +196,7 @@ function processDiff(diff, path) {
                         }
                     })
                 })
-                return { path: path, paths: path.split('/'), hunks: result, summary: { added: linesAdded, removed: linesRemoved } };
+                return { path: path, paths: path.split('/'), commit: commit, hunks: result, summary: { added: linesAdded, removed: linesRemoved } };
             });
         } else {
             return Promise.reject('FILE_NOT_FOUND');
