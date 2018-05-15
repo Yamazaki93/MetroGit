@@ -6,7 +6,7 @@
   </span>
   <span>{{item.display}}</span>
   <span class="expand" [class.icon-chevron-up]="toggled" [class.icon-chevron-down]="!toggled" *ngIf="item.items"></span>
-  <app-branch-item [item]="subItem" *ngFor="let subItem of item.items; trackBy: trackBy"></app-branch-item>
+  <app-branch-item [collapse]="_collapse" [item]="subItem" *ngFor="let subItem of item.items; trackBy: trackBy"></app-branch-item>
 </div>
 <context-menu #tagMenu>
   <ng-template contextMenuItem (execute)="onDeleteTag($event.item.shorthand)">

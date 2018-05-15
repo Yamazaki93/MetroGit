@@ -11,8 +11,14 @@ import { CommitSelectionService } from '../services/commit-selection.service';
 export class BranchItemComponent implements OnInit {
 
   @Input() item;
+  @Input()
+  set collapse(cp: boolean) {
+    this.toggled = !cp;
+    this._collapse = cp;
+  }
   @HostBinding('class.toggled') toggled = true;
   @ViewChild('tagMenu') tagMenu: ContextMenuComponent;
+  private _collapse = false;
   constructor(
     private d3: D3Service,
     private ctxService: ContextMenuService,

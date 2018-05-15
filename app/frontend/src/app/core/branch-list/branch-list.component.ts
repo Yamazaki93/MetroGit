@@ -13,6 +13,10 @@ export class BranchListComponent implements OnInit, AfterViewInit {
     this.updateBranchVisual();
     this.cd.detectChanges();
   }
+  @Input()
+  set collapseAll(cp: boolean) {
+    this._collapseAll = cp;
+  }
   @Input() rootIcon = "";
   @Input() rootPath = "";
   @Input() itemIcon = 'git-branch';
@@ -20,6 +24,7 @@ export class BranchListComponent implements OnInit, AfterViewInit {
   private items = [];
   private basePad = 25;
   private baseCls = "mr-2";
+  private _collapseAll = false;
   constructor(
     private d3: D3Service,
     private cd: ChangeDetectorRef

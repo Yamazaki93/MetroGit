@@ -25,6 +25,8 @@ export class BranchViewerComponent implements OnInit {
   showLocal = true;
   showRemote = true;
   showTags = true;
+  private collapseRemote = false;
+  private collapseLocal = false;
   @ViewChild('openRepoPanel') openRepoPanel: OpenRepoPanelComponent;
   constructor(
     private repoService: RepoService,
@@ -110,5 +112,13 @@ export class BranchViewerComponent implements OnInit {
         this.tags.push(r);
       }
     });
+  }
+  toggleCollapseRemote($event) {
+    this.collapseRemote = !this.collapseRemote;
+    $event.stopPropagation();
+  }
+  toggleCollapseLocal($event) {
+    this.collapseLocal = !this.collapseLocal;
+    $event.stopPropagation();
   }
 }
