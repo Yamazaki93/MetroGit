@@ -148,7 +148,7 @@ function addSubtask(event, arg) {
     if (conn) {
         return conn.post(`/issue`, {"fields": {
             "project": {
-                "id": 
+                "id": arg.projectId
             }
         }});
     }
