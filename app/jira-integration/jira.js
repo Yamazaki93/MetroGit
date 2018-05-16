@@ -15,6 +15,7 @@ ipcMain.on('JIRA-UpdateIssue', requireArgParams(updateIssue, ['key', 'data']));
 ipcMain.on('JIRA-AddComment', requireArgParams(addComment, ['key', 'body']));
 ipcMain.on('JIRA-GetAssignableUsers', requireArgParams(findAssignableUsers, ['key']));
 ipcMain.on('JIRA-AssignIssue', requireArgParams(assignIssue, ['key', 'name']));
+ipcMain.on('JIRA-AddSubtask', requireArgParams(addSubtask, ['key', 'name']));
 
 function init(sett, sec, win) {
     secureStorage = sec;
@@ -140,6 +141,16 @@ function assignIssue(event, arg) {
         return conn.put(`/issue/${arg.key}/assignee`, { name: arg.name }).then(result => {
             getIssue(event, arg);
         });
+    }
+}
+
+function addSubtask(event, arg) {
+    if (conn) {
+        return conn.post(`/issue`, {"fields": {
+            "project": {
+                "id": 
+            }
+        }});
     }
 }
 

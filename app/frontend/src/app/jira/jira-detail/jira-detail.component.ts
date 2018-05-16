@@ -136,7 +136,7 @@ export class JiraDetailComponent implements OnInit, OnDestroy {
   addSubtask() {
     let elem = this.promptInj.injectComponent(SubtaskPromptComponent);
     elem.toEnter.subscribe(name => {
-      this.jira.addSubtask(this.currentIssueKey, name);
+      this.jira.addSubtask(this.currentIssueKey, name, this.issue.fields.project.id);
     });
   }
 }
