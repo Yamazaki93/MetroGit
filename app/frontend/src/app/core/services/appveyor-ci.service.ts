@@ -1,5 +1,7 @@
 import { Injectable, Output, EventEmitter } from '@angular/core';
 import { ElectronService } from '../../infrastructure/electron.service';
+import { NotificationsService } from 'angular2-notifications';
+import { LoadingService } from '../../infrastructure/loading-service.service';
 
 @Injectable()
 export class AppveyorCiService {
@@ -14,7 +16,9 @@ export class AppveyorCiService {
   private account = "";
   private project = "";
   constructor(
-    private electron: ElectronService
+    private electron: ElectronService,
+    private notification: NotificationsService,
+    private loading: LoadingService
   ) {
     electron.onCD('Settings-EffectiveUpdated', (event, arg) => {
       this.buildResults = null;
@@ -52,6 +56,10 @@ export class AppveyorCiService {
     electron.onCD('CI-AppVeyorLogRetrieved', (event, arg) => {
       this.logRetrieved.emit({build: arg.version, output: arg.result});
     });
+    electron.onCD('CI-AppVeyorRebuilded', (event, arg) => {
+      this.notification.success(`Rebuild Scheduled ...`);
+      this.loading.disableLoading();
+    })
   }
 
   init() {
@@ -69,6 +77,11 @@ export class AppveyorCiService {
     if (this.buildResults && this.buildResults[commit] && this.account && this.project) {
       this.electron.ipcRenderer.send('CI-AppVeyorGetLog', {version: this.buildResults[commit].version});
     }
+  }
+
+  rebuildAppveyor(commit) {
+    this.loading.enableLoading('Rebuilding ...');
+    this.electron.ipcRenderer.send('CI-AppVeyorRebuild', {branch: this.buildResults[commit].branch, commit: commit});
   }
 
 }
