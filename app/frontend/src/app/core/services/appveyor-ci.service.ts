@@ -72,7 +72,7 @@ export class AppveyorCiService {
   }
 
   rebuildAppveyor(commit) {
-    this.electron.ipcRenderer.send('CI-AppVeyorRebuild', {});
+    this.electron.ipcRenderer.send('CI-AppVeyorRebuild', {branch: this.buildResults[commit].branch, commit: commit});
   }
 
 }

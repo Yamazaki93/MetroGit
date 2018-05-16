@@ -85,6 +85,7 @@ function formatResults(builds) {
             buildId: b.buildId,
             build: b.buildNumber,
             version: b.version,
+            branch: b.branch,
         }
     });
     let existing = {};
@@ -126,8 +127,13 @@ function getBuildLog(event, arg) {
 }
 
 function reBuildAppVeyor(event, arg) {
-    if (conn) {
-        var i = 1;
+    if (conn && arg.commit) {
+        conn.post(`builds`, {
+            "accountName": accountName,
+            "projectSlug": projectName,
+            "branch": arg.branch,
+            "commitId": arg.commit
+        })
     }
 }
 
