@@ -12,6 +12,8 @@ const shellMisc = require('./infrastructure/shell');
 const cache = require('./infrastructure/cache');
 const fileWatcher = require('./git/file-watcher');
 const updater = require('./infrastructure/auto-updater');
+const externalFile = require('./git/external-file-view');
+const releaseNote = require('./infrastructure/release-note');
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
@@ -24,7 +26,9 @@ function createWindow() {
     // init services
     secureStorage.init(win);
     fileWatcher.init(win);
+    externalFile.init(fileWatcher);
     settingsService.init(win, secureStorage);
+    releaseNote.init(settingsService, win);
     cache.init();
     repo.init(win, settingsService, secureStorage, fileWatcher);
     autoFetch.init(win, settingsService);
@@ -32,7 +36,7 @@ function createWindow() {
     appveyorService.init(settingsService, secureStorage, win, cache);
     jiraService.init(settingsService, secureStorage, win);
     shellMisc.init();
-    updater.init(win);
+    updater.init(win, settingsService);
 
     const menuTemplate = [
         {
@@ -58,6 +62,17 @@ function createWindow() {
                     }
                 },
             ]
+        },
+        {
+            label: "Help",
+            submenu: [
+                {
+                    label: "Release Notes",
+                    click(item, focusedWindow) {
+                        releaseNote.openReleaseNote();
+                    }
+                },
+            ]
         }
     ];
     const mainMenu = Menu.buildFromTemplate(menuTemplate);
@@ -65,6 +80,7 @@ function createWindow() {
     // and load the index.html of the app.
     win.loadURL(url.format({
         pathname:  path.join(__dirname, 'frontend/dist/index.html'),
+        hash: '/git',
         protocol: 'file:',
         slashes: true
     }))

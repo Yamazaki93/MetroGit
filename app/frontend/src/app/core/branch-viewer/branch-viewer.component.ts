@@ -5,6 +5,7 @@ import { RepoService } from '../services/repo.service';
 import { Router } from '@angular/router';
 import { LayoutService } from '../services/layout.service';
 import { D3Service } from '../d3/d3.service';
+import { HotkeysService, Hotkey } from 'angular2-hotkeys';
 
 @Component({
   selector: 'app-branch-viewer',
@@ -17,17 +18,22 @@ export class BranchViewerComponent implements OnInit {
   refs = [];
   remote = [];
   local = [];
+  tags = [];
   repoName = "";
   branchName = "";
   branchTarget = "";
   showLocal = true;
   showRemote = true;
+  showTags = true;
+  private collapseRemote = false;
+  private collapseLocal = false;
   @ViewChild('openRepoPanel') openRepoPanel: OpenRepoPanelComponent;
   constructor(
     private repoService: RepoService,
     private route: Router,
     private layout: LayoutService,
-    private d3: D3Service
+    private d3: D3Service,
+    private hotkeys: HotkeysService,
   ) {
     this.repoService.repoChange.subscribe(info => {
       let that = this;
@@ -54,6 +60,14 @@ export class BranchViewerComponent implements OnInit {
     this.toggled = layout.isNavToggled;
     this.showLocal = layout.isLocalShown;
     this.showRemote = layout.isRemoteShown;
+    layout.filePanelChanged.subscribe(filePanelOpen => {
+      if (this.toggled && filePanelOpen) {
+        this.toggleNavigation();
+      }
+    });
+    layout.navPanelChanged.subscribe(navOpen => {
+      this.toggled = navOpen;
+    });
   }
 
   ngOnInit() {
@@ -74,6 +88,10 @@ export class BranchViewerComponent implements OnInit {
   toggleOpenRepo(): void {
     this.openRepoPanel.toggled = !this.openRepoPanel.toggled;
   }
+  toggleTags(): void {
+    this.showTags = !this.showTags;
+    this.layout.isTagsShown = this.showTags;
+  }
   goToSettings(): void {
     this.route.navigateByUrl('/settings');
   }
@@ -84,12 +102,23 @@ export class BranchViewerComponent implements OnInit {
   updateReferences(refs) {
     this.remote = [];
     this.local = [];
+    this.tags = [];
     refs.forEach((r) => {
       if (r.isRemote) {
         this.remote.push(r);
       } else if (r.isBranch) {
         this.local.push(r);
+      } else if (r.isTag) {
+        this.tags.push(r);
       }
     });
+  }
+  toggleCollapseRemote($event) {
+    this.collapseRemote = !this.collapseRemote;
+    $event.stopPropagation();
+  }
+  toggleCollapseLocal($event) {
+    this.collapseLocal = !this.collapseLocal;
+    $event.stopPropagation();
   }
 }

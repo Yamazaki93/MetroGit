@@ -8,16 +8,56 @@ $badge-size: 20px;
     height: 100%;
 }
 
+.full-width{
+    width: 100%;
+}
+.no-shrink{
+    flex-shrink: 0;
+}
+
+.file-panel{
+    top: 0;
+    right: 40vw;
+    width: 0;
+    position: absolute;
+    height: 100%;
+    background: var(--gray-dark);
+    z-index: 10;
+    overflow: hidden;
+    opacity: 0;
+    &.toggled{
+        width: 60vw;
+        padding: 10px 10px 0 120px;
+        opacity: 1;
+    }
+    .close-btn-container{
+        flex-shrink: 0;
+        a{
+            color: #fff;
+            &:hover{
+                text-decoration: none;
+                color: var(--blue);
+            }
+        }
+    }
+}
+
 .commit-detail-container {
     height: 100%;
     width: 0;
     background: var(--gray-dark);
     box-shadow: 0 0 8px rgba(0, 0, 0, 0.8);
+    z-index: 11;
+    .info-panels{
+        height: 100%;
+        flex-shrink: 0;
+        width: 40vw;
+    }
+
     &.toggled {
-        width: 70vh;
+        width: 40vw;
     }
     position: relative;
-    overflow: hidden;
 }
 
 

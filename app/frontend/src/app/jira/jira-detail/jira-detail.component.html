@@ -32,17 +32,18 @@
       <label>Status</label>
       <!-- <div class="p-2 rounded" [class.bg-dark]="issue.fields.status.statusCategory.colorName!=='green' && issue.fields.status.statusCategory.colorName!=='yellow' "
         [class.bg-success]="issue.fields.status.statusCategory.colorName==='green'" [class.bg-primary]="issue.fields.status.statusCategory.colorName==='yellow'">{{issue.fields.status.name}}</div> -->
-      <app-transition-control (transitioning)="onTransitioning()" [key]="issue.key" [padding]="2" [status]="issue.fields.status"
+      <app-transition-control (transitioning)="onRequestPosted()" [key]="issue.key" [padding]="2" [status]="issue.fields.status"
         [transitions]="issue.transitions"></app-transition-control>
       <small *ngIf="issue.fields.resolution">
         <i class="icon-check mr-2"></i>{{issue.fields.resolution.name}}</small>
     </div>
     <div class="col-3">
       <label>Assignee</label>
-      <div class="p-2 rounded bg-dark profile-container">
+      <!-- <div class="p-2 rounded bg-dark profile-container">
         <img [src]="issue.fields.assignee.safeAvatarUrl" class="mr-1" width="24px" *ngIf="issue.fields.assignee" />
         <span *ngIf="issue.fields.assignee">{{issue.fields.assignee.displayName}}</span>
-      </div>
+      </div> -->
+      <app-profile-selector (profileSelected)="onRequestPosted()" [key]="issue.key" [profile]="issue.fields.assignee"></app-profile-selector>
     </div>
     <div class="col-3" *ngIf="issue.fields.storyPoints !== undefined">
       <label>Story Points</label>

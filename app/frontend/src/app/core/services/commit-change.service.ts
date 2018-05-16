@@ -3,6 +3,10 @@ import { ElectronService } from '../../infrastructure/electron.service';
 import { CredentialsService } from './credentials.service';
 import { NotificationsService } from 'angular2-notifications';
 import { Router } from '@angular/router';
+import { HotkeysService, Hotkey } from 'angular2-hotkeys';
+import { CommitSelectionService } from './commit-selection.service';
+import { WIPCommit } from '../prototypes/commit';
+import { LoadingService } from '../../infrastructure/loading-service.service';
 
 @Injectable()
 export class CommitChangeService {
@@ -27,11 +31,15 @@ export class CommitChangeService {
   }
   private _message = "";
   private _detail = "";
+  private selectedCommit: WIPCommit;
   constructor(
     private electron: ElectronService,
     private cred: CredentialsService,
     private route: Router,
-    private noti: NotificationsService
+    private noti: NotificationsService,
+    private cmtSelect: CommitSelectionService,
+    private hotkeys: HotkeysService,
+    private loading: LoadingService,
   ) {
     this.electron.onCD('Repo-Committed', (event, arg) => {
       this.newCommitMessage = "";
@@ -66,6 +74,35 @@ export class CommitChangeService {
     this.electron.onCD('Repo-Stashed', (event, arg) => {
       this.stashed.emit();
     });
+    cmtSelect.selectionChange.subscribe(newSelect => {
+      if (<WIPCommit>newSelect) {
+        this.selectedCommit = newSelect;
+      } else {
+        this.selectedCommit = null;
+      }
+    });
+    this.hotkeys.add(new Hotkey('ctrl+s', (event: KeyboardEvent): boolean => {
+      if (!this.loading.isBusy) {
+        this.tryCommit();
+      }
+      return false;
+    }, undefined, "Commit staged changes (or all unstaged files if no files staged)"));
+    this.hotkeys.add(new Hotkey('ctrl+down', (event: KeyboardEvent): boolean => {
+      if (!this.loading.isBusy) {
+        this.stash();
+      }
+      return false;
+    }, undefined, "Stash"));
+    this.hotkeys.add(new Hotkey('ctrl+up', (event: KeyboardEvent): boolean => {
+      if (!this.loading.isBusy) {
+        this.pop();
+      }
+      return false;
+    }, undefined, "Pop latest stash"));
+  }
+
+  init() {
+
   }
   stage(paths): void {
     this.electron.ipcRenderer.send('Repo-Stage', { paths: paths });
@@ -97,11 +134,26 @@ export class CommitChangeService {
       this.electron.ipcRenderer.send('Repo-Stash', { name: name, email: email, message: message });
     }
   }
-  pop(): void {
-    this.electron.ipcRenderer.send('Repo-Pop', {});
+  pop(index = -1): void {
+    this.electron.ipcRenderer.send('Repo-Pop', { index: index });
+  }
+  apply(index = -1): void {
+    this.electron.ipcRenderer.send('Repo-Apply', { index: index });
+  }
+  deleteStash(index): void {
+    this.electron.ipcRenderer.send('Repo-DeleteStash', { index: index });
   }
   discardAll(): void {
     this.electron.ipcRenderer.send('Repo-DiscardAll', {});
+  }
+  tryCommit(): void {
+    if (this.newCommitMessage.length && this.selectedCommit) {
+      if (this.selectedCommit.staged.length) {
+        this.commitStaged();
+      } else {
+        this.commit(this.selectedCommit.unstaged.map(us => us.path));
+      }
+    }
   }
   private checkProfileExists(): boolean {
     let noProfile = !this.cred.name || !this.cred.email;

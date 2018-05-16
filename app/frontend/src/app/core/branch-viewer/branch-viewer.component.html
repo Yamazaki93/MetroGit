@@ -12,29 +12,53 @@
       <span class="nav-text">{{repoName}}</span>
     </h4>
   </div>
-  <div class="repo-info-container smooth action-button" placement="right" ngbTooltip="Current Branch" container="body" *ngIf="branchName !== ''" (click)="goToCurrentBranch()">
-    <h4><i class="icon-git-branch mr-3"></i>{{branchName}}</h4>
+  <div class="repo-info-container smooth action-button" placement="right" ngbTooltip="Current Branch" container="body" *ngIf="branchName !== ''"
+    (click)="goToCurrentBranch()">
+    <h4>
+      <i class="icon-git-branch mr-3"></i>{{branchName}}</h4>
   </div>
   <div style="height: 100%;position: relative;">
     <ul class="main-nav-list">
       <li *ngIf="repoName !== ''" class="expandable smooth" [class.toggled]="showLocal">
-        <a class="smooth-1 action-button" (click)="toggleLocal()">
-          <h4>
-            <span class="icon-monitor mr-3"></span>
-            <span class="nav-text">Local</span>
-          </h4>
-          <!-- <span class="expand" [class.icon-chevron-up]="showLocal" [class.icon-chevron-down]="!showLocal"></span> -->
+        <a class="smooth-1 action-button d-flex" (click)="toggleLocal()">
+          <div class="full-width">
+            <h4>
+              <span class="icon-monitor mr-3"></span>
+              <span class="nav-text">Local</span>
+            </h4>
+          </div>
+          <div>
+            <h4 class="toggle-all-btn" (click)="toggleCollapseLocal($event)">
+              <span [class.icon-plus-square]="collapseLocal" [class.icon-minus-square]="!collapseLocal"></span>
+            </h4>
+          </div>
         </a>
-        <app-branch-list [branches]="local"></app-branch-list>
+        <app-branch-list [collapseAll]="collapseLocal" [branches]="local"></app-branch-list>
       </li>
       <li *ngIf="repoName !== ''" class="expandable smooth" [class.toggled]="showRemote">
-        <a class="smooth-1  action-button" (click)="toggleRemote()">
+        <a class="smooth-1  action-button d-flex" (click)="toggleRemote()">
+          <div class="full-width">
+            <h4>
+              <span class="icon-cloud mr-3"></span>
+              <span class="nav-text">Remote</span>
+            </h4>
+          </div>
+          <div>
+            <h4 class="toggle-all-btn" (click)="toggleCollapseRemote($event)">
+              <span [class.icon-plus-square]="collapseRemote" [class.icon-minus-square]="!collapseRemote"></span>
+            </h4>
+          </div>
+        </a>
+        <app-branch-list [collapseAll]="collapseRemote" [branches]="remote"></app-branch-list>
+      </li>
+      <li *ngIf="repoName !== ''" class="expandable smooth" [class.toggled]="showTags">
+        <a class="smooth-1 action-button" (click)="toggleTags()">
           <h4>
-            <span class="icon-cloud mr-3"></span>
-            <span class="nav-text">Remote</span>
+            <span class="icon-tag mr-3"></span>
+            <span class="nav-text">Tags</span>
           </h4>
         </a>
-        <app-branch-list [branches]="remote"></app-branch-list>
+        <app-branch-list [branches]="tags" [itemIcon]="'tag'"></app-branch-list>
       </li>
     </ul>
   </div>

@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, ViewChild, ElementRef, AfterViewChecked } from '@angular/core';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 
 @Component({
@@ -6,11 +6,12 @@ import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
   templateUrl: './jira-rich-text.component.html',
   styleUrls: ['./jira-rich-text.component.scss']
 })
-export class JiraRichTextComponent implements OnInit {
+export class JiraRichTextComponent implements OnInit, AfterViewChecked {
 
   @Input() set rawText(raw: string) {
     this.richText = this.sanitizer.bypassSecurityTrustHtml(raw);
   }
+  @ViewChild('container') container: ElementRef;
 
   private richText: SafeHtml;
   constructor(
@@ -18,6 +19,14 @@ export class JiraRichTextComponent implements OnInit {
   ) { }
 
   ngOnInit() {
+  }
+  ngAfterViewChecked(): void {
+    let eles = this.container.nativeElement.getElementsByTagName('a');
+    if (eles && eles.length) {
+      for (let i = 0; i < eles.length; i++) {
+        eles[i].setAttribute('href', 'javascript:void(0)');
+      }
+    }
   }
 
 }

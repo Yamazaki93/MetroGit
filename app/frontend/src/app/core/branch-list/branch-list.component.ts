@@ -13,12 +13,18 @@ export class BranchListComponent implements OnInit, AfterViewInit {
     this.updateBranchVisual();
     this.cd.detectChanges();
   }
+  @Input()
+  set collapseAll(cp: boolean) {
+    this._collapseAll = cp;
+  }
   @Input() rootIcon = "";
   @Input() rootPath = "";
+  @Input() itemIcon = 'git-branch';
   private _branches = [];
   private items = [];
   private basePad = 25;
   private baseCls = "mr-2";
+  private _collapseAll = false;
   constructor(
     private d3: D3Service,
     private cd: ChangeDetectorRef
@@ -63,7 +69,7 @@ export class BranchListComponent implements OnInit, AfterViewInit {
     if (paths.length === 1) {
       if (folder.items.map(_ => _.display).indexOf(paths[0]) === -1) {
         branch.padding = 15;
-        branch.icon = 'git-branch';
+        branch.icon = this.itemIcon;
         branch.display = paths[0];
         folder.items.push(branch);
         folder.items.sort(this.order);

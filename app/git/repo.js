@@ -16,7 +16,7 @@ function init(win, sett, sec, fw) {
 }
 
 function consolidateAuthError(err) {
-    if(err.message.indexOf('credentials') !== -1 || err.message.indexOf('authentication') !== -1 || err.message.indexOf('401') !== -1) {
+    if (err.message.indexOf('credentials') !== -1 || err.message.indexOf('authentication') !== -1 || err.message.indexOf('401') !== -1) {
         return Promise.reject('CRED_ISSUE');
     } else {
         return Promise.reject(err);
@@ -30,17 +30,13 @@ function initPullOptions() {
 }
 
 function fetchRepo(username, password) {
-    if (Repo) {
-        return checkSSHKey().then(() => {
-            return getCurrentFirstRemote()
-        }).then(remote => {
-            return tryFetch(remote, 1, username, password);
-        }).then(() => {
-            refreshRepo();
-        })
-    } else {
-        return Promise.reject('NO_REPO');
-    }
+    return checkSSHKey().then(() => {
+        return getCurrentFirstRemote()
+    }).then(remote => {
+        return tryFetch(remote, 1, username, password);
+    }).then(() => {
+        refreshRepo();
+    })
 }
 
 function getCurrentFirstRemote() {
@@ -158,128 +154,121 @@ function pullMerge(remoteBranch, currentBranch) {
 }
 
 function pullWrapper(username, password, option) {
-    if (Repo) {
-        let currentBranch;
-        let remoteBranch;
-        let stashed = false;
-        return checkSSHKey().then(() => {
-            return getCurrentFirstRemote()
-        }).then(remote => {
-            return tryFetch(remote, 1, username, password);
-        }).then(() => {
-            return Repo.getCurrentBranch();
-        }).then(res => {
-            currentBranch = res;
-            return findMatchingRemote(res);
-        }).then(rmt => {
-            remoteBranch = rmt;
-            notifyBlockingOperation(true);
-            return Repo.getStatus().then((statuses) => {
-                paths = statuses.map(s => s.path());
-                if (paths.length === 0) {
-                    return Promise.resolve('NO_WIP')
-                } else {
-                    updateBlockingStatus("Stashing...");
-                    return stage(paths).then(() => {
-                        stashed = true;
-                        return NodeGit.Stash.save(Repo, getCurrentSignature(), "Auto Stash", NodeGit.Stash.FLAGS.DEFAULT);
-                    })
-                }
-            })
-        }).then(() => {
-            updateBlockingStatus("Updating branch...");
-            if (option === 'ffonly') {
-                return pullFFOnly(remoteBranch, currentBranch);
-            } else if (option === 'merge') {
-                return pullMerge(remoteBranch, currentBranch);
-            } else if (option === 'rebase') {
-                return pullRebase(remoteBranch, currentBranch);
-            }
-        }).then(result => {
-            if (stashed) {
-                updateBlockingStatus('Popping stashed changes...')
-                return NodeGit.Stash.pop(Repo, 0, NodeGit.Stash.APPLY_FLAGS.APPLY_DEFAULT).then(() => {
-                    return result;
-                });
+    let currentBranch;
+    let remoteBranch;
+    let stashed = false;
+    return checkSSHKey().then(() => {
+        return getCurrentFirstRemote()
+    }).then(remote => {
+        return tryFetch(remote, 1, username, password);
+    }).then(() => {
+        return Repo.getCurrentBranch();
+    }).then(res => {
+        currentBranch = res;
+        return findMatchingRemote(res);
+    }).then(rmt => {
+        remoteBranch = rmt;
+        notifyBlockingOperation(true);
+        return Repo.getStatus().then((statuses) => {
+            paths = statuses.map(s => s.path());
+            if (paths.length === 0) {
+                return Promise.resolve('NO_WIP')
             } else {
-                return result;
+                updateBlockingStatus("Stashing...");
+                return stage(paths).then(() => {
+                    stashed = true;
+                    return NodeGit.Stash.save(Repo, getCurrentSignature(), "Auto Stash", NodeGit.Stash.FLAGS.DEFAULT);
+                })
             }
-        }).then(result => {
-            notifyBlockingOperation(false);
-            refreshRepo();
+        })
+    }).then(() => {
+        updateBlockingStatus("Updating branch...");
+        if (option === 'ffonly') {
+            return pullFFOnly(remoteBranch, currentBranch);
+        } else if (option === 'merge') {
+            return pullMerge(remoteBranch, currentBranch);
+        } else if (option === 'rebase') {
+            return pullRebase(remoteBranch, currentBranch);
+        }
+    }).then(result => {
+        if (stashed) {
+            updateBlockingStatus('Popping stashed changes...')
+            return NodeGit.Stash.pop(Repo, 0, NodeGit.Stash.APPLY_FLAGS.APPLY_DEFAULT).then(() => {
+                return result;
+            });
+        } else {
             return result;
-        });
-    } else {
-        return Promise.reject('NO_REPO')
-    }
+        }
+    }).then(result => {
+        refreshRepo();
+        return result;
+    }).finally(() => {
+        notifyBlockingOperation(false);
+    });
 }
 
 function push(username, password, force) {
-    if (Repo) {
-        let currentBranch;
-        let firstRemote;
-        let remoteBranch;
-        let originalTarget;
-        return checkSSHKey().then(() => {
-            return getCurrentFirstRemote()
-        }).then(remote => {
-            firstRemote = remote;
-            return tryFetch(remote, 1, username, password);
-        }).then(() => {
-            return Repo.getCurrentBranch();
-        }).then(res => {
-            currentBranch = res;
-            return findMatchingRemote(res).catch(err => {
-                if (err === 'UPSTREAM_NOT_FOUND') {
-                    return Promise.resolve();
-                } else {
-                    return Promise.reject(err);
+    let currentBranch;
+    let firstRemote;
+    let remoteBranch;
+    let originalTarget;
+    return checkSSHKey().then(() => {
+        return getCurrentFirstRemote()
+    }).then(remote => {
+        firstRemote = remote;
+        return tryFetch(remote, 1, username, password);
+    }).then(() => {
+        return Repo.getCurrentBranch();
+    }).then(res => {
+        currentBranch = res;
+        return findMatchingRemote(res).catch(err => {
+            if (err === 'UPSTREAM_NOT_FOUND') {
+                return Promise.resolve();
+            } else {
+                return Promise.reject(err);
+            }
+        });
+    }).then(rmt => {
+        if (!rmt) {
+            return Promise.resolve({ behind: true })
+        }
+        remoteBranch = rmt;
+        originalTarget = remoteBranch.target().toString();
+        return NodeGit.Graph.aheadBehind(Repo, remoteBranch.target(), currentBranch.target());
+    }).then(result => {
+        // result.ahead means remote branch is ahead of local
+        if (result.ahead && !force) {
+            return Promise.reject('FORCE_REQUIRED');
+        } else if (!result.behind && !result.ahead) {
+            return Promise.reject('UP_TO_DATE');
+        } else {
+            notifyBlockingOperation(true, "Pushing...");
+            let ref;
+            if (force) {
+                // force push by adding a plus sign
+                ref = `+${currentBranch.name()}:${currentBranch.name()}`
+            } else {
+                ref = `${currentBranch.name()}:${currentBranch.name()}`
+            }
+            return tryPush(firstRemote, [ref], 1, username, password).then(() => {
+                return tryFetch(firstRemote, 1, username, password);
+            }).then(() => {
+                return findMatchingRemote(currentBranch);
+            }).then(newRemote => {
+                // checking if after push the target stays the same as original target
+                // if yes, then push was rejected somehow by remote
+                if (newRemote.target().toString() === originalTarget) {
+                    return Promise.reject('REMOTE_UNCHANGED');
                 }
             });
-        }).then(rmt => {
-            if (!rmt) {
-                return Promise.resolve({ behind: true })
-            }
-            remoteBranch = rmt;
-            originalTarget = remoteBranch.target().toString();
-            return NodeGit.Graph.aheadBehind(Repo, remoteBranch.target(), currentBranch.target());
-        }).then(result => {
-            // result.ahead means remote branch is ahead of local
-            if (result.ahead && !force) {
-                return Promise.reject('FORCE_REQUIRED');
-            } else if (!result.behind && !result.ahead) {
-                return Promise.reject('UP_TO_DATE');
-            } else {
-                notifyBlockingOperation(true, "Pushing...");
-                let ref;
-                if (force) {
-                    // force push by adding a plus sign
-                    ref = `+${currentBranch.name()}:${currentBranch.name()}`
-                } else {
-                    ref = `${currentBranch.name()}:${currentBranch.name()}`
-                }
-                return tryPush(firstRemote, [ref], 1, username, password).then(() => {
-                    return tryFetch(firstRemote, 1, username, password);
-                }).then(() => {
-                    return findMatchingRemote(currentBranch);
-                }).then(newRemote => {
-                    // checking if after push the target stays the same as original target
-                    // if yes, then push was rejected somehow by remote
-                    if (newRemote.target().toString() === originalTarget) {
-                        return Promise.reject('REMOTE_UNCHANGED');
-                    }
-                });
-            }
-        }).then(() => {
-            notifyBlockingOperation(false);
-            refreshRepo();
-        }).catch(err => {
-            notifyBlockingOperation(false);
-            return Promise.reject(err);
-        });
-    } else {
-        return Promise.reject('NO_REPO');
-    }
+        }
+    }).then(() => {
+        notifyBlockingOperation(false);
+        refreshRepo();
+    }).catch(err => {
+        notifyBlockingOperation(false);
+        return Promise.reject(err);
+    });
 }
 
 function getCommits() {
@@ -296,6 +285,7 @@ function getCommits() {
                 let commits = [];
                 let stashIndicies = [];
                 res.forEach(x => {
+                    let stashIndex = -1;
                     let isStash = false;
                     let parents = x.parents().map(p => p.toString());
                     if (stashes.indexOf(x.sha()) !== -1) {
@@ -306,6 +296,7 @@ function getCommits() {
                                 stashIndicies.push(x.parents()[i].toString());
                             }
                         }
+                        stashIndex = stashes.indexOf(x.sha());
                     }
                     let cmt = {
                         sha: x.sha(),
@@ -318,6 +309,7 @@ function getCommits() {
                         author: x.author().name(),
                         parents: parents,
                         isStash: isStash,
+                        stashIndex: stashIndex,
                     }
                     if (stashIndicies.indexOf(cmt.sha) === -1) {
                         commits.push(cmt);
@@ -335,63 +327,59 @@ function getCommits() {
 }
 
 function getCommitDetails(sha) {
-    if (Repo) {
-        return Repo.getCommit(sha).then(x => {
-            return x.getDiff().then(diffs => {
-                diff = diffs[0]
-                return diff.findSimilar({ renameThreshold: 50 }).then(() => {
-                    return diff.patches();
-                });
-            }).then(patches => {
-                let modified = 0;
-                let added = 0;
-                let deleted = 0;
-                let renamed = 0;
-                let files = [];
-                patches.forEach(p => {
-                    let existingPaths = files.map(f => f.path);
-                    if (existingPaths.indexOf(p.newFile().path()) === -1) {
-                        if (p.isRenamed()) {
-                            renamed += 1;
-                        } else if (p.isModified()) {
-                            modified += 1;
-                        } else if (p.isDeleted()) {
-                            deleted += 1;
-                        } else if (p.isAdded()) {
-                            added += 1;
-                        }
-                        files.push({
-                            isModified: p.isModified(),
-                            isAdded: p.isAdded(),
-                            isDeleted: p.isDeleted(),
-                            isRenamed: p.isRenamed(),
-                            path: p.newFile().path()
-                        })
+    return Repo.getCommit(sha).then(x => {
+        return x.getDiff().then(diffs => {
+            diff = diffs[0]
+            return diff.findSimilar({ renameThreshold: 50 }).then(() => {
+                return diff.patches();
+            });
+        }).then(patches => {
+            let modified = 0;
+            let added = 0;
+            let deleted = 0;
+            let renamed = 0;
+            let files = [];
+            patches.forEach(p => {
+                let existingPaths = files.map(f => f.path);
+                if (existingPaths.indexOf(p.newFile().path()) === -1) {
+                    if (p.isRenamed()) {
+                        renamed += 1;
+                    } else if (p.isModified()) {
+                        modified += 1;
+                    } else if (p.isDeleted()) {
+                        deleted += 1;
+                    } else if (p.isAdded()) {
+                        added += 1;
                     }
-                });
-                return {
-                    sha: x.sha(),
-                    message: x.message().split('\n')[0],
-                    detail: x.message().split('\n').splice(1, x.message().split('\n').length).join('\n'),
-                    date: x.date(),
-                    time: x.time(),
-                    committer: x.committer(),
-                    email: x.author().email(),
-                    author: x.author().name(),
-                    parents: x.parents().map(p => p.toString()),
-                    fileSummary: {
-                        added: added,
-                        deleted: deleted,
-                        modified: modified,
-                        renamed: renamed,
-                    },
-                    files: files
+                    files.push({
+                        isModified: p.isModified(),
+                        isAdded: p.isAdded(),
+                        isDeleted: p.isDeleted(),
+                        isRenamed: p.isRenamed(),
+                        path: p.newFile().path()
+                    })
                 }
             });
+            return {
+                sha: x.sha(),
+                message: x.message().split('\n')[0],
+                detail: x.message().split('\n').splice(1, x.message().split('\n').length).join('\n'),
+                date: x.date(),
+                time: x.time(),
+                committer: x.committer(),
+                email: x.author().email(),
+                author: x.author().name(),
+                parents: x.parents().map(p => p.toString()),
+                fileSummary: {
+                    added: added,
+                    deleted: deleted,
+                    modified: modified,
+                    renamed: renamed,
+                },
+                files: files
+            }
         });
-    } else {
-        return Promise.reject('NO_REPO');
-    }
+    });
 }
 
 function getReferences() {
@@ -414,11 +402,14 @@ function getReferences() {
                 } else if (ref.isRemote()) {
                     let names = ref.shorthand().split('/');
                     display = names.splice(1, names.length).join('/');
+                } else if (ref.isTag()) {
+                    display = ref.shorthand();
                 }
                 return {
                     target: ref.target().toString(),
                     isBranch: ref.isBranch(),
                     isRemote: ref.isRemote(),
+                    isTag: ref.isTag(),
                     name: ref.name(),
                     shorthand: ref.shorthand(),
                     display: display
@@ -463,8 +454,8 @@ function notifyBlockingOperation(start, op) {
 }
 
 function updateBlockingStatus(op) {
-    if(window){
-        window.webContents.send('Repo-BlockingUpdate', {operation: op});
+    if (window) {
+        window.webContents.send('Repo-BlockingUpdate', { operation: op });
     }
 }
 
@@ -534,7 +525,7 @@ function updateCurrentBranchPosition() {
 }
 
 function getCurrentBranch() {
-    if (Repo && window) {
+    if (window) {
         return Repo.getCurrentBranch().then(ref => {
             let branchNames = ref.name().split('/');
             let branchName = branchNames[branchNames.length - 1];
@@ -544,65 +535,55 @@ function getCurrentBranch() {
 }
 
 function getCurrentRemotes() {
-    if (Repo) {
-        return Repo.getRemotes().then(strs => {
-            let reqs = [];
-            strs.forEach(r => {
-                reqs.push(Repo.getRemote(r));
-            });
-            return Promise.all(reqs);
-        })
-    } else {
-        return Promise.reject('NO_REPO')
-    }
+    return Repo.getRemotes().then(strs => {
+        let reqs = [];
+        strs.forEach(r => {
+            reqs.push(Repo.getRemote(r));
+        });
+        return Promise.all(reqs);
+    })
 }
 
 function stage(paths) {
-    if (Repo) {
-        let statuses;
-        return Repo.getStatus().then((sts) => {
-            statuses = sts;
-            return Repo.refreshIndex()
-        }).then(index => {
-            let req = [];
-            statuses.forEach(st => {
-                if (paths.indexOf(st.path()) !== -1 || paths.length === 0) {
-                    if (st.isDeleted()) {
-                        req.push(index.removeByPath(st.path()));
-                    } else {
-                        req.push(index.addByPath(st.path()));
-                    }
+    let statuses;
+    return Repo.getStatus().then((sts) => {
+        statuses = sts;
+        return Repo.refreshIndex()
+    }).then(index => {
+        let req = [];
+        statuses.forEach(st => {
+            if (paths.indexOf(st.path()) !== -1 || paths.length === 0) {
+                if (st.isDeleted()) {
+                    req.push(index.removeByPath(st.path()));
+                } else {
+                    req.push(index.addByPath(st.path()));
                 }
-            });
-            return Promise.all(req).then(() => {
-                return index.write();
-            });
-        }).then(() => {
-            return fileWatch.getStatus();
+            }
         });
-    } else {
-        return Promise.reject('NO_REPO')
-    }
+        return Promise.all(req).then(() => {
+            return index.write();
+        });
+    }).then(() => {
+        return fileWatch.getStatus();
+    });
 }
 
 function unstage(paths) {
-    if (Repo) {
-        return Repo.getHeadCommit().then(commit => {
-            return NodeGit.Reset.default(Repo, commit, paths);
-        }).then(() => {
-            return fileWatch.getStatus();
-        });
-    } else {
-        return Promise.reject('NO_REPO')
-    }
+    return Repo.getHeadCommit().then(commit => {
+        return NodeGit.Reset.default(Repo, commit, paths);
+    }).then(() => {
+        return fileWatch.getStatus();
+    });
 }
 
 function commitStaged(name, email, message) {
-    if (Repo && name && email) {
+    if (name && email) {
         let signature = NodeGit.Signature.now(name, email);
         let oid;
         let sha;
-        return Repo.index().then(index => {
+        return Repo.refreshIndex().then(() => {
+            return Repo.index()
+        }).then(index => {
             return index.write().then(() => {
                 return index.writeTree();
             });
@@ -622,13 +603,11 @@ function commitStaged(name, email, message) {
             notifyBlockingOperation(false);
             return Promise.reject(err);
         });
-    } else {
-        return Promise.reject('NO_REPO');
     }
 }
 
 function commit(name, email, message, files) {
-    if (Repo && name && email) {
+    if (name && email) {
         return stage(files).then(() => {
             return Repo.index().then(index => {
                 index.writeTree();
@@ -636,133 +615,212 @@ function commit(name, email, message, files) {
         }).then(() => {
             return commitStaged(name, email, message)
         });
-    } else {
-        return Promise.reject('NO_REPO');
     }
 }
 
 function stash(name, email, message) {
-    if (Repo) {
-        let signature;
-        if (!name || !email) {
-            signature = getCurrentSignature();
-        } else {
-            signature = NodeGit.Signature.now(name, email);
-        }
-        let sha;
-        let paths = [];
-        notifyBlockingOperation(true, "Stashing...");
-        return Repo.getStatus().then((statuses) => {
-            paths = statuses.map(s => s.path());
-            if (paths.length === 0) {
-                return Promise.resolve('NO_WIP')
-            } else {
-                return stage(paths).then(() => {
-                    return NodeGit.Stash.save(Repo, signature, message, NodeGit.Stash.FLAGS.INCLUDE_UNTRACKED);
-                })
-            }
-        }).finally(oid => {
-            notifyBlockingOperation(false);
-            return Promise.all([refreshRepo(), fileWatch.getStatus()]);
-        })
+    let signature;
+    if (!name || !email) {
+        signature = getCurrentSignature();
     } else {
-        return Promise.reject('NO_REPO');
+        signature = NodeGit.Signature.now(name, email);
     }
+    let sha;
+    let paths = [];
+    notifyBlockingOperation(true, "Stashing...");
+    return Repo.getStatus().then((statuses) => {
+        paths = statuses.map(s => s.path());
+        if (paths.length === 0) {
+            return Promise.resolve('NO_WIP')
+        } else {
+            return stage(paths).then(() => {
+                return NodeGit.Stash.save(Repo, signature, message, NodeGit.Stash.FLAGS.INCLUDE_UNTRACKED);
+            })
+        }
+    }).finally(oid => {
+        notifyBlockingOperation(false);
+        return Promise.all([refreshRepo(), fileWatch.getStatus()]);
+    })
 }
 
 function pop(index) {
-    if (Repo) {
-        if (index === undefined) {
-            index = 0;
-        }
-        notifyBlockingOperation(true, "Popping Stash...");
-        return Repo.refreshIndex().then(() => {
-            return NodeGit.Stash.pop(Repo, index, NodeGit.Stash.APPLY_FLAGS.APPLY_DEFAULT)
-        }).finally(oid => {
-            notifyBlockingOperation(false);
-            return Promise.all([refreshRepo(), fileWatch.getStatus()]);
-        })
-    } else {
-        return Promise.reject('NO_REPO');
+    if (index < 0) {
+        index = 0;
     }
+    notifyBlockingOperation(true, "Popping Stash...");
+    return Repo.refreshIndex().then(() => {
+        return NodeGit.Stash.pop(Repo, index, NodeGit.Stash.APPLY_FLAGS.APPLY_DEFAULT)
+    }).finally(oid => {
+        notifyBlockingOperation(false);
+        return Promise.all([refreshRepo(), fileWatch.getStatus()]);
+    })
+}
+
+function apply(index) {
+    if (index < 0) {
+        index = 0;
+    }
+    notifyBlockingOperation(true, "Applying Stash...");
+    return Repo.refreshIndex().then(() => {
+        return NodeGit.Stash.apply(Repo, index, NodeGit.Stash.APPLY_FLAGS.APPLY_DEFAULT)
+    }).finally(oid => {
+        notifyBlockingOperation(false);
+        return Promise.all([refreshRepo(), fileWatch.getStatus()]);
+    })
+}
+
+function deleteStash(index) {
+    return NodeGit.Stash.drop(Repo, index).then(() => {
+        return Promise.all([refreshRepo(), fileWatch.getStatus()]);
+    });
 }
 
 function createBranch(name, commit, force) {
-    if (Repo) {
-        if (force === undefined) {
-            force = false;
-        }
-        notifyBlockingOperation(true, "Creating Branch...");
-        return Repo.createBranch(name, commit, force).then(ref => {
-            return Repo.checkoutBranch(name)
-        }).then(() => {
-            return refreshRepo();
-        }).finally(() => {
-            notifyBlockingOperation(false);
-        });
-    } else {
-        return Promise.reject('NO_REPO');
+    if (force === undefined) {
+        force = false;
     }
+    notifyBlockingOperation(true, "Creating Branch...");
+    return Repo.createBranch(name, commit, force).then(ref => {
+        return Repo.checkoutBranch(name)
+    }).then(() => {
+        return refreshRepo();
+    }).finally(() => {
+        notifyBlockingOperation(false);
+    });
 }
 
 function checkout(branchName) {
-    if (Repo) {
-        notifyBlockingOperation(true, "Checking Out...");
-        return getCurrentFirstRemote().then(rmt => {
-            let name = rmt.name();
-            if (branchName.startsWith(`${name}/`)) {
-                let newName = branchName.replace(`${name}/`, '')
-                return Repo.getReference(branchName).then(ref => {
-                    let target = ref.target();
-                    return Repo.createBranch(newName, target, true)
-                })
-            } else {
-                return Repo.getReference(branchName);
-            }
-        }).then(ref => {
-            return Repo.checkoutBranch(ref)
-        }).then(() => {
-            return refreshRepo();
-        }).catch(err => {
-            return Promise.reject(err);
-        }).finally(res => {
-            notifyBlockingOperation(false);
-        })
-    } else {
-        return Promise.reject('NO_REPO');
-    }
+    notifyBlockingOperation(true, "Checking Out...");
+    return getCurrentFirstRemote().then(rmt => {
+        let name = rmt.name();
+        if (branchName.startsWith(`${name}/`)) {
+            let newName = branchName.replace(`${name}/`, '')
+            return Repo.getReference(branchName).then(ref => {
+                let target = ref.target();
+                return Repo.createBranch(newName, target, true)
+            })
+        } else {
+            return Repo.getReference(branchName);
+        }
+    }).then(ref => {
+        return Repo.checkoutBranch(ref)
+    }).then(() => {
+        return refreshRepo();
+    }).catch(err => {
+        return Promise.reject(err);
+    }).finally(res => {
+        notifyBlockingOperation(false);
+    })
 }
 
 function discardAll() {
-    if (Repo) {
-        return stage([]).then(() => {
-            return Repo.getHeadCommit()
-        }).then(commit => {
-            return NodeGit.Reset.reset(Repo, commit, NodeGit.Reset.TYPE.HARD);
-        }).then(() => {
-            return fileWatch.getStatus();
-        })
-    } else {
-        return Promise.reject('NO_REPO');
+    return stage([]).then(() => {
+        return Repo.getHeadCommit()
+    }).then(commit => {
+        return NodeGit.Reset.reset(Repo, commit, NodeGit.Reset.TYPE.HARD);
+    }).then(() => {
+        return fileWatch.getStatus();
+    })
+}
+
+function resetHard(commit) {
+    return stage([]).then(() => {
+        return Repo.getCommit(commit);
+    }).then(commit => {
+        if (!commit) {
+            return Promise.reject('COMMIT_NOT_FOUND');
+        }
+        notifyBlockingOperation(true, "Resetting...")
+        return NodeGit.Reset.reset(Repo, commit, NodeGit.Reset.TYPE.HARD);
+    }).then(() => {
+        notifyBlockingOperation(false);
+        return Promise.all([refreshRepo(), fileWatch.getStatus()]);
+    })
+}
+
+function resetSoft(commit) {
+    return stage([]).then(() => {
+        return Repo.getCommit(commit);
+    }).then(commit => {
+        if (!commit) {
+            return Promise.reject('COMMIT_NOT_FOUND');
+        }
+        notifyBlockingOperation(true, "Resetting...")
+        return NodeGit.Reset.reset(Repo, commit, NodeGit.Reset.TYPE.SOFT);
+    }).then(() => {
+        notifyBlockingOperation(false);
+        return Promise.all([refreshRepo(), fileWatch.getStatus()]);
+    })
+}
+
+function requireRepo(wrapped) {
+    return function () {
+        if (Repo) {
+            return wrapped.apply(this, arguments);
+        } else {
+            return Promise.reject('NO_REPO');
+        }
     }
+}
+
+function createTag(targetCommit, name) {
+    return Repo.getCommit(targetCommit).then(cmt => {
+        return NodeGit.Tag.createLightweight(Repo, name, cmt, 1);
+    }).then(() => {
+        return refreshRepo();
+    });
+}
+
+function deleteTag(name) {
+    return NodeGit.Tag.delete(Repo, name).then(() => {
+        return refreshRepo();
+    })
+}
+
+function pushTag(username, password, name, toDelete) {
+    return checkSSHKey().then(() => {
+        return getCurrentFirstRemote()
+    }).then(remote => {
+        firstRemote = remote;
+        notifyBlockingOperation(true, "Updating Remote Tag...");
+        // force push by adding a plus sign
+        let ref = `:refs/tags/${name}`;
+        if (!toDelete) {
+            ref = `+refs/tags/${name}` + ref;
+        }
+        return tryPush(firstRemote, [ref], 1, username, password);
+    }).then(() => {
+        notifyBlockingOperation(false);
+        refreshRepo();
+    }).catch(err => {
+        notifyBlockingOperation(false);
+        return Promise.reject(err);
+    });
 }
 
 module.exports = {
     init: init,
     openRepo: openRepo,
-    fetchRepo: fetchRepo,
-    getCurrentRemotes: getCurrentRemotes,
-    getCurrentFirstRemote: getCurrentFirstRemote,
-    pullWrapper: pullWrapper,
-    push: push,
-    stage: stage,
-    unstage: unstage,
-    commitStaged: commitStaged,
-    commit: commit,
-    stash: stash,
-    pop: pop,
-    getCommitDetails: getCommitDetails,
-    createBranch: createBranch,
-    checkout: checkout,
-    discardAll: discardAll
+    fetchRepo: requireRepo(fetchRepo),
+    getCurrentRemotes: requireRepo(getCurrentRemotes),
+    getCurrentFirstRemote: requireRepo(getCurrentFirstRemote),
+    pullWrapper: requireRepo(pullWrapper),
+    push: requireRepo(push),
+    stage: requireRepo(stage),
+    unstage: requireRepo(unstage),
+    commitStaged: requireRepo(commitStaged),
+    commit: requireRepo(commit),
+    stash: requireRepo(stash),
+    pop: requireRepo(pop),
+    getCommitDetails: requireRepo(getCommitDetails),
+    createBranch: requireRepo(createBranch),
+    checkout: requireRepo(checkout),
+    discardAll: requireRepo(discardAll),
+    resetHard: requireRepo(resetHard),
+    resetSoft: requireRepo(resetSoft),
+    deleteStash: requireRepo(deleteStash),
+    apply: requireRepo(apply),
+    createTag: requireRepo(createTag),
+    deleteTag: requireRepo(deleteTag),
+    pushTag: requireRepo(pushTag),
 }

@@ -1,7 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { Node } from '../d3/models/node';
 import { RepoService } from '../services/repo.service';
 import { D3Service } from '../d3/d3.service';
+import { ContextMenuComponent, ContextMenuService } from 'ngx-contextmenu';
+import { CommitSelectionService } from '../services/commit-selection.service';
 
 @Component({
   selector: 'app-subway-station-annot',
@@ -9,7 +11,7 @@ import { D3Service } from '../d3/d3.service';
   styleUrls: ['./subway-station-annot.component.scss']
 })
 export class SubwayStationAnnotComponent implements OnInit {
-
+  @ViewChild('tagMenu') public tagMenu: ContextMenuComponent;
   private height = Node.height;
   private commits = [];
   private refs = {};
@@ -17,7 +19,9 @@ export class SubwayStationAnnotComponent implements OnInit {
   private currentBranch = "";
   constructor(
     private repo: RepoService,
+    private commitSelection: CommitSelectionService,
     private d3: D3Service,
+    private ctxService: ContextMenuService
   ) {
     repo.commitsChange.subscribe(cmts => {
       this.commits = cmts;
@@ -50,7 +54,9 @@ export class SubwayStationAnnotComponent implements OnInit {
   }
 
   checkout(branchInfo) {
-    this.repo.checkout(branchInfo.shorthand);
+    if (!branchInfo.isTag) {
+      this.repo.checkout(branchInfo.shorthand);
+    }
   }
 
   updateBranchInfo(): void {
@@ -94,7 +100,23 @@ export class SubwayStationAnnotComponent implements OnInit {
       }
     });
   }
-
+  trackBy(index, item) {
+    return item.target;
+  }
+  tryOpenMenu($event: MouseEvent, item: any) {
+    if (item.isTag) {
+      this.ctxService.show.next({
+        contextMenu: this.tagMenu,
+        event: $event,
+        item: item,
+      });
+    }
+    $event.preventDefault();
+    $event.stopPropagation();
+  }
+  onDeleteTag(name) {
+    this.commitSelection.deleteTag(name);
+  }
 }
 
 interface BranchInfo {

@@ -8,6 +8,8 @@ export interface Profile {
         "16x16": string;
         "32x32": string;
     };
+    name: string;
+    key: string;
     displayName: string;
     active: boolean;
     safeAvatarUrl?: SafeUrl;
