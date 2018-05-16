@@ -133,6 +133,8 @@ function reBuildAppVeyor(event, arg) {
             "projectSlug": projectName,
             "branch": arg.branch,
             "commitId": arg.commit
+        }).then(resp => {
+            event.sender.send('CI-AppVeyorRebuilded', {});
         })
     }
 }
