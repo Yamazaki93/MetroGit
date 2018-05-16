@@ -102,4 +102,6 @@ export class JiraIntegrationService {
   assignIssue(key, name) {
     this.electron.ipcRenderer.send('JIRA-AssignIssue', { key: key, name: name });
   }
+  addSubtask(key, name) {
+  }
 }

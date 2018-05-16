@@ -8,6 +8,7 @@ import { Subscription } from 'rxjs/Subscription';
 import * as moment from 'moment';
 import { PromptInjectorService } from '../../infrastructure/prompt-injector.service';
 import { AddCommentPromptComponent } from '../add-comment-prompt/add-comment-prompt.component';
+import { SubtaskPromptComponent } from '../subtask-prompt/subtask-prompt.component';
 
 @Component({
   selector: 'app-jira-detail',
@@ -132,5 +133,10 @@ export class JiraDetailComponent implements OnInit, OnDestroy {
     this.loading = true;
     this.jira.getIssue(this.currentIssueKey);
   }
-
+  onCreateSubtask() {
+    let elem = this.promptInj.injectComponent(SubtaskPromptComponent);
+    elem.toEnter.subscribe(name => {
+      this.jira.addSubtask(this.currentIssueKey, name);
+    });
+  }
 }

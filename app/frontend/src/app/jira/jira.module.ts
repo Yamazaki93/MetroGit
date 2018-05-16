@@ -10,6 +10,7 @@ import { AddCommentPromptComponent } from './add-comment-prompt/add-comment-prom
 import { FormsModule } from '@angular/forms';
 import { ProfileSelectorComponent } from './profile-selector/profile-selector.component';
 import { ProfileFilterPipe } from './profile-selector/profile-filter';
+import { SubtaskPromptComponent } from './subtask-prompt/subtask-prompt.component';
 
 
 @NgModule({
@@ -23,9 +24,10 @@ import { ProfileFilterPipe } from './profile-selector/profile-filter';
     JiraIntegrationService
   ],
   entryComponents: [
-    AddCommentPromptComponent
+    AddCommentPromptComponent,
+    SubtaskPromptComponent
   ],
   exports: [ JiraDetailComponent ],
-  declarations: [JiraDetailComponent, JiraRichTextComponent, TransitionControlComponent, AddCommentPromptComponent, ProfileSelectorComponent, ProfileFilterPipe]
+  declarations: [JiraDetailComponent, JiraRichTextComponent, TransitionControlComponent, AddCommentPromptComponent, ProfileSelectorComponent, ProfileFilterPipe, SubtaskPromptComponent]
 })
 export class JiraModule { }
