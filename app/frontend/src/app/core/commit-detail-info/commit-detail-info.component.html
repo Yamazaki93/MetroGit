@@ -107,7 +107,7 @@
           </span>{{getShortenedPath(file.path)}}
         </div>
         <div class="action-button">
-          <a class="btn btn-success btn-sm" (click)="stage(file.path)">Stage File</a>
+          <a class="btn btn-success btn-sm" (click)="stage(file.path, $event)">Stage File</a>
         </div>
       </div>
     </div>
@@ -148,7 +148,7 @@
           </span>{{getShortenedPath(file.path)}}
         </div>
         <div class="action-button">
-          <a class="btn btn-danger btn-sm" (click)="unstage(file.path)">Unstage File</a>
+          <a class="btn btn-danger btn-sm" (click)="unstage(file.path, $event)">Unstage File</a>
         </div>
       </div>
     </div>

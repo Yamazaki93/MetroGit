@@ -125,11 +125,11 @@ function getFileDetail(path, commit) {
                 return processDiff(diff, path);
             })
         });
-    } else if(commit === 'workdir') {
-        return Repo.refreshIndex().then(() => {
-            return Repo.index();
-        }).then(index => {
-            return NodeGit.Diff.indexToWorkdir(Repo, index);
+    } else if (commit === 'workdir') {
+        return Repo.getHeadCommit().then(cmt => {
+            return cmt.getTree()
+        }).then(tree => {
+            return NodeGit.Diff.treeToWorkdir(Repo, tree);
         }).then(diff => {
             return processDiff(diff, path, commit);
         })

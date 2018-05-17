@@ -92,11 +92,13 @@ export class CommitDetailInfoComponent implements OnInit {
       this.commitChange.unstage(stagedPaths);
     }
   }
-  stage(file) {
+  stage(file, $event) {
     this.commitChange.stage([file]);
+    $event.stopPropagation();
   }
-  unstage(file) {
+  unstage(file, $event) {
     this.commitChange.unstage([file]);
+    $event.stopPropagation();
   }
   discardAll() {
     this.commitChange.discardAll();
