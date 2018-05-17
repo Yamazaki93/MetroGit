@@ -35,6 +35,7 @@ export class CommitDetailComponent implements OnInit {
         }
       } else {
         this.toggled = false;
+        this.fileToggled = false;
       }
     });
     selection.selectingChange.subscribe(selecting => {
