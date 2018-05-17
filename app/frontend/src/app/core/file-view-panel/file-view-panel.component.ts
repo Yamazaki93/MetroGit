@@ -9,10 +9,22 @@ import { FileDetail } from '../prototypes/file-detail';
 })
 export class FileViewPanelComponent implements OnInit {
 
-  @Input() detail: FileDetail;
+  @Input()
+  set detail(fd: FileDetail) {
+    this._fileDetail = fd;
+    if (fd) {
+      this.loading = false;
+    }
+  }
+  private _fileDetail: FileDetail;
+  private loading = true;
   constructor(
+    private ch: CommitSelectionService
   ) {
-
+    ch.gettingFileDetail.subscribe(() => {
+      this._fileDetail = null;
+      this.loading = true;
+    });
   }
 
   ngOnInit() {

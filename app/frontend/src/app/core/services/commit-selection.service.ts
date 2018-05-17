@@ -14,6 +14,7 @@ export class CommitSelectionService {
   @Output() selectingChange = new EventEmitter<boolean>();
   @Output() selectedFileChange = new EventEmitter<string>();
   @Output() fileDetailChanged = new EventEmitter<FileDetail>();
+  @Output() gettingFileDetail = new EventEmitter();
 
   selectedCommit: CommitDetail | WIPCommit;
   private _selectedFile = "";
@@ -79,6 +80,7 @@ export class CommitSelectionService {
     }
     this._selectedFile = file;
     this.selectedFileChange.emit(file);
+    this.gettingFileDetail.emit();
     this.electron.ipcRenderer.send('Repo-GetFileDetail', { file: file, commit: sha });
   }
   select(commit) {

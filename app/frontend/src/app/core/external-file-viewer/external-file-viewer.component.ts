@@ -35,7 +35,7 @@ export class ExternalFileViewerComponent implements OnInit {
   getTitle() {
     if (this.sha === 'workdir') {
       return "Unstaged Changes";
-    } else if (this.sha === 'index') {
+    } else if (this.sha === 'tree') {
       return "Staged Changes";
     } else {
       return this.sha.substring(0, 6);
