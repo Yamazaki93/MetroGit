@@ -32,9 +32,4 @@ export class ExternalFileViewerComponent implements OnInit {
 
   ngOnInit() {
   }
-
-  // getFileDetail() {
-  //   this.selection.selectFileDetail(this.path, this.sha);
-  // }
-
 }

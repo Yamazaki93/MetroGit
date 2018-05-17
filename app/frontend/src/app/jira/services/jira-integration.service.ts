@@ -4,6 +4,8 @@ import { Issue } from '../models/issue';
 import { NotificationsService } from 'angular2-notifications';
 import { StatusBarService } from '../../infrastructure/status-bar.service';
 import { Profile } from '../models/profile';
+import { IssueType } from '../models/issue-type';
+import { Resolution } from '../models/resolution';
 
 @Injectable()
 export class JiraIntegrationService {
@@ -14,7 +16,9 @@ export class JiraIntegrationService {
   @Output() assignableRetrieved = new EventEmitter<{ key: string, result: Profile[] }>();
   enabled = false;
   private jiraKeys = [];
-  private resolutions = [];
+  private resolutions: Resolution[] = [];
+  private issueTypes: IssueType[] = [];
+  private subtaskType: IssueType;
   constructor(
     private electron: ElectronService,
     private noti: NotificationsService,
@@ -34,8 +38,12 @@ export class JiraIntegrationService {
     electron.onCD('JIRA-IssueRetrieved', (event, arg) => {
       this.issueRetrieved.emit(arg.issue);
     });
-    electron.onCD('JIRA-TransitionsRetrieved', (event, arg) => {
+    electron.onCD('JIRA-ResolutionsRetrieved', (event, arg) => {
       this.resolutions = arg.resolutions;
+    });
+    electron.onCD('JIRA-IssueTypesRetrieved', (event, arg) => {
+      this.issueTypes = arg.issueTypes;
+      this.subtaskType = arg.subtaskType;
     });
     electron.onCD('JIRA-Error', (event, arg) => {
       noti.error("Error", "Your JIRA setup doesn't seemed to be correct, please enter the correct settings");

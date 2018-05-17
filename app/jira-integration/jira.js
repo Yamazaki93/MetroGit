@@ -101,7 +101,21 @@ function getJiraIssue(key) {
 function getResolution() {
     if (conn) {
         return conn.get(`/resolution`).then(result => {
-            window.webContents.send('JIRA-ResolutionsRetrieved', { resolutions: result });
+            window.webContents.send('JIRA-ResolutionsRetrieved', { resolutions: result.data });
+        })
+    }
+}
+
+function getIssueTypes() {
+    if (conn) {
+        return conn.get('/issuetype').then(result => {
+            let subtaskType;
+            result.data.forEach(issueType => {
+                if(issueType.subtask) {
+                    subtaskType = issueType;
+                }
+            })
+            window.webContents.send('JIRA-IssueTypesRetrieved', { issueTypes: result.data, subtaskType: subtaskType})
         })
     }
 }
@@ -146,11 +160,13 @@ function assignIssue(event, arg) {
 
 function addSubtask(event, arg) {
     if (conn) {
-        return conn.post(`/issue`, {"fields": {
-            "project": {
-                "id": arg.projectId
+        return conn.post(`/issue`, {
+            "fields": {
+                "project": {
+                    "id": arg.projectId
+                }
             }
-        }});
+        });
     }
 }
 
