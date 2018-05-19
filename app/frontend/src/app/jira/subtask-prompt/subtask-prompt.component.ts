@@ -11,6 +11,7 @@ export class SubtaskPromptComponent implements OnInit, Prompt {
   toClose = new EventEmitter();
   toEnter = new EventEmitter<string>();
   toCancel = new EventEmitter();
+  key = "";
   private name = "";
   constructor() { }
 
