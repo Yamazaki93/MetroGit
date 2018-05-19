@@ -10,6 +10,7 @@ export class SubtaskPromptComponent implements OnInit, Prompt {
 
   toClose = new EventEmitter();
   toEnter = new EventEmitter<string>();
+  toCancel = new EventEmitter();
   private name = "";
   constructor() { }
 
@@ -22,6 +23,7 @@ export class SubtaskPromptComponent implements OnInit, Prompt {
   }
 
   close() {
+    this.toCancel.emit();
     this.toClose.emit();
   }
 
