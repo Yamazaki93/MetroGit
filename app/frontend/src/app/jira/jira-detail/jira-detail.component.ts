@@ -122,7 +122,7 @@ export class JiraDetailComponent implements OnInit, OnDestroy {
     this.loading = true;
   }
   addComment() {
-    this.loading = true;
+    this.delayEnableLoading();
     let comp = this.promptInj.injectComponent(AddCommentPromptComponent);
     comp.key = this.currentIssueKey;
     comp.canceling.subscribe(closingPromptForm => {
@@ -134,7 +134,7 @@ export class JiraDetailComponent implements OnInit, OnDestroy {
     this.jira.getIssue(this.currentIssueKey);
   }
   addSubtask() {
-    this.loading = true;
+    this.delayEnableLoading();
     let elem = this.promptInj.injectComponent(SubtaskPromptComponent);
     elem.key = this.issue.key;
     elem.toCancel.subscribe(() => {
@@ -147,5 +147,12 @@ export class JiraDetailComponent implements OnInit, OnDestroy {
   updateTitle() {
     this.loading = true;
     this.jira.updateIssue(this.issue.key, {summary: this.issue.fields.summary}, null);
+  }
+
+  private delayEnableLoading() {
+    let that = this;
+    setTimeout(() => {
+      that.loading = true;
+    }, 400);
   }
 }
