@@ -20,7 +20,8 @@
       <object [data]="issueIconUrl" style="width: 30px;"></object>
     </div>
     <div class="full-width selectable">
-      <h5>{{issue.fields.summary}}</h5>
+      <!-- <h5>{{issue.fields.summary}}</h5> -->
+      <app-title-editor (toConfirm)="updateTitle()" [(text)]="issue.fields.summary"></app-title-editor>
     </div>
 
   </div>

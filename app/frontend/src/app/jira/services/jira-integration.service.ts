@@ -53,6 +53,7 @@ export class JiraIntegrationService {
     });
     electron.onCD('JIRA-OperationFailed', (event, arg) => {
       noti.error("Failed", "Operation failed, please reload this issue and try again");
+      this.issueRetrieved.emit(null);
     });
     electron.onCD('JIRA-NotFound', (event, arg) => {
       noti.warn("Not Found", "JIRA issue not found, server returned 404");

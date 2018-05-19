@@ -1,0 +1,14 @@
+<div class="title-container">
+  <h5 *ngIf="!editing" (click)="toggleEdit()">{{text}}</h5>
+  <div class="input-container">
+    <input *ngIf="editing" [(ngModel)]="editText" class="form-control">
+  </div>
+  <div *ngIf="editing" class="edit-actions">
+    <a href="javascript:void(0)" (click)="confirmEdit()" class="btn btn-primary btn-sm">
+      <i class="icon-check"></i>
+    </a>
+    <a href="javascript:void(0)" (click)="cancelEdit()" class="btn btn-secondary btn-sm">
+      <i class="icon-x"></i>
+    </a>
+  </div>
+</div>

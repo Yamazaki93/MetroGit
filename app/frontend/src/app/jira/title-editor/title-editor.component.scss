@@ -1,0 +1,13 @@
+.title-container{
+    width: 100%;
+    position: relative;
+    .input-container{
+        z-index: 8;
+    }
+    .edit-actions{
+        z-index: 7;
+        right: 0;
+        top: 38px;
+        position: absolute;
+    }
+}

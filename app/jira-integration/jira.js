@@ -122,7 +122,13 @@ function getIssueTypes() {
 
 function updateIssue(event, arg) {
     if (conn) {
-        return conn.post(`/issue/${arg.key}/transitions`, arg.data).then(result => {
+        let req;
+        if (arg.data.transition) { 
+            req = conn.post(`/issue/${arg.key}/transitions`, arg.data);
+        } else {
+            req = conn.put(`/issue/${arg.key}`, arg.data);
+        }
+        return req.then(result => {
             return getIssue(event, arg);
         })
     }

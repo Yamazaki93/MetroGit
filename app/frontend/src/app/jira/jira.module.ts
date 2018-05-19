@@ -11,6 +11,7 @@ import { FormsModule } from '@angular/forms';
 import { ProfileSelectorComponent } from './profile-selector/profile-selector.component';
 import { ProfileFilterPipe } from './profile-selector/profile-filter';
 import { SubtaskPromptComponent } from './subtask-prompt/subtask-prompt.component';
+import { TitleEditorComponent } from './title-editor/title-editor.component';
 
 
 @NgModule({
@@ -28,6 +29,6 @@ import { SubtaskPromptComponent } from './subtask-prompt/subtask-prompt.componen
     SubtaskPromptComponent
   ],
   exports: [ JiraDetailComponent ],
-  declarations: [JiraDetailComponent, JiraRichTextComponent, TransitionControlComponent, AddCommentPromptComponent, ProfileSelectorComponent, ProfileFilterPipe, SubtaskPromptComponent]
+  declarations: [JiraDetailComponent, JiraRichTextComponent, TransitionControlComponent, AddCommentPromptComponent, ProfileSelectorComponent, ProfileFilterPipe, SubtaskPromptComponent, TitleEditorComponent]
 })
 export class JiraModule { }

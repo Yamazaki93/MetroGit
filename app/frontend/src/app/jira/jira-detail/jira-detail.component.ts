@@ -143,4 +143,8 @@ export class JiraDetailComponent implements OnInit, OnDestroy {
       this.jira.addSubtask(this.currentIssueKey, name, this.issue.fields.project.id);
     });
   }
+  updateTitle() {
+    this.loading = true;
+    this.jira.updateIssue(this.issue.key, {summary: this.issue.fields.summary}, null);
+  }
 }
