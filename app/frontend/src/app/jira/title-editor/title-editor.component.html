@@ -1,6 +1,5 @@
 <div class="title-container">
-  <h5 *ngIf="!editing" (click)="toggleEdit()">{{text}}</h5>
-  
+  <h5 *ngIf="!editing" (click)="toggleEdit()">{{text}} <i class="ml-1 icon-edit-2"></i></h5>
   <div *ngIf="editing" class="edit-actions">
     <a href="javascript:void(0)" (click)="confirmEdit()" class="btn btn-primary btn-sm">
       <i class="icon-check"></i>

@@ -1,7 +1,18 @@
-.title-container{
+.title-container {
     width: 100%;
     position: relative;
-    .edit-actions{
+    border-radius: 5px;
+    padding: 3px;
+    h5 i {
+        display: none;
+    }
+    &:hover {
+        background: rgba(0, 0, 0, 0.2);
+        h5 i {
+            display: inline;
+        }
+    }
+    .edit-actions {
         padding: 3px;
         background: var(--gray-dark);
         border-radius: 3px;
