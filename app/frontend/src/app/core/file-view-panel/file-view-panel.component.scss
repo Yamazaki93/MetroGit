@@ -1,0 +1,77 @@
+$line-header-width: 20px;
+$line-content-width: 200px + $line-header-width;
+
+.file-view-container{
+    height: 100%;
+    .path-container{
+        h5 i {
+            vertical-align: middle;
+        }
+    }
+    .hunk-containers{
+        overflow-y: auto;
+    }
+    .hunk-headers {
+        width: $line-content-width;
+        flex-shrink: 0;
+        .hunk{
+            border-radius: 5px 0 0 5px;
+        }
+    }
+    .hunk-contents{
+        width: 100%;
+        .hunk{
+            width: 100%;
+            border-radius: 0 5px 5px 0;
+        }
+        .line{
+            white-space: nowrap;
+        }
+        .hunk-contents-inner{
+            display: inline-block;
+            min-width: 100%;
+        }
+        overflow-x: auto;
+        overflow-y: hidden;
+        height: 100%;
+    }
+    .hunk {
+        display: table;
+        background: rgba(0, 0, 0, 0.2);
+        .line{
+            border-bottom: solid 1px var(--gray-dark);
+            user-select: initial;
+        }
+        .op{
+            width: $line-header-width;
+            text-align: center;
+            border-right: solid 1px var(--gray-dark);
+            flex-shrink: 0;
+        }
+        .lineno{
+            flex-shrink: 0;
+            padding-left: 5px;
+            width: 100px;
+            border-right: solid 1px var(--gray-dark);
+        }
+        .content{
+            padding-left: 5px;
+            font-family: 'Consolas';
+            pre{
+                height: 24px;
+                margin: 0;
+                color: #FFF;
+            }
+        }
+    }
+}
+
+.full-width{
+    width: 100%;
+}
+.line.added{
+    background: rgba(40, 167, 69, 0.3);
+}
+.line.deleted{
+    background: rgba(220, 53, 69, 0.3);
+}

@@ -7,6 +7,7 @@ import { D3Service } from './core/d3/d3.service';
 import { AppveyorCiService } from './core/services/appveyor-ci.service';
 import { CredentialsService } from './core/services/credentials.service';
 import { UpdaterService } from './infrastructure/updater.service';
+import { CommitChangeService } from './core/services/commit-change.service';
 
 @Component({
   selector: 'app-root',
@@ -15,7 +16,7 @@ import { UpdaterService } from './infrastructure/updater.service';
 })
 export class AppComponent implements OnInit {
   constructor(private settings: SettingsService, private repo: RepoService, private ci: CiIntegrationService, private d3: D3Service,
-  private appveyor: AppveyorCiService, private cred: CredentialsService, private updater: UpdaterService) {
+  private appveyor: AppveyorCiService, private cred: CredentialsService, private updater: UpdaterService, private commitChange: CommitChangeService) {
   }
 
   ngOnInit() {
@@ -25,6 +26,7 @@ export class AppComponent implements OnInit {
     this.ci.init();
     this.appveyor.init();
     this.d3.init();
+    this.commitChange.init();
     this.settings.init();
   }
 }

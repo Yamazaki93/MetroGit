@@ -1,4 +1,4 @@
-import { Component, OnInit, Sanitizer, Input } from '@angular/core';
+import { Component, OnInit, Sanitizer, Input, Output, EventEmitter } from '@angular/core';
 import { D3Service } from '../d3/d3.service';
 import { DomSanitizer } from '@angular/platform-browser';
 import { CommitDetail, WIPCommit } from '../prototypes/commit';
@@ -8,6 +8,7 @@ import { NotificationsService } from 'angular2-notifications';
 import { Router } from '@angular/router';
 import { CredentialsService } from '../services/credentials.service';
 import { CommitChangeService } from '../services/commit-change.service';
+import { HotkeysService, Hotkey } from 'angular2-hotkeys';
 
 @Component({
   selector: 'app-commit-detail-info',
@@ -39,7 +40,7 @@ export class CommitDetailInfoComponent implements OnInit {
     private selection: CommitSelectionService,
     private noti: NotificationsService,
     private cred: CredentialsService,
-    private commitChange: CommitChangeService
+    private commitChange: CommitChangeService,
   ) {
     this.newCommitMessage = this.commitChange.newCommitMessage;
     this.newCommitDetail = this.commitChange.newCommitDetail;
@@ -91,28 +92,32 @@ export class CommitDetailInfoComponent implements OnInit {
       this.commitChange.unstage(stagedPaths);
     }
   }
-  stage(file) {
+  stage(file, $event) {
     this.commitChange.stage([file]);
+    $event.stopPropagation();
   }
-  unstage(file) {
+  unstage(file, $event) {
     this.commitChange.unstage([file]);
+    $event.stopPropagation();
   }
   discardAll() {
     this.commitChange.discardAll();
   }
   commitChanges() {
-    if (!(<WIPCommit>this.commit).staged.length) {
-      let unstagedPath = (<WIPCommit>this.commit).unstaged.map(s => s.path);
-      this.commitChange.commit(unstagedPath);
-    } else {
-      let stagedPaths = (<WIPCommit>this.commit).staged.map(s => s.path);
-      this.commitChange.commitStaged();
-    }
+    this.commitChange.tryCommit();
   }
   fillKeyIfNeeded() {
     if (this._message.length === 0 && this.commitChange.defaultKey) {
       this.newCommitMessage = this.commitChange.defaultKey + '-';
     }
   }
-
+  openFileDetails(file, commit = null) {
+    this.selection.selectFileDetail(file, commit);
+  }
+  onKeyDown($event) {
+    // keyboard code 83 = s;
+    if ($event.keyCode === 83 && $event.ctrlKey) {
+      this.commitChange.tryCommit();
+    }
+  }
 }

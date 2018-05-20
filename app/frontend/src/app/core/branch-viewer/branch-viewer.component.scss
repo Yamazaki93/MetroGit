@@ -166,3 +166,15 @@ app-open-repo-panel {
 .nav-text {
     white-space: nowrap;
 }
+
+.full-width{
+    width: 100%;
+}
+
+.toggle-all-btn{
+    line-height: 1.5rem;
+    font-size: 17px;
+    &:hover{
+        color: var(--blue);
+    }
+}

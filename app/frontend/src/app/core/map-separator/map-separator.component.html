@@ -1,0 +1,5 @@
+<div class="separator-container">
+  <div class="separator" *ngFor="let sep of separators" [style.top.px]="sep.top" [class.hidden]="!sep.visible">
+    <small>{{sep.display}}</small>
+  </div>
+</div>

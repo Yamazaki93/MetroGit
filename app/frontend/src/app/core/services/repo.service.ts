@@ -9,6 +9,7 @@ import { Router } from '@angular/router';
 import { ForcePushPromptComponent } from '../force-push-prompt/force-push-prompt.component';
 import { CommitChangeService } from './commit-change.service';
 import { CreateBranchPromptComponent } from '../create-branch-prompt/create-branch-prompt.component';
+import { HotkeysService, Hotkey } from 'angular2-hotkeys';
 
 @Injectable()
 export class RepoService {
@@ -18,8 +19,8 @@ export class RepoService {
   @Output() branchChange = new EventEmitter<Branch>();
   @Output() commitsChange = new EventEmitter<any[]>();
   @Output() refChange = new EventEmitter<any>();
-  @Output() pulled = new EventEmitter<any>();
-  @Output() pushed = new EventEmitter<any>();
+  @Output() pulling = new EventEmitter<boolean>();
+  @Output() pushing = new EventEmitter<boolean>();
   @Output() posUpdate = new EventEmitter<{ ahead: number, behind: number }>();
 
   commits: any[] = [];
@@ -56,7 +57,8 @@ export class RepoService {
     private promptIj: PromptInjectorService,
     private cred: CredentialsService,
     private route: Router,
-    private commitChange: CommitChangeService
+    private commitChange: CommitChangeService,
+    private hotkeys: HotkeysService,
   ) {
   }
 
@@ -72,7 +74,7 @@ export class RepoService {
       this.posUpdate.emit(this.currentPos);
     });
     this.electron.onCD('Repo-Pulled', (event, arg) => {
-      this.pulled.emit();
+      this.pulling.emit(false);
       if (arg.result === 'UP_TO_DATE') {
         this.noti.info("Up to date", "Your local branch is up-to-date with the remote");
       } else {
@@ -80,7 +82,7 @@ export class RepoService {
       }
     });
     this.electron.onCD('Repo-Pushed', (event, arg) => {
-      this.pushed.emit();
+      this.pushing.emit(false);
       this.noti.success("Pushed", "Successfully pushed to remote");
     });
     this.electron.onCD('Repo-CommitsUpdated', (event, arg) => {
@@ -131,8 +133,8 @@ export class RepoService {
       } else {
         this.skipAuthError(arg.detail);
       }
-      this.pulled.emit();
-      this._pendingOperation = this.pullFFOnly;
+      this.pulling.emit(false);
+      this._pendingOperation = this.pull;
     });
     this.electron.onCD('Repo-PushFailed', (event, arg) => {
       if (arg.detail === 'FORCE_REQUIRED') {
@@ -153,7 +155,7 @@ export class RepoService {
       } else {
         this.skipAuthError(arg.detail);
       }
-      this.pushed.emit();
+      this.pushing.emit(false);
     });
     this.electron.onCD('Settings-EffectiveUpdated', (event, arg) => {
       this.pulloption = arg['gen-pulloption'];
@@ -197,12 +199,34 @@ export class RepoService {
       }
       this.wipInfoChange.emit();
     });
+    this.electron.onCD('Repo-TagCreated', (event, arg) => {
+      let n = this.noti.success("Tag Created", `Tag ${arg.name} created successfully. Click here to publish it to remote`);
+      n.click.subscribe(() => {
+        this.pushTag(arg.name);
+      });
+    });
+    this.electron.onCD('Repo-TagDeleted', (event, arg) => {
+      let n = this.noti.success("Tag Deleted", `Tag ${arg.name} deleted successfully.`);
+      this.pushTag(arg.name, true);
+    });
     this.cred.credentialChange.subscribe(newCreds => {
       this.retry();
     });
     this.commitChange.messageChange.subscribe(msg => {
       this._wipCommit.message = msg;
     });
+    this.hotkeys.add(new Hotkey('ctrl+shift+up', (event: KeyboardEvent): boolean => {
+      if (!this.loading.isBusy) {
+        this.push();
+      }
+      return false;
+    }, undefined, "Push"));
+    this.hotkeys.add(new Hotkey('ctrl+shift+down', (event: KeyboardEvent): boolean => {
+      if (!this.loading.isBusy) {
+        this.pull();
+      }
+      return false;
+    }, undefined, "Pull"));
   }
 
   getCommitsWithWIP() {
@@ -256,11 +280,13 @@ export class RepoService {
     this.electron.ipcRenderer.send('Repo-Fetch', { username: this.cred.username, password: this.cred.password });
   }
 
-  pullFFOnly(): void {
+  pull(): void {
+    this.pulling.emit(true);
     this.electron.ipcRenderer.send('Repo-Pull', { username: this.cred.username, password: this.cred.password, option: this.pulloption });
   }
 
   push(force = false): void {
+    this.pushing.emit(true);
     this.electron.ipcRenderer.send('Repo-Push', { username: this.cred.username, password: this.cred.password, force: force });
   }
 
@@ -272,7 +298,10 @@ export class RepoService {
   }
 
   checkout(shorthand): void {
-    this.electron.ipcRenderer.send('Repo-Checkout', {branch: shorthand});
+    this.electron.ipcRenderer.send('Repo-Checkout', { branch: shorthand });
+  }
+  pushTag(name, toDelete = false): void {
+    this.electron.ipcRenderer.send('Repo-PushTag', { username: this.cred.username, password: this.cred.password, name: name, delete: toDelete });
   }
   retry(): void {
     if (this._pendingOperation) {

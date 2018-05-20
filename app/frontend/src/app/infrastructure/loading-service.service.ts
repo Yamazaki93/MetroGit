@@ -3,6 +3,9 @@ import { NotificationsService } from 'angular2-notifications';
 
 @Injectable()
 export class LoadingService {
+  get isBusy(): boolean {
+    return this._isBusy;
+  }
   private _isBusy = false;
   private _busyTimeout: any;
   private _count = 0;

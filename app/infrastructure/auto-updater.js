@@ -1,11 +1,13 @@
 const { autoUpdater } = require('electron-updater');
 const { ipcMain } = require('electron');
 var window;
+var settings;
 
 autoUpdater.autoDownload = false;
 
 ipcMain.on('Updater', (event, arg) => {
     if (arg === 'commence-install-update') {
+        settings.update('show-release-note', false);
         setImmediate(() => autoUpdater.quitAndInstall());
     } else if (arg === 'commence-download') {
         autoUpdater.downloadUpdate();
@@ -22,13 +24,12 @@ autoUpdater.on('update-downloaded', () => {
 });
 
 
-function init(win) {
+function init(win, sett) {
     window = win;
+    settings = sett;
     // auto check update 30 secs after init
     setTimeout(() => {
-        autoUpdater.checkForUpdates().then(res =>{
-            console.log(res);
-        })
+        autoUpdater.checkForUpdates();
     }, 30 * 1000);
 }
 

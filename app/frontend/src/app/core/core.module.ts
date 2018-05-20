@@ -37,6 +37,12 @@ import { CiConsoleOutputComponent } from './ci-console-output/ci-console-output.
 import { ForcePushPromptComponent } from './force-push-prompt/force-push-prompt.component';
 import { CommitChangeService } from './services/commit-change.service';
 import { CreateBranchPromptComponent } from './create-branch-prompt/create-branch-prompt.component';
+import { ContextMenuModule } from 'ngx-contextmenu';
+import { FileViewPanelComponent } from './file-view-panel/file-view-panel.component';
+import { ExternalFileViewerComponent } from './external-file-viewer/external-file-viewer.component';
+import { TagPromptComponent } from './tag-prompt/tag-prompt.component';
+import { MapSeparatorComponent } from './map-separator/map-separator.component';
+import { HotkeyModule } from 'angular2-hotkeys';
 
 
 @NgModule({
@@ -45,7 +51,9 @@ import { CreateBranchPromptComponent } from './create-branch-prompt/create-branc
     NgbModule,
     FormsModule,
     SimpleNotificationsModule,
+    HotkeyModule,
     InfrastructureModule,
+    ContextMenuModule,
     JiraModule,
   ],
   entryComponents: [
@@ -53,8 +61,9 @@ import { CreateBranchPromptComponent } from './create-branch-prompt/create-branc
     SshPasswordPromptComponent,
     ForcePushPromptComponent,
     CreateBranchPromptComponent,
+    TagPromptComponent,
   ],
-  declarations: [BranchViewerComponent, GitViewComponent, SubwayComponent, SubwayStationsComponent, SubwayMapVisualComponent, NodeVisualComponent, LinkVisualComponent, SubwayStationAnnotComponent, ActionToolbarComponent, OpenRepoPanelComponent, StatusBarComponent, PromptComponent, EnterLoginPromptComponent, PromptContainerDirective, BranchListComponent, BranchItemComponent, SshPasswordPromptComponent, CommitDetailComponent, CommitDetailInfoComponent, CommitDetailCiComponent, CiConsoleOutputComponent, ForcePushPromptComponent, CreateBranchPromptComponent],
+  declarations: [BranchViewerComponent, GitViewComponent, SubwayComponent, SubwayStationsComponent, SubwayMapVisualComponent, NodeVisualComponent, LinkVisualComponent, SubwayStationAnnotComponent, ActionToolbarComponent, OpenRepoPanelComponent, StatusBarComponent, PromptComponent, EnterLoginPromptComponent, PromptContainerDirective, BranchListComponent, BranchItemComponent, SshPasswordPromptComponent, CommitDetailComponent, CommitDetailInfoComponent, CommitDetailCiComponent, CiConsoleOutputComponent, ForcePushPromptComponent, CreateBranchPromptComponent, FileViewPanelComponent, ExternalFileViewerComponent, TagPromptComponent, MapSeparatorComponent],
   exports: [RouterModule],
   providers: [D3Service, RepoService, LayoutService, CredentialsService, CiIntegrationService, CommitSelectionService, AppveyorCiService, CommitChangeService],
 })

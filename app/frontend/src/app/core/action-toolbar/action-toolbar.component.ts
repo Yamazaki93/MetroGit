@@ -24,11 +24,11 @@ export class ActionToolbarComponent implements OnInit {
     private commit: CommitChangeService,
     private route: Router
   ) {
-    repo.pulled.subscribe(() => {
-      this.pulling = false;
+    repo.pulling.subscribe(state => {
+      this.pulling = state;
     });
-    repo.pushed.subscribe(() => {
-      this.pushing = false;
+    repo.pushing.subscribe(state => {
+      this.pushing = state;
     });
     repo.posUpdate.subscribe(pos => {
       this.behind = pos.behind;
@@ -43,11 +43,9 @@ export class ActionToolbarComponent implements OnInit {
   }
 
   pull() {
-    this.pulling = true;
-    this.repo.pullFFOnly();
+    this.repo.pull();
   }
   push() {
-    this.pushing = true;
     this.repo.push();
   }
   stash() {

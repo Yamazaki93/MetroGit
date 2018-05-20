@@ -1,4 +1,5 @@
 const { ipcMain } = require('electron');
+const { requireArgParams } = require('../infrastructure/handler-helper');
 const axios = require('axios');
 var username = "";
 var apiToken = "";
@@ -8,10 +9,12 @@ var settings;
 var conn;
 var window;
 
-ipcMain.on('JIRA-RepoChanged', initJira);
-ipcMain.on('JIRA-GetIssue', getIssue);
-ipcMain.on('JIRA-UpdateIssue', updateIssue);
-ipcMain.on('JIRA-AddComment', addComment);
+ipcMain.on('JIRA-RepoChanged', requireArgParams(initJira, ['id']));
+ipcMain.on('JIRA-GetIssue', requireArgParams(getIssue, ['key']));
+ipcMain.on('JIRA-UpdateIssue', requireArgParams(updateIssue, ['key', 'data']));
+ipcMain.on('JIRA-AddComment', requireArgParams(addComment, ['key', 'body']));
+ipcMain.on('JIRA-GetAssignableUsers', requireArgParams(findAssignableUsers, ['key']));
+ipcMain.on('JIRA-AssignIssue', requireArgParams(assignIssue, ['key', 'name']));
 
 function init(sett, sec, win) {
     secureStorage = sec;
@@ -21,7 +24,7 @@ function init(sett, sec, win) {
 }
 
 function initJira(event, arg) {
-    if (arg.id && settings.get('jira-enabled')) {
+    if (settings.get('jira-enabled')) {
         username = settings.get('jira-username');
         address = settings.get('jira-address');
         secureStorage.getPass(`jira-token@${arg.id}`).then(pass => {
@@ -46,10 +49,10 @@ function initJira(event, arg) {
                         } else {
                             window.webContents.send('JIRA-OperationFailed', {});
                         }
-                    } else if(error.code === 'ECONNABORTED') {
-                        window.webContents.send('JIRA-Timeout', {error: error})
+                    } else if (error.code === 'ECONNABORTED') {
+                        window.webContents.send('JIRA-Timeout', { error: error })
                     } else {
-                        window.webContents.send('JIRA-Error', {error: error});
+                        window.webContents.send('JIRA-Error', { error: error });
                     }
                     return Promise.reject(error);
                 });
@@ -64,7 +67,7 @@ function initJira(event, arg) {
 }
 
 function getIssue(event, arg) {
-    if (conn && arg.key) {
+    if (conn) {
         return getJiraIssue(arg.key).then(result => {
             checkStoryFields(result);
             event.sender.send('JIRA-IssueRetrieved', { issue: result.data })
@@ -73,7 +76,7 @@ function getIssue(event, arg) {
 }
 
 function addComment(event, arg) {
-    if (conn && arg.key && arg.body) {
+    if (conn) {
         let data = {
             'body': arg.body
         }
@@ -84,7 +87,7 @@ function addComment(event, arg) {
 }
 
 function getJiraIssue(key) {
-    if(conn) {
+    if (conn) {
         return conn.get(`/issue/${key}?expand=renderedFields,names,transitions`).then(result => {
             result.data.fields.description = result.data.renderedFields.description;
             return result;
@@ -103,7 +106,7 @@ function getResolution() {
 }
 
 function updateIssue(event, arg) {
-    if(conn && arg.key && arg.data) {
+    if (conn) {
         return conn.post(`/issue/${arg.key}/transitions`, arg.data).then(result => {
             return getIssue(event, arg);
         })
@@ -117,6 +120,27 @@ function checkStoryFields(expandedResult) {
             expandedResult.data.fields.storyPoints = expandedResult.data.fields[k];
         }
     })
+}
+
+function findAssignableUsers(event, arg) {
+    if (conn) {
+        let url = `/user/assignable/search?issueKey=${arg.key}`;
+        if (arg.search) {
+            url += '&username=' + arg.search;
+        }
+        return conn.get(url).then(result => {
+            let resp = { key: arg.key, result: result.data };
+            event.sender.send('JIRA-AssignableUsersRetrieved', { result: resp });
+        })
+    }
+}
+
+function assignIssue(event, arg) {
+    if (conn) {
+        return conn.put(`/issue/${arg.key}/assignee`, { name: arg.name }).then(result => {
+            getIssue(event, arg);
+        });
+    }
 }
 
 module.exports = {

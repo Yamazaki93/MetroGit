@@ -1,4 +1,5 @@
 const { ipcMain } = require('electron');
+const { requireArgParams } = require('../infrastructure/handler-helper');
 const axios = require('axios');
 const serviceKey = 'AppVeyor';
 var accountName = "";
@@ -11,7 +12,8 @@ var cache;
 var checkPeriodicUpdateHook;
 
 ipcMain.on('CI-RepoChanged', repoChange);
-ipcMain.on('CI-AppVeyorGetLog', getBuildLog);
+ipcMain.on('CI-AppVeyorRebuild', reBuildAppVeyor);
+ipcMain.on('CI-AppVeyorGetLog', requireArgParams(getBuildLog, ['version']));
 
 function init(sett, sec, win, cac) {
     secureStorage = sec;
@@ -84,6 +86,7 @@ function formatResults(builds) {
             buildId: b.buildId,
             build: b.buildNumber,
             version: b.version,
+            branch: b.branch,
         }
     });
     let existing = {};
@@ -110,7 +113,7 @@ function periodicUpdate() {
 }
 
 function getBuildLog(event, arg) {
-    if (conn && arg.version) {
+    if (conn) {
         conn.get(`/projects/${accountName}/${projectName}/build/${arg.version}`).then(resp => {
             if (resp.data.build.jobs.length) {
                 let jobId = resp.data.build.jobs[0].jobId;
@@ -120,6 +123,19 @@ function getBuildLog(event, arg) {
             } else {
                 event.sender.send('CI-AppVeyorLogNotFound', { version: arg.version });
             }
+        })
+    }
+}
+
+function reBuildAppVeyor(event, arg) {
+    if (conn && arg.commit) {
+        conn.post(`builds`, {
+            "accountName": accountName,
+            "projectSlug": projectName,
+            "branch": arg.branch,
+            "commitId": arg.commit
+        }).then(resp => {
+            event.sender.send('CI-AppVeyorRebuilded', {});
         })
     }
 }
