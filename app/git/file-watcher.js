@@ -110,7 +110,6 @@ function getFileDetailWrapper(event, arg) {
         getFileDetail(arg.file, arg.commit).then(result => {
             event.sender.send('Repo-FileDetailRetrieved', result);
         }).catch(err => {
-            console.log(err);
         })
     }
 }
