@@ -13,6 +13,9 @@ function init(win, sett, sec, fw) {
     secure = sec;
     fileWatch = fw;
     initPullOptions();
+    window.on('close', (event) => {
+        clearInterval(refreshInterval);
+    })
 }
 
 function consolidateAuthError(err) {
