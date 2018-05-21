@@ -1,3 +1,11 @@
-<div class="key-selector-container">
+<div class="key-selector-container mr-2" (click)="enableEditing()">
   <h5 class="text-muted full-width" *ngIf="!editing">{{currentIssueKey}}</h5>
+  <div *ngIf="editing" class="edit-actions">
+    <a href="javascript:void(0)" (click)="cancelEdit()" class="btn btn-secondary btn-sm">
+      <i class="icon-x"></i>
+    </a>
+  </div>
+  <div class="input-container">
+    <input *ngIf="editing" [(ngModel)]="queryKey" class="form-control">
+  </div>
 </div>

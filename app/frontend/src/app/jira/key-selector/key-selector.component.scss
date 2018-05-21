@@ -1,3 +1,16 @@
 .key-selector-container{
     cursor: pointer;
+    position: relative;
+    .form-control{
+        padding: 0 5px;
+    }
+    .edit-actions{
+        position: absolute;
+        padding: 3px;
+        border-radius: 3px;
+        background: rgba(0, 0, 0, 0.2);
+        right: 0;
+        top: 25px;
+    }
 }
+

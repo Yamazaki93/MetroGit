@@ -17,9 +17,18 @@ export class KeySelectorComponent implements OnInit {
   }
   private _key = "";
   private editing = false;
+  private queryKey = "";
   constructor() { }
 
   ngOnInit() {
+  }
+
+  enableEditing() {
+    this.queryKey = this._key;
+    this.editing = true;
+  }
+  cancelEdit() {
+    this.editing = false;
   }
 
 }
