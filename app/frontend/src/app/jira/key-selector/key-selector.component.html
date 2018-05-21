@@ -6,20 +6,24 @@
     </a>
   </div>
   <div class="input-container">
-    <input *ngIf="editing" [(ngModel)]="queryKey" class="form-control">
+    <input *ngIf="editing" (input)="onKeyChanged()" [(ngModel)]="queryKey" class="form-control">
   </div>
-  <div class="issues" [class.toggled]="toggled">
+  <div class="issues" [class.toggled]="toggled" *ngIf="editing">
     <div class="mt-2" *ngIf="loading">
       <app-spinner [size]="20" [enabled]="loading"></app-spinner>
     </div>
     <div *ngIf="!loading">
-      <div class="user d-flex p-1" *ngFor="let issue of issues">
+      <div class="issue d-flex p-1" *ngFor="let issue of issues">
         <div>
-          <img [src]="issue.safeIconUrl" class="mr-1" width="32px" />
+          <img [src]="issue.fields.priority.safeIconUrl" class="mr-1" width="16px" />
         </div>
-        <div class="d-flex flex-column">
+        <div class="issue-text">
+          {{issue.fields.summary}}
         </div>
       </div>
+    </div>
+    <div *ngIf="!loading && issues && issues.length === 0">
+      No Results
     </div>
   </div>
 </div>

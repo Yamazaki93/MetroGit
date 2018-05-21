@@ -1,4 +1,6 @@
 import { Component, OnInit, Input, EventEmitter, Output } from '@angular/core';
+import { JiraIntegrationService } from '../services/jira-integration.service';
+import { DomSanitizer } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-key-selector',
@@ -18,10 +20,27 @@ export class KeySelectorComponent implements OnInit {
   private _key = "";
   private editing = false;
   private queryKey = "";
-  private toggled = true;
+  private toggled = false;
   private loading = false;
   private issues = [];
-  constructor() { }
+  constructor(
+    private jira: JiraIntegrationService,
+    private sanitizer: DomSanitizer,
+
+  ) {
+    jira.issueQueryRetrieved.subscribe(issues => {
+      this.loading = false;
+      issues.map(issue => {
+        issue.fields.priority.safeIconUrl = this.sanitizer.bypassSecurityTrustUrl(issue.fields.priority.iconUrl);
+      });
+      this.issues = issues;
+      if (this.issues) {
+        this.toggled = true;
+      } else {
+        this.toggled = false;
+      }
+    });
+  }
 
   ngOnInit() {
   }
@@ -34,5 +53,8 @@ export class KeySelectorComponent implements OnInit {
     this.editing = false;
     $event.stopPropagation();
   }
-
+  onKeyChanged() {
+    this.loading = true;
+    this.jira.searchIssues(this.queryKey, ['summary', 'priority']);
+  }
 }

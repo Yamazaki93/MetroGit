@@ -15,6 +15,7 @@ ipcMain.on('JIRA-UpdateIssue', requireArgParams(updateIssue, ['key', 'data']));
 ipcMain.on('JIRA-AddComment', requireArgParams(addComment, ['key', 'body']));
 ipcMain.on('JIRA-GetAssignableUsers', requireArgParams(findAssignableUsers, ['key']));
 ipcMain.on('JIRA-AssignIssue', requireArgParams(assignIssue, ['key', 'name']));
+ipcMain.on('JIRA-SearchIssues', requireArgParams(searchIssues, ['jql']));
 
 function init(sett, sec, win) {
     secureStorage = sec;
@@ -46,6 +47,9 @@ function initJira(event, arg) {
                         } else if (error.response.status === 404) {
                             window.webContents.send('JIRA-NotFound', {});
                             return Promise.reject(error);
+                        } else if(error.request.path.indexOf('search') !== -1) {
+                            // swallow search errors
+                            return Promise.resolve('QUERY_ISSUE');
                         } else {
                             window.webContents.send('JIRA-OperationFailed', {});
                         }
@@ -139,6 +143,21 @@ function assignIssue(event, arg) {
     if (conn) {
         return conn.put(`/issue/${arg.key}/assignee`, { name: arg.name }).then(result => {
             getIssue(event, arg);
+        });
+    }
+}
+
+function searchIssues(event, arg) {
+    if (conn) {
+        let url = `/search`;
+        let obj = { jql: arg.jql };
+        if (arg.fields) {
+            obj.fields = arg.fields;
+        }
+        return conn.post(url, obj).then(resp => {
+            event.sender.send('JIRA-IssueQueryResultRetrieved', { issues: resp.data.issues });
+        }).catch(err => {
+            event.sender.send('JIRA-IssueQueryResultRetrieved', { issues: [] });
         });
     }
 }
