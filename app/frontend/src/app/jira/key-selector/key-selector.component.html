@@ -1,11 +1,25 @@
 <div class="key-selector-container mr-2" (click)="enableEditing()">
   <h5 class="text-muted full-width" *ngIf="!editing">{{currentIssueKey}}</h5>
   <div *ngIf="editing" class="edit-actions">
-    <a href="javascript:void(0)" (click)="cancelEdit()" class="btn btn-secondary btn-sm">
+    <a href="javascript:void(0)" (click)="cancelEdit($event)" class="btn btn-secondary btn-sm">
       <i class="icon-x"></i>
     </a>
   </div>
   <div class="input-container">
     <input *ngIf="editing" [(ngModel)]="queryKey" class="form-control">
+  </div>
+  <div class="issues" [class.toggled]="toggled">
+    <div class="mt-2" *ngIf="loading">
+      <app-spinner [size]="20" [enabled]="loading"></app-spinner>
+    </div>
+    <div *ngIf="!loading">
+      <div class="user d-flex p-1" *ngFor="let issue of issues">
+        <div>
+          <img [src]="issue.safeIconUrl" class="mr-1" width="32px" />
+        </div>
+        <div class="d-flex flex-column">
+        </div>
+      </div>
+    </div>
   </div>
 </div>
