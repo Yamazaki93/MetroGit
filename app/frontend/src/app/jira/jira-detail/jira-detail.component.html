@@ -3,7 +3,9 @@
     <div class="icon-container mr-1" style="padding-top: 3px;">
       <object [data]="priorityIconUrl" style="width: 20px;"></object>
     </div>
-    <h5 class="text-muted full-width">{{currentIssueKey}}</h5>
+    <div class="full-width">
+      <app-key-selector [currentIssueKey]="currentIssueKey"></app-key-selector>
+    </div>
     <div class="external-link mr-2" placement="left" ngbTooltip="Refresh" container="body" (click)="refreshIssue()">
       <h5>
         <i class="icon-refresh-cw"></i>
@@ -30,8 +32,6 @@
   <div class="mt-3 issue-status-container row flex-no-shrink">
     <div class="col-3">
       <label>Status</label>
-      <!-- <div class="p-2 rounded" [class.bg-dark]="issue.fields.status.statusCategory.colorName!=='green' && issue.fields.status.statusCategory.colorName!=='yellow' "
-        [class.bg-success]="issue.fields.status.statusCategory.colorName==='green'" [class.bg-primary]="issue.fields.status.statusCategory.colorName==='yellow'">{{issue.fields.status.name}}</div> -->
       <app-transition-control (transitioning)="onRequestPosted()" [key]="issue.key" [padding]="2" [status]="issue.fields.status"
         [transitions]="issue.transitions"></app-transition-control>
       <small *ngIf="issue.fields.resolution">
@@ -39,10 +39,6 @@
     </div>
     <div class="col-3">
       <label>Assignee</label>
-      <!-- <div class="p-2 rounded bg-dark profile-container">
-        <img [src]="issue.fields.assignee.safeAvatarUrl" class="mr-1" width="24px" *ngIf="issue.fields.assignee" />
-        <span *ngIf="issue.fields.assignee">{{issue.fields.assignee.displayName}}</span>
-      </div> -->
       <app-profile-selector (profileSelected)="onRequestPosted()" [key]="issue.key" [profile]="issue.fields.assignee"></app-profile-selector>
     </div>
     <div class="col-3" *ngIf="issue.fields.storyPoints !== undefined">
