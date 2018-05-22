@@ -58,7 +58,12 @@ export class KeySelectorComponent implements OnInit {
   }
   onKeyChanged() {
     this.loading = true;
-    this.jira.searchIssues(this.queryKey, ['summary', 'priority', 'issuetype']);
+    let result = this.jira.parseKeyFromMessage(this.queryKey, "");
+    if (result.length) {
+      this.jira.searchIssuesByKey(result[0], ['summary', 'priority', 'issuetype']);
+    } else {
+      this.jira.searchIssuesBySummary(this.queryKey, ['summary', 'priority', 'issuetype']);
+    }
   }
   selectIssue(key, $event) {
     this.editing = false;

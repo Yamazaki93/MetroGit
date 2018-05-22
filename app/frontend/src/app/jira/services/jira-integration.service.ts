@@ -106,8 +106,12 @@ export class JiraIntegrationService {
   assignIssue(key, name) {
     this.electron.ipcRenderer.send('JIRA-AssignIssue', { key: key, name: name });
   }
-  searchIssues(keyQuery, fields?) {
+  searchIssuesByKey(keyQuery, fields?) {
     let jql = `key = "${keyQuery}"`;
+    this.electron.ipcRenderer.send('JIRA-SearchIssues', { jql: jql, fields: fields });
+  }
+  searchIssuesBySummary(textQuery, fields?) {
+    let jql = `summary ~ "\\"${textQuery}\\""`;
     this.electron.ipcRenderer.send('JIRA-SearchIssues', { jql: jql, fields: fields });
   }
 }

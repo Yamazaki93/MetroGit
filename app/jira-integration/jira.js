@@ -155,10 +155,12 @@ function searchIssues(event, arg) {
             obj.fields = arg.fields;
         }
         return conn.post(url, obj).then(resp => {
-            event.sender.send('JIRA-IssueQueryResultRetrieved', { issues: resp.data.issues });
-        }).catch(err => {
-            event.sender.send('JIRA-IssueQueryResultRetrieved', { issues: [] });
-        });
+            if (resp === 'QUERY_ISSUE') {
+                event.sender.send('JIRA-IssueQueryResultRetrieved', { issues: [] });
+            } else {
+                event.sender.send('JIRA-IssueQueryResultRetrieved', { issues: resp.data.issues });
+            }
+        })
     }
 }
 

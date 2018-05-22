@@ -2,7 +2,7 @@
   <h5 class="text-muted full-width" *ngIf="!editing && currentIssueKey !== ''">{{currentIssueKey}}</h5>
   <h5 class="text-muted full-width" *ngIf="!editing && currentIssueKey === ''">Click here to search for issue</h5>
   <div class="input-container d-flex" *ngIf="editing" >
-    <input placeholder="Enter Issue Key" (input)="onKeyChanged()" [(ngModel)]="queryKey" class="form-control mr-1">
+    <input placeholder="Enter Issue Key or Summary Text" (input)="onKeyChanged()" [(ngModel)]="queryKey" class="form-control mr-1">
     <a href="javascript:void(0)" (click)="cancelEdit($event)" class="btn btn-secondary btn-sm">
       <i class="icon-x"></i>
     </a>
@@ -18,6 +18,9 @@
         </div>
         <div>
           <img [src]="issue.fields.issuetype.safeIconUrl" class="mr-1" width="18px" />
+        </div>
+        <div class="flex-no-shrink text-muted mr-1">
+          {{issue.key}}
         </div>
         <div class="issue-text">
           {{issue.fields.summary}}

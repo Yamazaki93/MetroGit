@@ -7,14 +7,13 @@
     .edit-actions{
         position: absolute;
         padding: 3px;
-        z-index: 1;
         border-radius: 3px;
         background: rgba(0, 0, 0, 0.2);
         right: 0;
         top: 25px;
     }
     .issues{
-        z-index: 0;
+        z-index: 1;
         position: absolute;
         display: none;
         top: 25px;
@@ -41,3 +40,6 @@
     }
 }
 
+.flex-no-shrink{
+    flex-shrink: 0;
+}
