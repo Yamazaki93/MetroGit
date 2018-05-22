@@ -5,11 +5,11 @@
 </div>
 <div class="commit-detail-container smooth d-flex" [class.toggled]="toggled">
   <div class="info-panels d-flex flex-column justify-content-start">
-    <div id="commit-detail-nav-container" class="d-flex flex-wrap" [class.hidden]="!toggled || !selectedCommit">
-      <a class="nav-button" placement="right" container="body" (click)="goTo('info')" [class.toggled]="selectedTab==='info'">
+    <div id="commit-detail-nav-container" class="d-flex flex-wrap" [class.hidden]="!toggled">
+      <a class="nav-button" placement="right" container="body" *ngIf="selectedCommit" (click)="goTo('info')" [class.toggled]="selectedTab==='info'">
         <i class="icon-git-commit"></i>
       </a>
-      <a class="nav-button" placement="right" container="body" *ngIf="ci.enabled" (click)="goTo('ci')" [class.toggled]="selectedTab==='ci'">
+      <a class="nav-button" placement="right" container="body" *ngIf="ci.enabled && selectedCommit" (click)="goTo('ci')" [class.toggled]="selectedTab==='ci'">
         <i class="icon-check-circle"></i>
       </a>
       <a class="nav-button" placement="right" container="body" *ngIf="jira.enabled" (click)="goTo('jira')" [class.toggled]="selectedTab==='jira'">
@@ -21,15 +21,10 @@
         </svg>
       </a>
     </div>
-    <div class="commit-detail-content" [class.hidden]="!toggled || !selectedTab || !selectedCommit || loading">
-      <app-commit-detail-info [commit]="selectedCommit" *ngIf="selectedTab==='info' && selectedCommit"></app-commit-detail-info>
-      <app-jira-detail [commit]="selectedCommit" *ngIf="selectedTab==='jira' && selectedCommit"></app-jira-detail>
+    <div class="commit-detail-content" [class.hidden]="!toggled || !selectedTab || loading">
+      <app-commit-detail-info [commit]="selectedCommit" *ngIf="selectedTab==='info'"></app-commit-detail-info>
+      <app-jira-detail [commit]="selectedCommit" *ngIf="selectedTab==='jira'"></app-jira-detail>
       <app-commit-detail-ci [selectedCommit]="selectedCommit" *ngIf="selectedTab==='ci' && selectedCommit"></app-commit-detail-ci>
-    </div>
-    <div class="empty-container d-flex flex-column justify-content-center align-items-center" [class.hidden]="!toggled || loading || selectedCommit">
-      <div>
-        <h4>Select a commit from the map to see details</h4>
-      </div>
     </div>
     <div class="loading-container d-flex flex-column justify-content-center align-items-center" [class.hidden]="!loading">
       <app-spinner [enabled]="loading" [size]="60"></app-spinner>

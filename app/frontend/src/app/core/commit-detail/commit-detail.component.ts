@@ -34,7 +34,6 @@ export class CommitDetailComponent implements OnInit {
           this.selectedTab = 'info';
         }
       } else {
-        this.toggled = false;
         this.fileToggled = false;
       }
     });

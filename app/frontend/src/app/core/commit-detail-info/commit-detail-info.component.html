@@ -1,4 +1,4 @@
-<div class="commit-detail-info-container d-flex flex-column p-3">
+<div class="commit-detail-info-container d-flex flex-column p-3" *ngIf="commit">
   <div class="summary-container d-flex flex-column">
     <div class="summary-header d-flex" *ngIf="!commit.virtual">
       <div class="committer-badge mr-3" [style.background]="getBadgeColor()">
@@ -51,7 +51,6 @@
         <i class="icon-file"></i>{{commit.fileSummary.renamed}}</span>
     </h5>
   </div>
-
   <div class="mt-2 file-details-container d-flex flex-column" *ngIf="!commit.virtual">
     <h5>File Details</h5>
     <div class="modified-file-list p-2">
@@ -160,5 +159,10 @@
       <span *ngIf="!newCommitMessage.length">Please Enter A Commit Message</span>
       <span *ngIf="newCommitMessage.length && !commit.staged.length">Commit All Files</span>
     </a>
+  </div>
+</div>
+<div class="empty-container d-flex flex-column justify-content-center align-items-center" [class.hidden]="!commit">
+  <div>
+    <h4>Select a commit from the map to see details</h4>
   </div>
 </div>
