@@ -6,10 +6,10 @@
 <div class="commit-detail-container smooth d-flex" [class.toggled]="toggled">
   <div class="info-panels d-flex flex-column justify-content-start">
     <div id="commit-detail-nav-container" class="d-flex flex-wrap" [class.hidden]="!toggled">
-      <a class="nav-button" placement="right" container="body" (click)="goTo('info')" [class.toggled]="selectedTab==='info'">
+      <a class="nav-button" placement="right" container="body" *ngIf="selectedCommit" (click)="goTo('info')" [class.toggled]="selectedTab==='info'">
         <i class="icon-git-commit"></i>
       </a>
-      <a class="nav-button" placement="right" container="body" *ngIf="ci.enabled" (click)="goTo('ci')" [class.toggled]="selectedTab==='ci'">
+      <a class="nav-button" placement="right" container="body" *ngIf="ci.enabled && selectedCommit" (click)="goTo('ci')" [class.toggled]="selectedTab==='ci'">
         <i class="icon-check-circle"></i>
       </a>
       <a class="nav-button" placement="right" container="body" *ngIf="jira.enabled" (click)="goTo('jira')" [class.toggled]="selectedTab==='jira'">
@@ -23,7 +23,7 @@
     </div>
     <div class="commit-detail-content" [class.hidden]="!toggled || !selectedTab || loading">
       <app-commit-detail-info [commit]="selectedCommit" *ngIf="selectedTab==='info'"></app-commit-detail-info>
-      <app-jira-detail [commit]="selectedCommit" *ngIf="selectedTab==='jira' && selectedCommit"></app-jira-detail>
+      <app-jira-detail [commit]="selectedCommit" *ngIf="selectedTab==='jira'"></app-jira-detail>
       <app-commit-detail-ci [selectedCommit]="selectedCommit" *ngIf="selectedTab==='ci' && selectedCommit"></app-commit-detail-ci>
     </div>
     <div class="loading-container d-flex flex-column justify-content-center align-items-center" [class.hidden]="!loading">

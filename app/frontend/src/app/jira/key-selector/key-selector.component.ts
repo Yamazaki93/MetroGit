@@ -12,6 +12,7 @@ export class KeySelectorComponent implements OnInit {
 
   @Input() set currentIssueKey(key: string) {
     this._key = key;
+    this.queryKey = key;
   }
   @Output() currentIssueKeyChange = new EventEmitter<string>();
   @Output() issueSelected = new EventEmitter<Issue>();

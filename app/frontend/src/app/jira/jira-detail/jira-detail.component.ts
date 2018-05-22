@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, OnDestroy } from '@angular/core';
+import { Component, OnInit, Input, OnDestroy, ViewChild } from '@angular/core';
 import { CommitMessage } from '../models/commit-message';
 import { JiraIntegrationService } from '../services/jira-integration.service';
 import { Issue } from '../models/issue';
@@ -8,6 +8,7 @@ import { Subscription } from 'rxjs/Subscription';
 import * as moment from 'moment';
 import { PromptInjectorService } from '../../infrastructure/prompt-injector.service';
 import { AddCommentPromptComponent } from '../add-comment-prompt/add-comment-prompt.component';
+import { KeySelectorComponent } from '../key-selector/key-selector.component';
 
 @Component({
   selector: 'app-jira-detail',
@@ -16,16 +17,18 @@ import { AddCommentPromptComponent } from '../add-comment-prompt/add-comment-pro
 })
 export class JiraDetailComponent implements OnInit, OnDestroy {
 
+  @ViewChild('keySelector') keySelector: KeySelectorComponent;
   @Input() set commit(cmt: CommitMessage) {
-    let result = this.jira.parseKeyFromMessage(cmt.message, cmt.detail);
-    this.issue = null;
-    if (result.length > 0) {
-      this.currentIssueKey = result[0];
-      this.loading = true;
-      this.jira.getIssue(this.currentIssueKey);
-    } else {
-      this.issue = null;
+    if (cmt) {
+      let result = this.jira.parseKeyFromMessage(cmt.message, cmt.detail);
+      if (result.length > 0) {
+        this.currentIssueKey = result[0];
+        this.loading = true;
+        this.jira.getIssue(this.currentIssueKey);
+      }
+    } else if (!this.issue) {
       this.currentIssueKey = "";
+      this.keySelector.enableEditing();
     }
   }
   private currentIssueKey = "";

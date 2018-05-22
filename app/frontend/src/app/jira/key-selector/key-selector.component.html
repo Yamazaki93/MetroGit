@@ -1,7 +1,8 @@
 <div class="key-selector-container mr-2" (click)="enableEditing()">
-  <h5 class="text-muted full-width" *ngIf="!editing">{{currentIssueKey}}</h5>
+  <h5 class="text-muted full-width" *ngIf="!editing && currentIssueKey !== ''">{{currentIssueKey}}</h5>
+  <h5 class="text-muted full-width" *ngIf="!editing && currentIssueKey === ''">Click here to search for issue</h5>
   <div class="input-container d-flex" *ngIf="editing" >
-    <input (input)="onKeyChanged()" [(ngModel)]="queryKey" class="form-control mr-1">
+    <input placeholder="Enter Issue Key" (input)="onKeyChanged()" [(ngModel)]="queryKey" class="form-control mr-1">
     <a href="javascript:void(0)" (click)="cancelEdit($event)" class="btn btn-secondary btn-sm">
       <i class="icon-x"></i>
     </a>
