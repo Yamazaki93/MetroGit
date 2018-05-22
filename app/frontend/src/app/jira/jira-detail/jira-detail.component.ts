@@ -45,24 +45,22 @@ export class JiraDetailComponent implements OnInit, OnDestroy {
     this.subs.push(jira.issueRetrieved.subscribe(iss => {
       if (!iss) {
         this.loading = false;
-      } else if (!iss.fields.issuetype.subtask && iss.key === this.currentIssueKey) {
+      }  else if (iss.key === this.currentIssueKey) {
         this.issue = iss;
         this.formatCurrentIssue();
         this.querySubtasks();
         this.loading = false;
-      } else {
-        if (this.issue && this.issue.fields.subtasks) {
-          let subtaskKeys = this.issue.fields.subtasks.map(sub => sub.key);
-          let index = subtaskKeys.indexOf(iss.key);
-          if (index !== -1) {
-            this.issue.fields.subtasks.forEach(task => {
-              if (task.key === iss.key) {
-                task.transitions = iss.transitions;
-                task.fields.status = iss.fields.status;
-              }
-            });
-            this.loading = false;
-          }
+      } else if (iss.fields.issuetype.subtask && this.issue && this.issue.fields.subtasks) {
+        let subtaskKeys = this.issue.fields.subtasks.map(sub => sub.key);
+        let index = subtaskKeys.indexOf(iss.key);
+        if (index !== -1) {
+          this.issue.fields.subtasks.forEach(task => {
+            if (task.key === iss.key) {
+              task.transitions = iss.transitions;
+              task.fields.status = iss.fields.status;
+            }
+          });
+          this.loading = false;
         }
       }
     }));
@@ -132,5 +130,9 @@ export class JiraDetailComponent implements OnInit, OnDestroy {
     this.loading = true;
     this.jira.getIssue(this.currentIssueKey);
   }
-
+  loadIssue(key) {
+    this.loading = true;
+    this.currentIssueKey = key;
+    this.jira.getIssue(key);
+  }
 }

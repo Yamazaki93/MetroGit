@@ -4,7 +4,7 @@
       <object [data]="priorityIconUrl" style="width: 20px;"></object>
     </div>
     <div class="full-width">
-      <app-key-selector [currentIssueKey]="currentIssueKey"></app-key-selector>
+      <app-key-selector (issueSelected)="loadIssue($event)" [currentIssueKey]="currentIssueKey"></app-key-selector>
     </div>
     <div class="external-link mr-2" placement="left" ngbTooltip="Refresh" container="body" (click)="refreshIssue()">
       <h5>
@@ -55,7 +55,7 @@
       </div>
     </div>
   </div>
-  <div class="mt-3 full-width flex-no-shrink" *ngIf="issue.fields.subtasks">
+  <div class="mt-3 full-width flex-no-shrink" *ngIf="issue.fields.subtasks && !issue.fields.issuetype.subtask">
     <h5>Subtasks</h5>
     <div class="subtasks">
       <div class="mt-1 subtask d-flex p-2 justify-content-stretch bg-dark" *ngFor="let subtask of issue.fields.subtasks">

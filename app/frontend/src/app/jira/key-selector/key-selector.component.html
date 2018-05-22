@@ -1,21 +1,22 @@
 <div class="key-selector-container mr-2" (click)="enableEditing()">
   <h5 class="text-muted full-width" *ngIf="!editing">{{currentIssueKey}}</h5>
-  <div *ngIf="editing" class="edit-actions">
+  <div class="input-container d-flex" *ngIf="editing" >
+    <input (input)="onKeyChanged()" [(ngModel)]="queryKey" class="form-control mr-1">
     <a href="javascript:void(0)" (click)="cancelEdit($event)" class="btn btn-secondary btn-sm">
       <i class="icon-x"></i>
     </a>
-  </div>
-  <div class="input-container">
-    <input *ngIf="editing" (input)="onKeyChanged()" [(ngModel)]="queryKey" class="form-control">
   </div>
   <div class="issues" [class.toggled]="toggled" *ngIf="editing">
     <div class="mt-2" *ngIf="loading">
       <app-spinner [size]="20" [enabled]="loading"></app-spinner>
     </div>
     <div *ngIf="!loading">
-      <div class="issue d-flex p-1" *ngFor="let issue of issues">
+      <div class="issue d-flex p-1" (click)="selectIssue(issue.key, $event)" *ngFor="let issue of issues">
         <div>
-          <img [src]="issue.fields.priority.safeIconUrl" class="mr-1" width="16px" />
+          <img [src]="issue.fields.priority.safeIconUrl" class="mr-1" width="18px" />
+        </div>
+        <div>
+          <img [src]="issue.fields.issuetype.safeIconUrl" class="mr-1" width="18px" />
         </div>
         <div class="issue-text">
           {{issue.fields.summary}}

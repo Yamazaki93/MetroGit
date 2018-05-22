@@ -1,6 +1,7 @@
 import { Component, OnInit, Input, EventEmitter, Output } from '@angular/core';
 import { JiraIntegrationService } from '../services/jira-integration.service';
 import { DomSanitizer } from '@angular/platform-browser';
+import { Issue } from '../models/issue';
 
 @Component({
   selector: 'app-key-selector',
@@ -13,7 +14,7 @@ export class KeySelectorComponent implements OnInit {
     this._key = key;
   }
   @Output() currentIssueKeyChange = new EventEmitter<string>();
-
+  @Output() issueSelected = new EventEmitter<Issue>();
   get currentIssueKey() {
     return this._key;
   }
@@ -32,6 +33,7 @@ export class KeySelectorComponent implements OnInit {
       this.loading = false;
       issues.map(issue => {
         issue.fields.priority.safeIconUrl = this.sanitizer.bypassSecurityTrustUrl(issue.fields.priority.iconUrl);
+        issue.fields.issuetype.safeIconUrl = this.sanitizer.bypassSecurityTrustResourceUrl(issue.fields.issuetype.iconUrl);
       });
       this.issues = issues;
       if (this.issues) {
@@ -55,6 +57,11 @@ export class KeySelectorComponent implements OnInit {
   }
   onKeyChanged() {
     this.loading = true;
-    this.jira.searchIssues(this.queryKey, ['summary', 'priority']);
+    this.jira.searchIssues(this.queryKey, ['summary', 'priority', 'issuetype']);
+  }
+  selectIssue(key, $event) {
+    this.editing = false;
+    this.issueSelected.emit(key);
+    $event.stopPropagation();
   }
 }
