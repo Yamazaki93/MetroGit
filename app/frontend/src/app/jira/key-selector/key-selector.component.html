@@ -13,10 +13,10 @@
     </div>
     <div *ngIf="!loading">
       <div class="issue d-flex p-1" (click)="selectIssue(issue.key, $event)" *ngFor="let issue of issues">
-        <div>
+        <div *ngIf="issue.fields.priority">
           <img [src]="issue.fields.priority.safeIconUrl" class="mr-1" width="18px" />
         </div>
-        <div>
+        <div *ngIf="issue.fields.issuetype">
           <img [src]="issue.fields.issuetype.safeIconUrl" class="mr-1" width="18px" />
         </div>
         <div class="flex-no-shrink text-muted mr-1">

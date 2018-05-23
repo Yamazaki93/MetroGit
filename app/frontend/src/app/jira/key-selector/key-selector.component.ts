@@ -33,8 +33,12 @@ export class KeySelectorComponent implements OnInit {
     jira.issueQueryRetrieved.subscribe(issues => {
       this.loading = false;
       issues.map(issue => {
-        issue.fields.priority.safeIconUrl = this.sanitizer.bypassSecurityTrustUrl(issue.fields.priority.iconUrl);
-        issue.fields.issuetype.safeIconUrl = this.sanitizer.bypassSecurityTrustResourceUrl(issue.fields.issuetype.iconUrl);
+        if (issue.fields.priority) {
+          issue.fields.priority.safeIconUrl = this.sanitizer.bypassSecurityTrustUrl(issue.fields.priority.iconUrl);
+        }
+        if (issue.fields.issuetype) {
+          issue.fields.issuetype.safeIconUrl = this.sanitizer.bypassSecurityTrustResourceUrl(issue.fields.issuetype.iconUrl);
+        }
       });
       this.issues = issues;
       if (this.issues) {
