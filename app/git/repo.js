@@ -113,6 +113,12 @@ function tryPush(remote, refs, tries, username, password) {
             certificateCheck: function () {
                 return 1;
             },
+            // pending refactor 
+            // pushUpdateReference: function (ref, status, data) {
+            //     if (status.indexOf('declined') >= 0) {
+            //         e = new Error(status);
+            //     }
+            // }
         }
     }).catch(err => {
         return consolidateAuthError(err);
