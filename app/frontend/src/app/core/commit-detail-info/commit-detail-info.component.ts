@@ -16,6 +16,9 @@ import { CommitChangeService } from '../services/commit-change.service';
 })
 export class CommitDetailInfoComponent implements OnInit {
 
+  @Input() set fileViewMode(m: string) {
+    this._mode = m;
+  }
   @Input() commit: CommitDetail | WIPCommit;
   private set newCommitMessage(msg) {
     this._message = msg;
@@ -33,6 +36,7 @@ export class CommitDetailInfoComponent implements OnInit {
   }
   private _message = "";
   private _detail = "";
+  private _mode = "";
   constructor(
     private d3: D3Service,
     private sanitize: DomSanitizer,
@@ -111,7 +115,7 @@ export class CommitDetailInfoComponent implements OnInit {
     }
   }
   openFileDetails(file, commit = null) {
-    this.selection.selectFileDetail(file, commit);
+    this.selection.selectFileDetail(file, commit, this.fileViewMode === 'file');
   }
   onKeyDown($event) {
     // keyboard code 83 = s;

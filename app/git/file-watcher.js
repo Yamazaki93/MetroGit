@@ -121,7 +121,7 @@ function getFileDetail(path, commit, fullFile = false) {
                 diff = diffs[0]
                 return diff
             }).then(diff => {
-                return processDiff(diff, path, undefined, fullFile);
+                return processDiff(diff, path, commit, fullFile);
             })
         });
     } else if (commit === 'workdir') {
@@ -204,7 +204,8 @@ function processDiff(diff, path, commit, fullFile = false) {
                         return tree.getEntry(path);
                     }).then(treeEntry => {
                         if(treeEntry.isFile()) {
-                            let blob = treeEntry.getBlob()
+                            let blob = treeEntry.getBlob();
+                            console.log(blob);
                         } else {
                             return Promise.reject('PATH_NOT_FILE');
                         }

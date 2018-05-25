@@ -16,13 +16,20 @@ export class FileViewPanelComponent implements OnInit {
       this.loading = false;
     }
   }
-  @Output() modeChanged = new EventEmitter<string>();
+  @Output() modeChange = new EventEmitter<string>();
+  @Input()
+  set mode(m: string) {
+    if (this._mode !== m) {
+      this.modeChange.emit(m);
+      this.ch.selectFileDetail(this._fileDetail.path, this._fileDetail.commit, m === 'file');
+    }
+    this._mode = m;
+  }
+  get mode() {
+    return this._mode;
+  }
   private _fileDetail: FileDetail;
   private loading = true;
-  private set mode(m: string) {
-    this._mode = m;
-    this.modeChanged.emit(m);
-  }
   private _mode = 'hunk';
   constructor(
     private ch: CommitSelectionService

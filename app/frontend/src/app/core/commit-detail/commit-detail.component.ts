@@ -14,7 +14,6 @@ import { FileViewPanelComponent } from '../file-view-panel/file-view-panel.compo
 })
 export class CommitDetailComponent implements OnInit {
 
-  @ViewChild('fileViewPanel') fileView: FileViewPanelComponent;
   private toggled = false;
   private loading = false;
   private fileToggled = false;
@@ -22,6 +21,14 @@ export class CommitDetailComponent implements OnInit {
   private selectedTab = "";
   private selectedFile = "";
   private fileDetail: FileDetail;
+  private set fileViewMode(m: string) {
+    this._mode = m;
+    console.log(m);
+  }
+  private get fileViewMode() {
+    return this._mode;
+  }
+  private _mode = 'hunk';
   constructor(
     private selection: CommitSelectionService,
     private ci: CiIntegrationService,
@@ -53,11 +60,6 @@ export class CommitDetailComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.fileView.modeChanged.subscribe(mode => {
-      if (this.selectedFile) {
-
-      }
-    });
   }
 
   toggleDetail(): void {
