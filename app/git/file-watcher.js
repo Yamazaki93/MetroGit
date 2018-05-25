@@ -236,7 +236,13 @@ function processDiff(diff, path, commit, fullFile = false) {
 }
 
 function getFileLines(commit, path) {
-    return Repo.getCommit(commit).then(cmt => {
+    let getCmtPromise;
+    if(commit === 'workdir' || commit === 'tree') {
+        getCmtPromise = Repo.getHeadCommit();
+    } else {
+        getCmtPromise = Repo.getCommit(commit)
+    };
+    return getCmtPromise.then(cmt => {
         return cmt.getTree();
     }).then(tree => {
         return tree.getEntry(path);
