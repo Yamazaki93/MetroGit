@@ -115,7 +115,7 @@ export class CommitDetailInfoComponent implements OnInit {
     }
   }
   openFileDetails(file, commit = null) {
-    this.selection.selectFileDetail(file, commit, this.fileViewMode === 'file');
+    this.selection.selectFileDetail(file, commit, this._mode === 'file');
   }
   onKeyDown($event) {
     // keyboard code 83 = s;

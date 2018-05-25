@@ -184,39 +184,81 @@ function processDiff(diff, path, commit, fullFile = false) {
                 });
                 return Promise.resolve(result);
             }).then(result => {
-                if (!fullFile) {
-                    let linesAdded = 0;
-                    let linesRemoved = 0;
-                    result.forEach(h => {
-                        h.lines.forEach(l => {
-                            if (l.op === '+') {
-                                linesAdded += 1;
-                            } else if (l.op === '-') {
-                                linesRemoved += 1;
-                            }
-                        })
-                    })
-                    return { path: path, paths: path.split('/'), commit: commit, hunks: result, summary: { added: linesAdded, removed: linesRemoved } };
-                } else {
-                    Repo.getCommit(commit).then(cmt => {
-                        return cmt.getTree();
-                    }).then(tree => {
-                        return tree.getEntry(path);
-                    }).then(treeEntry => {
-                        if(treeEntry.isFile()) {
-                            let blob = treeEntry.getBlob();
-                            console.log(blob);
-                        } else {
-                            return Promise.reject('PATH_NOT_FILE');
+                let linesAdded = 0;
+                let linesRemoved = 0;
+                result.forEach(h => {
+                    h.lines.forEach(l => {
+                        if (l.op === '+') {
+                            linesAdded += 1;
+                        } else if (l.op === '-') {
+                            linesRemoved += 1;
                         }
                     })
+                })
+                if (!fullFile) {
                     return { path: path, paths: path.split('/'), commit: commit, hunks: result, summary: { added: linesAdded, removed: linesRemoved } };
+                } else {
+                    return getFileLines(commit, path).then(hunkLikeLines => {
+                        for (let j = 0; j < result.length; j++) {
+                            for (let i = 0; i < hunkLikeLines.length; i++) {
+                                if (hunkLikeLines[i].newLineno === result[j].lines[0].newLineno) {
+                                    // found a line with a hunk starting the line
+                                    // get ending line number
+                                    let lastLineNum = result[j].lines[result[j].lines.length - 1].newLineno;
+                                    // get endling line index in hunkLikeLines
+                                    let iEnd;
+                                    for (iEnd = i; iEnd < hunkLikeLines.length; iEnd++) {
+                                        if(hunkLikeLines[iEnd].newLineno === lastLineNum) {
+                                            break;
+                                        }
+                                    }
+                                    let lineCount = iEnd - i + 1;
+                                    // clear oldLineno in result[j].lines
+                                    result[j].lines.map(l => {
+                                        if(l.op !== '+' || l.op !== '-'){
+                                            l.oldLineno = -1
+                                        }
+                                    })
+                                    hunkLikeLines.splice(i, lineCount, ...result[j].lines);
+                                    break;
+                                }
+                            }
+                        }
+                        return { path: path, paths: path.split('/'), commit: commit, hunks: [{lines: hunkLikeLines}], summary: { added: linesAdded, removed: linesRemoved } };
+                    })
                 }
 
             });
         } else {
             return Promise.reject('FILE_NOT_FOUND');
         }
+    });
+}
+
+function getFileLines(commit, path) {
+    return Repo.getCommit(commit).then(cmt => {
+        return cmt.getTree();
+    }).then(tree => {
+        return tree.getEntry(path);
+    }).then(treeEntry => {
+        if (!treeEntry) {
+            return Promise.resolve([]);
+        } else if (treeEntry.isFile()) {
+            return treeEntry.getBlob();
+        } else {
+            return Promise.reject('PATH_NOT_FILE');
+        }
+    }).then(blob => {
+        let lines = blob.toString().split(/\r?\n/);
+        let hunkLike = lines.map((l, index) => {
+            return {
+                op: "",
+                content: l,
+                oldLineno: -1,
+                newLineno: index + 1
+            }
+        })
+        return hunkLike;
     });
 }
 
