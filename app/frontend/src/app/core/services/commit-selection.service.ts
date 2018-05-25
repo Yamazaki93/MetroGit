@@ -74,14 +74,14 @@ export class CommitSelectionService {
     });
   }
 
-  selectFileDetail(file, sha = null) {
+  selectFileDetail(file, sha = null, fullFile = false) {
     if (!sha) {
       sha = this.selectedCommit.sha;
     }
     this._selectedFile = file;
     this.selectedFileChange.emit(file);
     this.gettingFileDetail.emit();
-    this.electron.ipcRenderer.send('Repo-GetFileDetail', { file: file, commit: sha });
+    this.electron.ipcRenderer.send('Repo-GetFileDetail', { file: file, commit: sha, fullFile: fullFile });
   }
   select(commit) {
     if (commit && (!this.selectedCommit || commit !== this.selectedCommit.sha)) {
