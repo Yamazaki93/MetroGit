@@ -215,7 +215,7 @@ function processDiff(diff, path, commit, fullFile = false) {
                                     let lineCount = iEnd - i + 1;
                                     // clear oldLineno in result[j].lines
                                     result[j].lines.map(l => {
-                                        if(l.op !== '+' || l.op !== '-'){
+                                        if(l.op !== '+' && l.op !== '-'){
                                             l.oldLineno = -1
                                         }
                                     })
@@ -241,9 +241,7 @@ function getFileLines(commit, path) {
     }).then(tree => {
         return tree.getEntry(path);
     }).then(treeEntry => {
-        if (!treeEntry) {
-            return Promise.resolve([]);
-        } else if (treeEntry.isFile()) {
+        if (treeEntry.isFile()) {
             return treeEntry.getBlob();
         } else {
             return Promise.reject('PATH_NOT_FILE');
@@ -259,6 +257,8 @@ function getFileLines(commit, path) {
             }
         })
         return hunkLike;
+    }).catch(err => {
+        return Promise.resolve([]);
     });
 }
 
