@@ -1,10 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { CommitDetail } from '../prototypes/commit';
 import { CommitSelectionService } from '../services/commit-selection.service';
 import { CiIntegrationService } from '../services/ci-integration.service';
 import { JiraIntegrationService } from '../../jira/services/jira-integration.service';
 import { LayoutService } from '../services/layout.service';
 import { FileDetail } from '../prototypes/file-detail';
+import { FileViewPanelComponent } from '../file-view-panel/file-view-panel.component';
 
 @Component({
   selector: 'app-commit-detail',
@@ -13,6 +14,7 @@ import { FileDetail } from '../prototypes/file-detail';
 })
 export class CommitDetailComponent implements OnInit {
 
+  @ViewChild('fileViewPanel') fileView: FileViewPanelComponent;
   private toggled = false;
   private loading = false;
   private fileToggled = false;
@@ -51,6 +53,11 @@ export class CommitDetailComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.fileView.modeChanged.subscribe(mode => {
+      if (this.selectedFile) {
+
+      }
+    });
   }
 
   toggleDetail(): void {

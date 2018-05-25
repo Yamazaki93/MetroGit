@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { CommitSelectionService } from '../services/commit-selection.service';
 import { FileDetail } from '../prototypes/file-detail';
 
@@ -16,8 +16,14 @@ export class FileViewPanelComponent implements OnInit {
       this.loading = false;
     }
   }
+  @Output() modeChanged = new EventEmitter<string>();
   private _fileDetail: FileDetail;
   private loading = true;
+  private set mode(m: string) {
+    this._mode = m;
+    this.modeChanged.emit(m);
+  }
+  private _mode = 'hunk';
   constructor(
     private ch: CommitSelectionService
   ) {

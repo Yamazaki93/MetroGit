@@ -107,21 +107,21 @@ function getStatus() {
 
 function getFileDetailWrapper(event, arg) {
     if (Repo) {
-        getFileDetail(arg.file, arg.commit).then(result => {
+        getFileDetail(arg.file, arg.commit, arg.fullFile).then(result => {
             event.sender.send('Repo-FileDetailRetrieved', result);
         }).catch(err => {
         })
     }
 }
 
-function getFileDetail(path, commit) {
+function getFileDetail(path, commit, fullFile = false) {
     if (commit !== 'tree' && commit !== 'workdir') {
         return Repo.getCommit(commit).then(x => {
             return x.getDiff().then(diffs => {
                 diff = diffs[0]
                 return diff
             }).then(diff => {
-                return processDiff(diff, path);
+                return processDiff(diff, path, undefined, fullFile);
             })
         });
     } else if (commit === 'workdir') {
@@ -130,7 +130,7 @@ function getFileDetail(path, commit) {
         }).then(tree => {
             return NodeGit.Diff.treeToWorkdir(Repo, tree);
         }).then(diff => {
-            return processDiff(diff, path, commit);
+            return processDiff(diff, path, commit, fullFile);
         })
     } else {
         let index;
@@ -144,12 +144,12 @@ function getFileDetail(path, commit) {
         }).then(tree => {
             return NodeGit.Diff.treeToIndex(Repo, tree, index);
         }).then(diff => {
-            return processDiff(diff, path, commit);
+            return processDiff(diff, path, commit, fullFile);
         })
     }
 }
 
-function processDiff(diff, path, commit) {
+function processDiff(diff, path, commit, fullFile = false) {
     return diff.findSimilar({ renameThreshold: 50 }).then(() => {
         return diff.patches();
     }).then(patches => {
@@ -184,18 +184,34 @@ function processDiff(diff, path, commit) {
                 });
                 return Promise.resolve(result);
             }).then(result => {
-                let linesAdded = 0;
-                let linesRemoved = 0;
-                result.forEach(h => {
-                    h.lines.forEach(l => {
-                        if (l.op === '+') {
-                            linesAdded += 1;
-                        } else if (l.op === '-') {
-                            linesRemoved += 1;
+                if (!fullFile) {
+                    let linesAdded = 0;
+                    let linesRemoved = 0;
+                    result.forEach(h => {
+                        h.lines.forEach(l => {
+                            if (l.op === '+') {
+                                linesAdded += 1;
+                            } else if (l.op === '-') {
+                                linesRemoved += 1;
+                            }
+                        })
+                    })
+                    return { path: path, paths: path.split('/'), commit: commit, hunks: result, summary: { added: linesAdded, removed: linesRemoved } };
+                } else {
+                    Repo.getCommit(commit).then(cmt => {
+                        return cmt.getTree();
+                    }).then(tree => {
+                        return tree.getEntry(path);
+                    }).then(treeEntry => {
+                        if(treeEntry.isFile()) {
+                            let blob = treeEntry.getBlob()
+                        } else {
+                            return Promise.reject('PATH_NOT_FILE');
                         }
                     })
-                })
-                return { path: path, paths: path.split('/'), commit: commit, hunks: result, summary: { added: linesAdded, removed: linesRemoved } };
+                    return { path: path, paths: path.split('/'), commit: commit, hunks: result, summary: { added: linesAdded, removed: linesRemoved } };
+                }
+
             });
         } else {
             return Promise.reject('FILE_NOT_FOUND');
