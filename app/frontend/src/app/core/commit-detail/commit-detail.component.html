@@ -34,7 +34,10 @@
 <div class="file-panel d-flex flex-column smooth" [class.toggled]="fileToggled">
   <div class="d-flex no-shrink">
     <div class="full-width">
-      <h3>{{getShortenedPath(selectedFile)}}
+      <h3>{{getShortenedPath(selectedFile)}}</h3>
+    </div>
+    <div class="no-shrink">
+      <h3>
         <span class="badge badge-success mr-1" *ngIf="fileDetail && fileDetail.summary.added">{{fileDetail.summary.added}} +</span>
         <span class="badge badge-danger mr-1" *ngIf="fileDetail && fileDetail.summary.removed">{{fileDetail.summary.removed}} -</span>
       </h3>
