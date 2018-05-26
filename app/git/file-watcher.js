@@ -125,10 +125,10 @@ function getFileDetail(path, commit, fullFile = false) {
             })
         });
     } else if (commit === 'workdir') {
-        return Repo.getHeadCommit().then(cmt => {
-            return cmt.getTree()
+        return Repo.refreshIndex().then(cmt => {
+            return Repo.index();
         }).then(tree => {
-            return NodeGit.Diff.treeToWorkdir(Repo, tree);
+            return NodeGit.Diff.indexToWorkdir(Repo, tree);
         }).then(diff => {
             return processDiff(diff, path, commit, fullFile);
         })
@@ -208,14 +208,14 @@ function processDiff(diff, path, commit, fullFile = false) {
                                     // get endling line index in hunkLikeLines
                                     let iEnd;
                                     for (iEnd = i; iEnd < hunkLikeLines.length; iEnd++) {
-                                        if(hunkLikeLines[iEnd].newLineno === lastLineNum) {
+                                        if (hunkLikeLines[iEnd].newLineno === lastLineNum) {
                                             break;
                                         }
                                     }
                                     let lineCount = iEnd - i + 1;
                                     // clear oldLineno in result[j].lines
                                     result[j].lines.map(l => {
-                                        if(l.op !== '+' && l.op !== '-'){
+                                        if (l.op !== '+' && l.op !== '-') {
                                             l.oldLineno = -1
                                         }
                                     })
@@ -224,11 +224,35 @@ function processDiff(diff, path, commit, fullFile = false) {
                                 }
                             }
                         }
-                        return { path: path, paths: path.split('/'), commit: commit, hunks: [{lines: hunkLikeLines}], summary: { added: linesAdded, removed: linesRemoved } };
+                        let hunks;
+                        if (hunkLikeLines.length === 0) {
+                            hunks = result;
+                        } else {
+                            hunks = hunkLikeLines;
+                        }
+                        return { path: path, paths: path.split('/'), commit: commit, hunks: hunks, summary: { added: linesAdded, removed: linesRemoved } };
                     })
                 }
 
             });
+        } else if (!patch && commit === 'workdir') {
+            //special case for unstaged added file
+            return NodeGit.Blob.createFromWorkdir(Repo, path).then(id => {
+                return Repo.getBlob(id);
+            }).then(blob => { 
+                let lines = blob.toString().split(/\r?\n/);
+                let hunkLike = lines.map((l, index) => {
+                    return {
+                        op: "+",
+                        content: l,
+                        oldLineno: -1,
+                        newLineno: index + 1
+                    }
+                })
+                return hunkLike;
+            }).then(hunkLike => {
+                return { path: path, paths: path.split('/'), commit: commit, hunks: [{lines: hunkLike}], summary: { added: hunkLike.length, removed: 0 } };
+            })
         } else {
             return Promise.reject('FILE_NOT_FOUND');
         }
@@ -237,7 +261,7 @@ function processDiff(diff, path, commit, fullFile = false) {
 
 function getFileLines(commit, path) {
     let getCmtPromise;
-    if(commit === 'workdir' || commit === 'tree') {
+    if (commit === 'workdir' || commit === 'tree') {
         getCmtPromise = Repo.getHeadCommit();
     } else {
         getCmtPromise = Repo.getCommit(commit)
