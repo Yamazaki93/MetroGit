@@ -10,13 +10,13 @@
   <div class="form-group" *ngIf="repoProfile">
     <label for="exampleInputPassword1">Email</label>
     <div class="input-group mb-2">
-      <input type="email" class="form-control" id="inlineFormInputGroup" name="email">
+      <input type="email" class="form-control" (input)="updateProfile()" id="inlineFormInputGroup" name="email" [(ngModel)]="email">
     </div>
   </div>
   <div class="form-group" *ngIf="repoProfile">
     <label for="exampleInputPassword1">Full Name</label>
     <div class="input-group mb-2">
-      <input type="text" class="form-control" id="nameInput" name="FullName">
+      <input type="text" class="form-control" (input)="updateProfile()" id="nameInput" name="FullName" [(ngModel)]="name">
     </div>
   </div>
 </form>
