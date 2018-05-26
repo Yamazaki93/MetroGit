@@ -81,6 +81,10 @@ export class CommitDetailCiComponent implements OnInit {
     this.appveyor.openAppveyor(this.commit.sha);
     $event.stopPropagation();
   }
+  rebuildAppveyor($event) {
+    this.appveyor.rebuildAppveyor(this.commit.sha);
+    $event.stopPropagation();
+  }
   checkGetAppveyorLog() {
     if (this.appveyor.enabled && this.showAppveyor && this.appveyor.buildResults && this.appveyor.buildResults[this.commit.sha]) {
       this.loadingAppveyor = true;

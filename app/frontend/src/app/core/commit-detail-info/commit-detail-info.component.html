@@ -1,4 +1,4 @@
-<div class="commit-detail-info-container d-flex flex-column p-3">
+<div class="commit-detail-info-container d-flex flex-column p-3" *ngIf="commit">
   <div class="summary-container d-flex flex-column">
     <div class="summary-header d-flex" *ngIf="!commit.virtual">
       <div class="committer-badge mr-3" [style.background]="getBadgeColor()">
@@ -51,7 +51,6 @@
         <i class="icon-file"></i>{{commit.fileSummary.renamed}}</span>
     </h5>
   </div>
-
   <div class="mt-2 file-details-container d-flex flex-column" *ngIf="!commit.virtual">
     <h5>File Details</h5>
     <div class="modified-file-list p-2">
@@ -91,7 +90,7 @@
       <a class="btn-success btn-sm btn" [class.disabled]="!commit.unstaged.length" (click)="stageAll()">Stage All</a>
     </div>
     <div class="modified-file-list p-2">
-      <div class="modified-file-entry p-1 d-flex" *ngFor="let file of commit.unstaged; trackBy: wipFileTrack">
+      <div class="modified-file-entry p-1 d-flex" *ngFor="let file of commit.unstaged; trackBy: wipFileTrack"  (click)="openFileDetails(file.path, 'workdir')">
         <div>
           <span class="mr-2 text-warning" *ngIf="file.isModified">
             <i class="icon-file-text"></i>
@@ -107,7 +106,7 @@
           </span>{{getShortenedPath(file.path)}}
         </div>
         <div class="action-button">
-          <a class="btn btn-success btn-sm" (click)="stage(file.path)">Stage File</a>
+          <a class="btn btn-success btn-sm" (click)="stage(file.path, $event)">Stage File</a>
         </div>
       </div>
     </div>
@@ -132,7 +131,7 @@
       <a class="btn-danger btn-sm btn" [class.disabled]="!commit.staged.length" (click)="unstageAll()">Unstage All</a>
     </div>
     <div class="modified-file-list p-2">
-      <div class="modified-file-entry p-1" *ngFor="let file of commit.staged; trackBy: wipFileTrack">
+      <div class="modified-file-entry p-1" *ngFor="let file of commit.staged; trackBy: wipFileTrack" (click)="openFileDetails(file.path, 'tree')">
         <div>
           <span class="mr-2 text-warning" *ngIf="file.isModified">
             <i class="icon-file-text"></i>
@@ -148,7 +147,7 @@
           </span>{{getShortenedPath(file.path)}}
         </div>
         <div class="action-button">
-          <a class="btn btn-danger btn-sm" (click)="unstage(file.path)">Unstage File</a>
+          <a class="btn btn-danger btn-sm" (click)="unstage(file.path, $event)">Unstage File</a>
         </div>
       </div>
     </div>
@@ -160,5 +159,10 @@
       <span *ngIf="!newCommitMessage.length">Please Enter A Commit Message</span>
       <span *ngIf="newCommitMessage.length && !commit.staged.length">Commit All Files</span>
     </a>
+  </div>
+</div>
+<div class="empty-container d-flex flex-column justify-content-center align-items-center" [class.hidden]="!commit">
+  <div>
+    <h4>Select a commit from the map to see details</h4>
   </div>
 </div>

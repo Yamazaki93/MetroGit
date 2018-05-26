@@ -14,6 +14,7 @@ export class CommitSelectionService {
   @Output() selectingChange = new EventEmitter<boolean>();
   @Output() selectedFileChange = new EventEmitter<string>();
   @Output() fileDetailChanged = new EventEmitter<FileDetail>();
+  @Output() gettingFileDetail = new EventEmitter();
 
   selectedCommit: CommitDetail | WIPCommit;
   private _selectedFile = "";
@@ -73,13 +74,14 @@ export class CommitSelectionService {
     });
   }
 
-  selectFileDetail(file, sha = null) {
+  selectFileDetail(file, sha = null, fullFile = false) {
     if (!sha) {
       sha = this.selectedCommit.sha;
     }
     this._selectedFile = file;
     this.selectedFileChange.emit(file);
-    this.electron.ipcRenderer.send('Repo-GetFileDetail', { file: file, commit: sha });
+    this.gettingFileDetail.emit();
+    this.electron.ipcRenderer.send('Repo-GetFileDetail', { file: file, commit: sha, fullFile: fullFile });
   }
   select(commit) {
     if (commit && (!this.selectedCommit || commit !== this.selectedCommit.sha)) {
@@ -95,8 +97,11 @@ export class CommitSelectionService {
       this.selectionChange.emit(this.selectedCommit);
     }
   }
-  openExternalFileView(file) {
-    this.electron.ipcRenderer.send('Repo-OpenExternalFile', { file: file, commit: this.selectedCommit.sha });
+  openExternalFileView(file, sha = null) {
+    if (!sha) {
+      sha = this.selectedCommit.sha;
+    }
+    this.electron.ipcRenderer.send('Repo-OpenExternalFile', { file: file, commit: sha });
   }
   reset(commit, mode): void {
     if (mode === 'hard') {

@@ -107,42 +107,66 @@ function getStatus() {
 
 function getFileDetailWrapper(event, arg) {
     if (Repo) {
-        getFileDetail(arg.file, arg.commit).then(result => {
+        getFileDetail(arg.file, arg.commit, arg.fullFile).then(result => {
             event.sender.send('Repo-FileDetailRetrieved', result);
+        }).catch(err => {
         })
     }
 }
 
-function getFileDetail(path, commit) {
-    if (commit !== '00000') {
+function getFileDetail(path, commit, fullFile = false) {
+    if (commit !== 'tree' && commit !== 'workdir') {
         return Repo.getCommit(commit).then(x => {
             return x.getDiff().then(diffs => {
                 diff = diffs[0]
-                return diff.findSimilar({ renameThreshold: 50 }).then(() => {
-                    return diff.patches();
-                });
-            }).then(patches => {
-                let patch;
-                patches.forEach(p => {
-                    if (p.newFile().path() === path) {
-                        patch = p;
-                    }
-                });
-                if (patch) {
-                    return patch.hunks()
-                } else {
-                    return Promise.reject('FILE_NOT_FOUND');
-                }
-            }).then(hunks => {
+                return diff
+            }).then(diff => {
+                return processDiff(diff, path, commit, fullFile);
+            })
+        });
+    } else if (commit === 'workdir') {
+        return Repo.refreshIndex().then(cmt => {
+            return Repo.index();
+        }).then(tree => {
+            return NodeGit.Diff.indexToWorkdir(Repo, tree);
+        }).then(diff => {
+            return processDiff(diff, path, commit, fullFile);
+        })
+    } else {
+        let index;
+        return Repo.refreshIndex().then(() => {
+            return Repo.index();
+        }).then(ind => {
+            index = ind;
+            return Repo.getHeadCommit().then(cmt => {
+                return cmt.getTree()
+            });
+        }).then(tree => {
+            return NodeGit.Diff.treeToIndex(Repo, tree, index);
+        }).then(diff => {
+            return processDiff(diff, path, commit, fullFile);
+        })
+    }
+}
+
+function processDiff(diff, path, commit, fullFile = false) {
+    return diff.findSimilar({ renameThreshold: 50 }).then(() => {
+        return diff.patches();
+    }).then(patches => {
+        let patch;
+        patches.forEach(p => {
+            if (p.newFile().path() === path) {
+                patch = p;
+            }
+        });
+        if (patch) {
+            return patch.hunks().then(hunks => {
                 let req = [];
                 hunks.forEach(function (hunk) {
                     req.push(hunk.lines());
                 });
                 return Promise.all(req);
             }).then(hunks => {
-                // console.log("diff", patch.oldFile().path(),
-                //     patch.newFile().path());
-                // console.log(hunk.header().trim());
                 let result = [];
                 hunks.forEach(lines => {
                     result.push({
@@ -171,12 +195,101 @@ function getFileDetail(path, commit) {
                         }
                     })
                 })
-                return { path: path, paths: path.split('/'), hunks: result, summary: { added: linesAdded, removed: linesRemoved } };
+                if (!fullFile) {
+                    return { path: path, paths: path.split('/'), commit: commit, hunks: result, summary: { added: linesAdded, removed: linesRemoved } };
+                } else {
+                    return getFileLines(commit, path).then(hunkLikeLines => {
+                        for (let j = 0; j < result.length; j++) {
+                            for (let i = 0; i < hunkLikeLines.length; i++) {
+                                if (hunkLikeLines[i].newLineno === result[j].lines[0].newLineno) {
+                                    // found a line with a hunk starting the line
+                                    // get ending line number
+                                    let lastLineNum = result[j].lines[result[j].lines.length - 1].newLineno;
+                                    // get endling line index in hunkLikeLines
+                                    let iEnd;
+                                    for (iEnd = i; iEnd < hunkLikeLines.length; iEnd++) {
+                                        if (hunkLikeLines[iEnd].newLineno === lastLineNum) {
+                                            break;
+                                        }
+                                    }
+                                    let lineCount = iEnd - i + 1;
+                                    // clear oldLineno in result[j].lines
+                                    result[j].lines.map(l => {
+                                        if (l.op !== '+' && l.op !== '-') {
+                                            l.oldLineno = -1
+                                        }
+                                    })
+                                    hunkLikeLines.splice(i, lineCount, ...result[j].lines);
+                                    break;
+                                }
+                            }
+                        }
+                        let hunks;
+                        if (hunkLikeLines.length === 0) {
+                            hunks = result;
+                        } else {
+                            hunks = [{lines: hunkLikeLines}];
+                        }
+                        return { path: path, paths: path.split('/'), commit: commit, hunks: hunks, summary: { added: linesAdded, removed: linesRemoved } };
+                    })
+                }
+
             });
-        });
+        } else if (!patch && commit === 'workdir') {
+            //special case for unstaged added file
+            return NodeGit.Blob.createFromWorkdir(Repo, path).then(id => {
+                return Repo.getBlob(id);
+            }).then(blob => { 
+                let lines = blob.toString().split(/\r?\n/);
+                let hunkLike = lines.map((l, index) => {
+                    return {
+                        op: "+",
+                        content: l,
+                        oldLineno: -1,
+                        newLineno: index + 1
+                    }
+                })
+                return hunkLike;
+            }).then(hunkLike => {
+                return { path: path, paths: path.split('/'), commit: commit, hunks: [{lines: hunkLike}], summary: { added: hunkLike.length, removed: 0 } };
+            })
+        } else {
+            return Promise.reject('FILE_NOT_FOUND');
+        }
+    });
+}
+
+function getFileLines(commit, path) {
+    let getCmtPromise;
+    if (commit === 'workdir' || commit === 'tree') {
+        getCmtPromise = Repo.getHeadCommit();
     } else {
-        return Promise.resolve();
-    }
+        getCmtPromise = Repo.getCommit(commit)
+    };
+    return getCmtPromise.then(cmt => {
+        return cmt.getTree();
+    }).then(tree => {
+        return tree.getEntry(path);
+    }).then(treeEntry => {
+        if (treeEntry.isFile()) {
+            return treeEntry.getBlob();
+        } else {
+            return Promise.reject('PATH_NOT_FILE');
+        }
+    }).then(blob => {
+        let lines = blob.toString().split(/\r?\n/);
+        let hunkLike = lines.map((l, index) => {
+            return {
+                op: "",
+                content: l,
+                oldLineno: -1,
+                newLineno: index + 1
+            }
+        })
+        return hunkLike;
+    }).catch(err => {
+        return Promise.resolve([]);
+    });
 }
 
 module.exports = {

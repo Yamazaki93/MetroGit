@@ -8,7 +8,6 @@ import { NotificationsService } from 'angular2-notifications';
 import { Router } from '@angular/router';
 import { CredentialsService } from '../services/credentials.service';
 import { CommitChangeService } from '../services/commit-change.service';
-import { HotkeysService, Hotkey } from 'angular2-hotkeys';
 
 @Component({
   selector: 'app-commit-detail-info',
@@ -17,6 +16,9 @@ import { HotkeysService, Hotkey } from 'angular2-hotkeys';
 })
 export class CommitDetailInfoComponent implements OnInit {
 
+  @Input() set fileViewMode(m: string) {
+    this._mode = m;
+  }
   @Input() commit: CommitDetail | WIPCommit;
   private set newCommitMessage(msg) {
     this._message = msg;
@@ -34,6 +36,7 @@ export class CommitDetailInfoComponent implements OnInit {
   }
   private _message = "";
   private _detail = "";
+  private _mode = "";
   constructor(
     private d3: D3Service,
     private sanitize: DomSanitizer,
@@ -92,11 +95,13 @@ export class CommitDetailInfoComponent implements OnInit {
       this.commitChange.unstage(stagedPaths);
     }
   }
-  stage(file) {
+  stage(file, $event) {
     this.commitChange.stage([file]);
+    $event.stopPropagation();
   }
-  unstage(file) {
+  unstage(file, $event) {
     this.commitChange.unstage([file]);
+    $event.stopPropagation();
   }
   discardAll() {
     this.commitChange.discardAll();
@@ -109,8 +114,8 @@ export class CommitDetailInfoComponent implements OnInit {
       this.newCommitMessage = this.commitChange.defaultKey + '-';
     }
   }
-  openFileDetails(file) {
-    this.selection.selectFileDetail(file);
+  openFileDetails(file, commit = null) {
+    this.selection.selectFileDetail(file, commit, this._mode === 'file');
   }
   onKeyDown($event) {
     // keyboard code 83 = s;

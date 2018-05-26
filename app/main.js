@@ -40,6 +40,18 @@ function createWindow() {
 
     const menuTemplate = [
         {
+            label: "File",
+            submenu: [
+                {
+                    label: "Quit",
+                    accelerator: 'CommandOrControl+q',
+                    click(item, focusedWindow){
+                        app.quit();
+                    }
+                }
+            ]
+        },
+        {
             label: "View",
             submenu: [
                 {
@@ -76,7 +88,7 @@ function createWindow() {
         }
     ];
     const mainMenu = Menu.buildFromTemplate(menuTemplate);
-    win.setMenu(mainMenu);
+    Menu.setApplicationMenu(mainMenu);
     // and load the index.html of the app.
     win.loadURL(url.format({
         pathname:  path.join(__dirname, 'frontend/dist/index.html'),

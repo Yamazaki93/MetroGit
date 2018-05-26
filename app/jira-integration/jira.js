@@ -16,6 +16,7 @@ ipcMain.on('JIRA-AddComment', requireArgParams(addComment, ['key', 'body']));
 ipcMain.on('JIRA-GetAssignableUsers', requireArgParams(findAssignableUsers, ['key']));
 ipcMain.on('JIRA-AssignIssue', requireArgParams(assignIssue, ['key', 'name']));
 ipcMain.on('JIRA-AddSubtask', requireArgParams(addSubtask, ['key', 'name']));
+ipcMain.on('JIRA-SearchIssues', requireArgParams(searchIssues, ['jql']));
 
 function init(sett, sec, win) {
     secureStorage = sec;
@@ -47,6 +48,9 @@ function initJira(event, arg) {
                         } else if (error.response.status === 404) {
                             window.webContents.send('JIRA-NotFound', {});
                             return Promise.reject(error);
+                        } else if (error.request.path.indexOf('search') !== -1) {
+                            // swallow search errors
+                            return Promise.resolve('QUERY_ISSUE');
                         } else {
                             window.webContents.send('JIRA-OperationFailed', {});
                         }
@@ -111,11 +115,11 @@ function getIssueTypes() {
         return conn.get('/issuetype').then(result => {
             let subtaskType;
             result.data.forEach(issueType => {
-                if(issueType.subtask) {
+                if (issueType.subtask) {
                     subtaskType = issueType;
                 }
             })
-            window.webContents.send('JIRA-IssueTypesRetrieved', { issueTypes: result.data, subtaskType: subtaskType})
+            window.webContents.send('JIRA-IssueTypesRetrieved', { issueTypes: result.data, subtaskType: subtaskType })
         })
     }
 }
@@ -123,7 +127,7 @@ function getIssueTypes() {
 function updateIssue(event, arg) {
     if (conn) {
         let req;
-        if (arg.data.transition) { 
+        if (arg.data.transition) {
             req = conn.post(`/issue/${arg.key}/transitions`, arg.data);
         } else {
             req = conn.put(`/issue/${arg.key}`, arg.data);
@@ -173,6 +177,22 @@ function addSubtask(event, arg) {
                 }
             }
         });
+    }
+}
+function searchIssues(event, arg) {
+    if (conn) {
+        let url = `/search`;
+        let obj = { jql: arg.jql };
+        if (arg.fields) {
+            obj.fields = arg.fields;
+        }
+        return conn.post(url, obj).then(resp => {
+            if (resp === 'QUERY_ISSUE') {
+                event.sender.send('JIRA-IssueQueryResultRetrieved', { issues: [] });
+            } else {
+                event.sender.send('JIRA-IssueQueryResultRetrieved', { issues: resp.data.issues });
+            }
+        })
     }
 }
 

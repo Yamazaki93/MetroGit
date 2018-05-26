@@ -1,8 +1,17 @@
-<div class="file-view-container d-flex flex-column align-items-stretch justify-content-stretch" *ngIf="detail">
-
+<div class="file-view-container d-flex flex-column align-items-stretch justify-content-stretch" *ngIf="_fileDetail">
+  <div class="text-center mb-2">
+    <div class="btn-group btn-group-toggle" data-toggle="buttons" ngbRadioGroup [(ngModel)]="mode">
+      <label ngbButtonLabel class="btn btn-secondary active">
+        <input ngbButton type="radio" name="options" id="option1" autocomplete="off" [value]="'hunk'"> Hunks
+      </label>
+      <label ngbButtonLabel class="btn btn-secondary">
+        <input ngbButton type="radio" name="options" id="option2" autocomplete="off" [value]="'file'"> File
+      </label>
+    </div>
+  </div>
   <div class="hunk-containers pr-1 d-flex">
     <div class="hunk-headers">
-      <div class="hunk mb-3" *ngFor="let hunk of detail.hunks">
+      <div class="hunk mb-3" *ngFor="let hunk of _fileDetail.hunks">
         <div class="line d-flex" *ngFor="let line of hunk.lines" [class.added]="line.op==='+'" [class.deleted]="line.op==='-'">
           <div class="op">{{line.op}}</div>
           <div class="lineno">{{line.oldLineno > 0 ? line.oldLineno : ""}}</div>
@@ -12,7 +21,7 @@
     </div>
     <div class="hunk-contents">
       <div class="hunk-contents-inner">
-        <div class="hunk mb-3" *ngFor="let hunk of detail.hunks">
+        <div class="hunk mb-3" *ngFor="let hunk of _fileDetail.hunks">
           <div class="line" *ngFor="let line of hunk.lines" [class.added]="line.op==='+'" [class.deleted]="line.op==='-'">
             <div class="content">
               <pre>{{line.content}}</pre>
@@ -23,3 +32,4 @@
     </div>
   </div>
 </div>
+<app-spinner [enabled]="loading"></app-spinner>

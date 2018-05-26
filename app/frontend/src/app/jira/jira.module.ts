@@ -12,6 +12,7 @@ import { ProfileSelectorComponent } from './profile-selector/profile-selector.co
 import { ProfileFilterPipe } from './profile-selector/profile-filter';
 import { SubtaskPromptComponent } from './subtask-prompt/subtask-prompt.component';
 import { TitleEditorComponent } from './title-editor/title-editor.component';
+import { KeySelectorComponent } from './key-selector/key-selector.component';
 
 
 @NgModule({
@@ -29,6 +30,6 @@ import { TitleEditorComponent } from './title-editor/title-editor.component';
     SubtaskPromptComponent
   ],
   exports: [ JiraDetailComponent ],
-  declarations: [JiraDetailComponent, JiraRichTextComponent, TransitionControlComponent, AddCommentPromptComponent, ProfileSelectorComponent, ProfileFilterPipe, SubtaskPromptComponent, TitleEditorComponent]
+  declarations: [JiraDetailComponent, JiraRichTextComponent, TransitionControlComponent, AddCommentPromptComponent, ProfileSelectorComponent, ProfileFilterPipe, KeySelectorComponent, SubtaskPromptComponent, TitleEditorComponent]
 })
 export class JiraModule { }

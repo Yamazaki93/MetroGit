@@ -29,9 +29,7 @@ function init(win, sett) {
     settings = sett;
     // auto check update 30 secs after init
     setTimeout(() => {
-        autoUpdater.checkForUpdates().then(res =>{
-            console.log(res);
-        })
+        autoUpdater.checkForUpdates();
     }, 30 * 1000);
 }
 

@@ -32,4 +32,14 @@ export class ExternalFileViewerComponent implements OnInit {
 
   ngOnInit() {
   }
+
+  getTitle() {
+    if (this.sha === 'workdir') {
+      return "Unstaged Changes";
+    } else if (this.sha === 'tree') {
+      return "Staged Changes";
+    } else {
+      return this.sha.substring(0, 6);
+    }
+  }
 }

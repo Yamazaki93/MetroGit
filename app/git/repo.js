@@ -13,6 +13,9 @@ function init(win, sett, sec, fw) {
     secure = sec;
     fileWatch = fw;
     initPullOptions();
+    window.on('close', (event) => {
+        clearInterval(refreshInterval);
+    })
 }
 
 function consolidateAuthError(err) {
@@ -110,6 +113,12 @@ function tryPush(remote, refs, tries, username, password) {
             certificateCheck: function () {
                 return 1;
             },
+            // pending refactor 
+            // pushUpdateReference: function (ref, status, data) {
+            //     if (status.indexOf('declined') >= 0) {
+            //         e = new Error(status);
+            //     }
+            // }
         }
     }).catch(err => {
         return consolidateAuthError(err);

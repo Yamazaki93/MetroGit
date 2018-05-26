@@ -1,5 +1,6 @@
 
 export interface FileDetail {
+    commit: string;
     paths: string[];
     path: string;
     hunks: [

@@ -12,6 +12,7 @@ var cache;
 var checkPeriodicUpdateHook;
 
 ipcMain.on('CI-RepoChanged', repoChange);
+ipcMain.on('CI-AppVeyorRebuild', reBuildAppVeyor);
 ipcMain.on('CI-AppVeyorGetLog', requireArgParams(getBuildLog, ['version']));
 
 function init(sett, sec, win, cac) {
@@ -85,6 +86,7 @@ function formatResults(builds) {
             buildId: b.buildId,
             build: b.buildNumber,
             version: b.version,
+            branch: b.branch,
         }
     });
     let existing = {};
@@ -121,6 +123,19 @@ function getBuildLog(event, arg) {
             } else {
                 event.sender.send('CI-AppVeyorLogNotFound', { version: arg.version });
             }
+        })
+    }
+}
+
+function reBuildAppVeyor(event, arg) {
+    if (conn && arg.commit) {
+        conn.post(`builds`, {
+            "accountName": accountName,
+            "projectSlug": projectName,
+            "branch": arg.branch,
+            "commitId": arg.commit
+        }).then(resp => {
+            event.sender.send('CI-AppVeyorRebuilded', {});
         })
     }
 }

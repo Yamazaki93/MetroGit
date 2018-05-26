@@ -3,4 +3,5 @@ export interface IssueType {
     iconUrl: string;
     subtask: boolean;
     id: string;
+    safeIconUrl?: string;
 }

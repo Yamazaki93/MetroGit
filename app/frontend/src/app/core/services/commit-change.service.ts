@@ -81,19 +81,19 @@ export class CommitChangeService {
         this.selectedCommit = null;
       }
     });
-    this.hotkeys.add(new Hotkey('ctrl+s', (event: KeyboardEvent): boolean => {
+    this.hotkeys.add(new Hotkey('mod+s', (event: KeyboardEvent): boolean => {
       if (!this.loading.isBusy) {
         this.tryCommit();
       }
       return false;
     }, undefined, "Commit staged changes (or all unstaged files if no files staged)"));
-    this.hotkeys.add(new Hotkey('ctrl+down', (event: KeyboardEvent): boolean => {
+    this.hotkeys.add(new Hotkey('mod+down', (event: KeyboardEvent): boolean => {
       if (!this.loading.isBusy) {
         this.stash();
       }
       return false;
     }, undefined, "Stash"));
-    this.hotkeys.add(new Hotkey('ctrl+up', (event: KeyboardEvent): boolean => {
+    this.hotkeys.add(new Hotkey('mod+up', (event: KeyboardEvent): boolean => {
       if (!this.loading.isBusy) {
         this.pop();
       }
