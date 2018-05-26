@@ -23,7 +23,6 @@ export class CommitDetailComponent implements OnInit {
   private fileDetail: FileDetail;
   private set fileViewMode(m: string) {
     this._mode = m;
-    console.log(m);
   }
   private get fileViewMode() {
     return this._mode;

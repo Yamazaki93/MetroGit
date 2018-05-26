@@ -228,7 +228,7 @@ function processDiff(diff, path, commit, fullFile = false) {
                         if (hunkLikeLines.length === 0) {
                             hunks = result;
                         } else {
-                            hunks = hunkLikeLines;
+                            hunks = [{lines: hunkLikeLines}];
                         }
                         return { path: path, paths: path.split('/'), commit: commit, hunks: hunks, summary: { added: linesAdded, removed: linesRemoved } };
                     })
