@@ -13,19 +13,13 @@ export class SubmoduleDetailsPanelComponent implements OnInit {
     this._name = n;
     this.submodules.getSubmoduleDetails(n);
   }
-  path = "";
-  hid = "";
-  message = "";
-  detail = "";
+  private details;
   private _name = "";
   constructor(
     private submodules: SubmodulesService
   ) {
     submodules.submoduleDetailChanged.subscribe(result => {
-      this.path = result.path;
-      this.hid = result.hid.substring(0, 6);
-      this.message = result.message;
-      this.detail = result.detail;
+      this.details = result;
     });
   }
 

@@ -46,7 +46,12 @@ function getSubmoduleDetails(event, arg) {
                 return repo.getCommit(result.hid);
             }).then(cmt => {
                 result.message = cmt.message().split('\n')[0];
-                result.detail = cmt.message().split('\n').splice(1, cmt.message().split('\n').length).join('\n'),
+                result.detail = cmt.message().split('\n').splice(1, cmt.message().split('\n').length).join('\n');
+                result.date = cmt.date();
+                result.time = cmt.time();
+                result.committer = cmt.committer();
+                result.email = cmt.author().email();
+                result.author = cmt.author().name();
                 event.sender.send('Repo-SubmoduleDetailsRetrieved', {result: result});
             })
         })
