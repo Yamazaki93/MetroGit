@@ -340,8 +340,8 @@ export class D3Service {
     }
   }
 
-  getAuthor(commit) {
-    let firstChars = commit.author.split(' ').map(n => n.length > 0 ? n[0].toUpperCase() : "");
+  getAuthor(author) {
+    let firstChars = author.split(' ').map(n => n.length > 0 ? n[0].toUpperCase() : "");
     let name = "";
     firstChars.forEach(f => {
       if (f > 'A' && f < 'Z' && name.length < 2) {
