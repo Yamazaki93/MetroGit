@@ -1,0 +1,11 @@
+<div class="panel-container smooth" [class.toggled]="toggled">
+  <div class="close-btn-container">
+    <a class="close-btn" (click)="toggled = false">
+      <i class="icon-x"></i>
+    </a>
+  </div>
+  <div class="content-container p-3">
+    <h4><i class="icon-box mr-3"></i>Submodule: {{submoduleName}}</h4>
+    <small>{{path}}</small>
+  </div>
+</div>

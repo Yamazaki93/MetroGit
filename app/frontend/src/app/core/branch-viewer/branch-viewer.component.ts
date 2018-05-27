@@ -6,6 +6,7 @@ import { Router } from '@angular/router';
 import { LayoutService } from '../services/layout.service';
 import { D3Service } from '../d3/d3.service';
 import { SubmodulesService } from '../services/submodules.service';
+import { SubmoduleDetailsPanelComponent } from '../submodule-details-panel/submodule-details-panel.component';
 
 @Component({
   selector: 'app-branch-viewer',
@@ -30,6 +31,7 @@ export class BranchViewerComponent implements OnInit {
   private collapseRemote = false;
   private collapseLocal = false;
   @ViewChild('openRepoPanel') openRepoPanel: OpenRepoPanelComponent;
+  @ViewChild('submodulePanel') submodulePanel: SubmoduleDetailsPanelComponent;
   constructor(
     private repoService: RepoService,
     private route: Router,
@@ -54,6 +56,10 @@ export class BranchViewerComponent implements OnInit {
     });
     this.submodules.submoduleChanged.subscribe(subm => {
       this.submoduleNames = subm;
+    });
+    this.submodules.submoduleSelected.subscribe(name => {
+      this.submodulePanel.submoduleName = name;
+      this.submodulePanel.toggled = true;
     });
     if (this.repoService.hasRepository) {
       this.repoName = this.repoService.repoName;

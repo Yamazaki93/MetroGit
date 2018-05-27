@@ -5,6 +5,7 @@ var Repo;
 var window = null;
 
 ipcMain.on('Repo-Open', openRepo);
+ipcMain.on('Repo-GetSubmoduleDetails', requireArgParams(getSubmoduleDetails, ['name']))
 
 function init(win) {
     window = win;    
@@ -27,9 +28,21 @@ function getSubmoduleNames(){
                 return {
                     display: n,
                     shorthand: n,
+                    submodule: true,
                 }
             })
             window.webContents.send('Repo-SubmoduleNamesRetrieved', {submodules: submodules});
+        })
+    }
+}
+
+function getSubmoduleDetails(event, arg) {
+    if(Repo && window) {
+        NodeGit.Submodule.lookup(Repo, arg.name).then(submodule => {
+            let result = {};
+            result.hid = submodule.headId();
+            result.path = submodule.path();
+            event.sender.send('Repo-SubmoduleDetailsRetrieved', {result: result});
         })
     }
 }
