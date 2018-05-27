@@ -14,14 +14,18 @@ export class SubmoduleDetailsPanelComponent implements OnInit {
     this.submodules.getSubmoduleDetails(n);
   }
   path = "";
-  head = "";
+  hid = "";
+  message = "";
+  detail = "";
   private _name = "";
   constructor(
     private submodules: SubmodulesService
   ) {
-    submodules.submoduleDetailChanged.subscribe(details => {
-      this.path = details.path;
-      this.head = details.head;
+    submodules.submoduleDetailChanged.subscribe(result => {
+      this.path = result.path;
+      this.hid = result.hid.substring(0, 6);
+      this.message = result.message;
+      this.detail = result.detail;
     });
   }
 

@@ -29,4 +29,21 @@ $primary-color: #FFF;
             font-size: 30px;
         }
     }
+    .message-title-container {
+        background: rgba(0, 0, 0, 0.2);
+        border-bottom: solid 2px #222;
+        h5 {
+            margin: 0;
+        }
+        user-select: initial;
+    }
+    .message-container {
+        height: 100%;
+    }
+    .message-content-container {
+        background: rgba(0, 0, 0, 0.2);
+        overflow-y: auto;
+        user-select: initial;
+        height: 100%;
+    }
 }

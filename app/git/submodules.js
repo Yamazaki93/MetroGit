@@ -40,9 +40,15 @@ function getSubmoduleDetails(event, arg) {
     if(Repo && window) {
         NodeGit.Submodule.lookup(Repo, arg.name).then(submodule => {
             let result = {};
-            result.hid = submodule.headId();
+            result.hid = submodule.headId().toString();
             result.path = submodule.path();
-            event.sender.send('Repo-SubmoduleDetailsRetrieved', {result: result});
+            submodule.open().then(repo => {
+                return repo.getCommit(result.hid);
+            }).then(cmt => {
+                result.message = cmt.message().split('\n')[0];
+                result.detail = cmt.message().split('\n').splice(1, cmt.message().split('\n').length).join('\n'),
+                event.sender.send('Repo-SubmoduleDetailsRetrieved', {result: result});
+            })
         })
     }
 }
