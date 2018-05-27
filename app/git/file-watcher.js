@@ -201,7 +201,8 @@ function processDiff(diff, path, commit, fullFile = false) {
                     return getFileLines(commit, path).then(hunkLikeLines => {
                         for (let j = 0; j < result.length; j++) {
                             for (let i = 0; i < hunkLikeLines.length; i++) {
-                                if (hunkLikeLines[i].newLineno === result[j].lines[0].newLineno) {
+                                if (hunkLikeLines[i].newLineno === result[j].lines[0].newLineno ||
+                                    hunkLikeLines[i].newLineno === result[j].lines[0].oldLineno) {
                                     // found a line with a hunk starting the line
                                     // get ending line number
                                     let lastLineNum = result[j].lines[result[j].lines.length - 1].newLineno;
