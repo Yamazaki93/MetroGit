@@ -25,6 +25,11 @@ $badge-size: 20px;
     z-index: 10;
     overflow: hidden;
     opacity: 0;
+    .file-name{
+        width: 100%;
+        // min-width: 0;
+        overflow: hidden;
+    }
     &.toggled{
         width: 60vw;
         padding: 10px 10px 0 120px;
