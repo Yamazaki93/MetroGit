@@ -62,6 +62,7 @@ export class BranchViewerComponent implements OnInit {
       this.refs = this.repoService.refs;
       this.updateReferences(this.refs);
     }
+    this.submoduleNames = this.submodules.submodules;
     this.toggled = layout.isNavToggled;
     this.showLocal = layout.isLocalShown;
     this.showRemote = layout.isRemoteShown;
