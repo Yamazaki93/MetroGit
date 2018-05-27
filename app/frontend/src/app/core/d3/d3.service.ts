@@ -36,6 +36,7 @@ export class D3Service {
           let b = newBuilds[key];
           this.updateCommitStatus(b.commit, b.overall);
         });
+        this.mapChange.emit();
       }
     });
   }
@@ -50,6 +51,7 @@ export class D3Service {
         let b = this.ci.buildResults[key];
         this.updateCommitStatus(b.commit, b.overall);
       });
+      this.mapChange.emit();
     } else {
       this.clearCommitsCIStatus();
     }
@@ -327,11 +329,7 @@ export class D3Service {
 
   updateCommitStatus(commit: string, status: string) {
     if (this.ciEnabled && this.currentMap) {
-      let that = this;
-      setTimeout(() => {
-        that.currentMap.updateCommitStatus(commit, status);
-        that.mapChange.emit();
-      });
+      this.currentMap.updateCommitStatus(commit, status);
     }
   }
   clearCommitsCIStatus() {
