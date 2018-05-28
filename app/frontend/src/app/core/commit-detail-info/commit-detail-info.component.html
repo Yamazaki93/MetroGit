@@ -1,15 +1,6 @@
 <div class="commit-detail-info-container d-flex flex-column p-3" *ngIf="commit">
   <div class="summary-container d-flex flex-column">
     <div class="summary-header d-flex" *ngIf="!commit.virtual">
-      <!-- <div class="committer-badge mr-3" [style.background]="getBadgeColor()">
-        {{getCommitter()}}
-      </div>
-      <div class="committer-info-container">
-        <h4>{{commit.author}}</h4>
-        <small>{{commit.email}}</small>
-        <small class="ml-1 mr-1">at</small>
-        <small> {{getDateTime()}}</small>
-      </div> -->
       <div class="full-width">
         <app-committer-card [author]="commit.author" [email]="commit.email" [time]="commit.date"></app-committer-card>
       </div>
