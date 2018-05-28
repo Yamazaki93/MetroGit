@@ -7,6 +7,7 @@ import { LayoutService } from '../services/layout.service';
 import { D3Service } from '../d3/d3.service';
 import { SubmodulesService } from '../services/submodules.service';
 import { SubmoduleDetailsPanelComponent } from '../submodule-details-panel/submodule-details-panel.component';
+import { UpdaterService } from '../../infrastructure/updater.service';
 
 @Component({
   selector: 'app-branch-viewer',
@@ -28,6 +29,7 @@ export class BranchViewerComponent implements OnInit {
   showRemote = true;
   showTags = true;
   showSubmodules = true;
+  updateAvailable = false;
   private collapseRemote = false;
   private collapseLocal = false;
   @ViewChild('openRepoPanel') openRepoPanel: OpenRepoPanelComponent;
@@ -37,7 +39,8 @@ export class BranchViewerComponent implements OnInit {
     private route: Router,
     private layout: LayoutService,
     private d3: D3Service,
-    private submodules: SubmodulesService
+    private submodules: SubmodulesService,
+    private updater: UpdaterService
   ) {
     this.repoService.repoChange.subscribe(info => {
       let that = this;
@@ -61,6 +64,9 @@ export class BranchViewerComponent implements OnInit {
       this.submodulePanel.submoduleName = name;
       this.submodulePanel.toggled = true;
     });
+    this.updater.updateAvailableChange.subscribe(ava => {
+      this.updateAvailable = ava;
+    });
     if (this.repoService.hasRepository) {
       this.repoName = this.repoService.repoName;
       this.branchName = this.repoService.currentBranch.name;
@@ -82,6 +88,7 @@ export class BranchViewerComponent implements OnInit {
     layout.navPanelChanged.subscribe(navOpen => {
       this.toggled = navOpen;
     });
+    this.updateAvailable = this.updater.isUpdateAvailable;
   }
 
   ngOnInit() {
@@ -107,7 +114,11 @@ export class BranchViewerComponent implements OnInit {
     this.layout.isTagsShown = this.showTags;
   }
   goToSettings(): void {
-    this.route.navigateByUrl('/settings');
+    if (this.updateAvailable) {
+      this.route.navigateByUrl('/settings/updater');
+    } else {
+      this.route.navigateByUrl('/settings');
+    }
   }
   goToCurrentBranch(): void {
     this.d3.scrollTo(this.branchTarget);
