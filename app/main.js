@@ -86,6 +86,12 @@ function createWindow() {
                         releaseNote.openReleaseNote();
                     }
                 },
+                {
+                    label: "About",
+                    click(item, focusedWindow) {
+                        releaseNote.openAboutPage();
+                    }
+                }
             ]
         }
     ];
