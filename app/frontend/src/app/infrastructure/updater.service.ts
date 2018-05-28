@@ -7,6 +7,8 @@ import { StatusBarService } from './status-bar.service';
 export class UpdaterService {
 
   isUpdateAvailable = false;
+  updateVersion = "";
+  updateChecking: EventEmitter<boolean> = new EventEmitter<boolean>();
   updateAvailableChange: EventEmitter<boolean> = new EventEmitter<boolean>();
   constructor(
     private electron: ElectronService,
@@ -20,6 +22,10 @@ export class UpdaterService {
           this.electron.ipcRenderer.send('Updater', 'commence-download');
         });
         this.isUpdateAvailable = true;
+        this.updateVersion = arg.version;
+        this.updateAvailableChange.emit(this.isUpdateAvailable);
+      } else if (arg.msg === 'update-not-available') {
+        this.isUpdateAvailable = false;
         this.updateAvailableChange.emit(this.isUpdateAvailable);
       } else if (arg.msg === 'downloading-update') {
         this.status.enableLoading(`Downloading: ${Math.floor(arg.percentage)}%`);
@@ -31,6 +37,16 @@ export class UpdaterService {
         }, 10 * 1000);
       }
     });
+    electron.onCD('Updater-Checking', (event, arg) => {
+      this.updateChecking.emit(arg.inProgress);
+    });
+  }
+  checkUpdate() {
+    this.electron.ipcRenderer.send('Updater-Check');
+  }
+  installUpdate() {
+    this.noti.info("Installing Update", "Downloading update...");
+    this.electron.ipcRenderer.send('Updater', 'commence-download');
   }
   init() {
 
