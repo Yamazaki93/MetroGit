@@ -2,6 +2,7 @@ import { Component, OnInit, Input, HostBinding, ViewChild } from '@angular/core'
 import { D3Service } from '../d3/d3.service';
 import { ContextMenuService, ContextMenuComponent } from 'ngx-contextmenu';
 import { CommitSelectionService } from '../services/commit-selection.service';
+import { SubmodulesService } from '../services/submodules.service';
 
 @Component({
   selector: 'app-branch-item',
@@ -23,6 +24,7 @@ export class BranchItemComponent implements OnInit {
     private d3: D3Service,
     private ctxService: ContextMenuService,
     private commitSelection: CommitSelectionService,
+    private submodules: SubmodulesService
   ) { }
 
   ngOnInit() {
@@ -31,6 +33,8 @@ export class BranchItemComponent implements OnInit {
   onClick($event) {
     if (this.item.items) {
       this.toggled = !this.toggled;
+    } else if (this.item.submodule) {
+      this.submodules.selectSubmodule(this.item.shorthand);
     } else {
       this.d3.scrollTo(this.item.target);
     }

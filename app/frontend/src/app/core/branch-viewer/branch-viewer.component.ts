@@ -5,6 +5,8 @@ import { RepoService } from '../services/repo.service';
 import { Router } from '@angular/router';
 import { LayoutService } from '../services/layout.service';
 import { D3Service } from '../d3/d3.service';
+import { SubmodulesService } from '../services/submodules.service';
+import { SubmoduleDetailsPanelComponent } from '../submodule-details-panel/submodule-details-panel.component';
 
 @Component({
   selector: 'app-branch-viewer',
@@ -18,20 +20,24 @@ export class BranchViewerComponent implements OnInit {
   remote = [];
   local = [];
   tags = [];
+  submoduleNames = [];
   repoName = "";
   branchName = "";
   branchTarget = "";
   showLocal = true;
   showRemote = true;
   showTags = true;
+  showSubmodules = true;
   private collapseRemote = false;
   private collapseLocal = false;
   @ViewChild('openRepoPanel') openRepoPanel: OpenRepoPanelComponent;
+  @ViewChild('submodulePanel') submodulePanel: SubmoduleDetailsPanelComponent;
   constructor(
     private repoService: RepoService,
     private route: Router,
     private layout: LayoutService,
     private d3: D3Service,
+    private submodules: SubmodulesService
   ) {
     this.repoService.repoChange.subscribe(info => {
       let that = this;
@@ -48,6 +54,13 @@ export class BranchViewerComponent implements OnInit {
       this.refs = data.references;
       this.updateReferences(data.references);
     });
+    this.submodules.submoduleChanged.subscribe(subm => {
+      this.submoduleNames = subm;
+    });
+    this.submodules.submoduleSelected.subscribe(name => {
+      this.submodulePanel.submoduleName = name;
+      this.submodulePanel.toggled = true;
+    });
     if (this.repoService.hasRepository) {
       this.repoName = this.repoService.repoName;
       this.branchName = this.repoService.currentBranch.name;
@@ -55,9 +68,12 @@ export class BranchViewerComponent implements OnInit {
       this.refs = this.repoService.refs;
       this.updateReferences(this.refs);
     }
+    this.submoduleNames = this.submodules.submodules;
     this.toggled = layout.isNavToggled;
     this.showLocal = layout.isLocalShown;
     this.showRemote = layout.isRemoteShown;
+    this.showTags = layout.isTagsShown;
+    this.showSubmodules = layout.isSubmoduleShown;
     layout.filePanelChanged.subscribe(filePanelOpen => {
       if (this.toggled && filePanelOpen) {
         this.toggleNavigation();
@@ -118,5 +134,9 @@ export class BranchViewerComponent implements OnInit {
   toggleCollapseLocal($event) {
     this.collapseLocal = !this.collapseLocal;
     $event.stopPropagation();
+  }
+  toggleSubm() {
+    this.showSubmodules = !this.showSubmodules;
+    this.layout.isSubmoduleShown = this.showSubmodules;
   }
 }

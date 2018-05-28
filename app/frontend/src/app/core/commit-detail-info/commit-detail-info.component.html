@@ -1,7 +1,7 @@
 <div class="commit-detail-info-container d-flex flex-column p-3" *ngIf="commit">
   <div class="summary-container d-flex flex-column">
     <div class="summary-header d-flex" *ngIf="!commit.virtual">
-      <div class="committer-badge mr-3" [style.background]="getBadgeColor()">
+      <!-- <div class="committer-badge mr-3" [style.background]="getBadgeColor()">
         {{getCommitter()}}
       </div>
       <div class="committer-info-container">
@@ -9,6 +9,9 @@
         <small>{{commit.email}}</small>
         <small class="ml-1 mr-1">at</small>
         <small> {{getDateTime()}}</small>
+      </div> -->
+      <div class="full-width">
+        <app-committer-card [author]="commit.author" [email]="commit.email" [time]="commit.date"></app-committer-card>
       </div>
       <div class="sha-container text-right">
         <small>
@@ -23,19 +26,22 @@
       </div>
     </div>
     <div class="" *ngIf="commit.virtual">
-      <a class="btn btn-sm btn-danger" (click)="discardAll()"><i class="icon-trash-2 mr-2"></i>Discard All Changes</a>
+      <a class="btn btn-sm btn-danger" (click)="discardAll()">
+        <i class="icon-trash-2 mr-2"></i>Discard All Changes</a>
     </div>
     <div class="mt-3 d-flex flex-column message-container">
       <div class="message-title-container p-2">
         <h5 *ngIf="!commit.virtual">{{commit.message}}</h5>
         <div class="d-flex">
-          <input *ngIf="commit.virtual" (keydown)="onKeyDown($event)" [(ngModel)]="newCommitMessage" (focus)="fillKeyIfNeeded()" name="newMessage" type="text" placeholder="Commit Message...">
+          <input *ngIf="commit.virtual" (keydown)="onKeyDown($event)" [(ngModel)]="newCommitMessage" (focus)="fillKeyIfNeeded()" name="newMessage"
+            type="text" placeholder="Commit Message...">
           <h5 class="ml-1 word-count" *ngIf="newCommitMessage.length > 30" [class.text-warning]="newCommitMessage.length > 50">{{50 - newCommitMessage.length}}</h5>
         </div>
       </div>
       <div class="message-content-container p-2">
         <ng-container *ngIf="commit.detail && !commit.virtual">{{commit.detail}}</ng-container>
-        <textarea *ngIf="commit.virtual" (keydown)="onKeyDown($event)" [(ngModel)]="newCommitDetail" (change)="setCommitMessages()" name="newDetail"></textarea>
+        <textarea *ngIf="commit.virtual" (keydown)="onKeyDown($event)" [(ngModel)]="newCommitDetail" (change)="setCommitMessages()"
+          name="newDetail"></textarea>
       </div>
     </div>
   </div>
@@ -90,7 +96,7 @@
       <a class="btn-success btn-sm btn" [class.disabled]="!commit.unstaged.length" (click)="stageAll()">Stage All</a>
     </div>
     <div class="modified-file-list p-2">
-      <div class="modified-file-entry p-1 d-flex" *ngFor="let file of commit.unstaged; trackBy: wipFileTrack"  (click)="openFileDetails(file.path, 'workdir')">
+      <div class="modified-file-entry p-1 d-flex" *ngFor="let file of commit.unstaged; trackBy: wipFileTrack" (click)="openFileDetails(file.path, 'workdir')">
         <div>
           <span class="mr-2 text-warning" *ngIf="file.isModified">
             <i class="icon-file-text"></i>

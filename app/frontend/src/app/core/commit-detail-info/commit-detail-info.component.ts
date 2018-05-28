@@ -67,15 +67,7 @@ export class CommitDetailInfoComponent implements OnInit {
       return path;
     }
   }
-  getCommitter() {
-    return this.d3.getAuthor(this.commit);
-  }
-  getDateTime() {
-    return moment(this.commit.date).format('MM/DD/YYYY hh:mm a');
-  }
-  getBadgeColor() {
-    return this.sanitize.bypassSecurityTrustStyle(`${this.d3.getColorByAuthor(this.commit.email)}`);
-  }
+
   wipFileTrack(index, item) {
     return item.path;
   }
