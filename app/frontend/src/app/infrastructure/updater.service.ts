@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, EventEmitter } from '@angular/core';
 import { ElectronService } from './electron.service';
 import { NotificationsService } from 'angular2-notifications';
 import { StatusBarService } from './status-bar.service';
@@ -6,6 +6,8 @@ import { StatusBarService } from './status-bar.service';
 @Injectable()
 export class UpdaterService {
 
+  isUpdateAvailable = false;
+  updateAvailableChange: EventEmitter<boolean> = new EventEmitter<boolean>();
   constructor(
     private electron: ElectronService,
     private noti: NotificationsService,
@@ -17,6 +19,8 @@ export class UpdaterService {
         notification.click.subscribe(() => {
           this.electron.ipcRenderer.send('Updater', 'commence-download');
         });
+        this.isUpdateAvailable = true;
+        this.updateAvailableChange.emit(this.isUpdateAvailable);
       } else if (arg.msg === 'downloading-update') {
         this.status.enableLoading(`Downloading: ${Math.floor(arg.percentage)}%`);
       } else if (arg.msg === 'download-complete') {

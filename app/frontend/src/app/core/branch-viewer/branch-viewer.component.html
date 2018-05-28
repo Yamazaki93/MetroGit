@@ -73,9 +73,12 @@
   </div>
   <div class="repo-info-container toggle-visible action-button smooth" (click)="goToSettings()">
     <h4>
-      <i class="icon-settings mr-3 text-primary"></i>
+      <i class="icon-settings mr-3"></i>
       <span class="nav-text">Settings</span>
     </h4>
+    <div class="badge bg-primary">
+      !
+    </div>
   </div>
 </div>
 <app-open-repo-panel class="smooth" [class.toggled]="toggled" #openRepoPanel></app-open-repo-panel>
