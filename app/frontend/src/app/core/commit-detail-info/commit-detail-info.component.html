@@ -154,11 +154,12 @@
     </div>
   </div>
   <div class="mt-2 action-button-container" *ngIf="commit.virtual">
-    <a class="btn" [class.btn-success]="newCommitMessage.length" [class.btn-default]="!newCommitMessage.length" [class.disabled]="!newCommitMessage.length"
+    <a class="btn" [class.btn-success]="!committing && newCommitMessage.length" [class.btn-default]="committing || !newCommitMessage.length" [class.disabled]="!newCommitMessage.length || committing"
       (click)="commitChanges()">
-      <span *ngIf="commit.staged.length && newCommitMessage.length">Commit Staged Changes</span>
-      <span *ngIf="!newCommitMessage.length">Please Enter A Commit Message</span>
-      <span *ngIf="newCommitMessage.length && !commit.staged.length">Commit All Files</span>
+      <span *ngIf="!committing && commit.staged.length && newCommitMessage.length">Commit Staged Changes</span>
+      <span *ngIf="!committing && !newCommitMessage.length">Please Enter A Commit Message</span>
+      <span *ngIf="!committing && newCommitMessage.length && !commit.staged.length">Commit All Files</span>
+      <app-spinner [size]="20" [enabled]="committing"></app-spinner>
     </a>
   </div>
 </div>
