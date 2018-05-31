@@ -66,5 +66,6 @@ export class BranchItemComponent implements OnInit {
     this.commitSelection.deleteTag(name);
   }
   onDeleteBranch(name) {
+    this.commitSelection.deleteBranch(name);
   }
 }

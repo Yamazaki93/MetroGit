@@ -120,4 +120,7 @@ export class CommitSelectionService {
   deleteTag(name): void {
     this.electron.ipcRenderer.send('Repo-DeleteTag', { name: name });
   }
+  deleteBranch(name): void {
+    this.electron.ipcRenderer.send('Repo-DeleteBranch', {name: name});
+  }
 }
