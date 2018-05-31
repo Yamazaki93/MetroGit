@@ -117,9 +117,6 @@ export class SubwayStationAnnotComponent implements OnInit {
   onDeleteTag(name) {
     this.commitSelection.deleteTag(name);
   }
-  onDeleteBranch(name) {
-    this.commitSelection.deleteBranch(name);
-  }
 }
 
 interface BranchInfo {

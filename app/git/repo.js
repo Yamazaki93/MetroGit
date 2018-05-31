@@ -786,6 +786,19 @@ function deleteTag(name) {
     })
 }
 
+function deleteBranch(name){
+    return Repo.getCurrentBranch().then(ref => {
+        if(ref.shorthand() === name) {
+            return Promise.reject('IS_CURRENT_BRANCH');
+        }
+        return Repo.getBranch(name)
+    }).then(ref => {
+        return ref.delete();
+    }).then(res => {
+        return Promise.resolve()
+    })
+}
+
 function pushTag(username, password, name, toDelete) {
     return checkSSHKey().then(() => {
         return getCurrentFirstRemote()
@@ -832,4 +845,5 @@ module.exports = {
     createTag: requireRepo(createTag),
     deleteTag: requireRepo(deleteTag),
     pushTag: requireRepo(pushTag),
+    deleteBranch: requireRepo(deleteBranch),
 }
