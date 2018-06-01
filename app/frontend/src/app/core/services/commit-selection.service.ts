@@ -78,7 +78,7 @@ export class CommitSelectionService {
       if (arg.upstream) {
         let notification = this.noti.success("Branch Deleted", "Click here to delete the upstream branch");
         notification.click.subscribe(() => {
-          this.deleteBranch(arg.upstream);
+          this.deleteRemoteBranch(arg.upstream);
         });
       }
     });
