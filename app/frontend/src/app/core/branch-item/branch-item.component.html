@@ -9,7 +9,7 @@
   <app-branch-item [collapse]="_collapse" [item]="subItem" *ngFor="let subItem of item.items; trackBy: trackBy"></app-branch-item>
 </div>
 <context-menu #branchMenu>
-  <ng-template contextMenuItem (execute)="onDeleteBranch($event.item.name)">
+  <ng-template contextMenuItem (execute)="onDeleteBranch($event.item)">
     <span class="text-danger">Delete Branch</span>
   </ng-template>
 </context-menu>

@@ -251,8 +251,8 @@ function deleteTag(event, arg) {
 }
 
 function deleteBranch(event, arg) {
-    repoService.deleteBranch(arg.name).then(res => {
-        event.sender.send('Repo-BranchDeleted', {name: arg.name, hasUpstream: res.hasUpstream});
+    repoService.deleteBranch(arg.name, arg.username, arg.password).then(res => {
+        event.sender.send('Repo-BranchDeleted', {name: arg.name, upstream: res.upstream});
     }).catch(err => {
         operationFailed('Repo-BranchDeleteFailed', event, err);
     });

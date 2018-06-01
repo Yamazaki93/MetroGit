@@ -65,7 +65,11 @@ export class BranchItemComponent implements OnInit {
   onDeleteTag(name) {
     this.commitSelection.deleteTag(name);
   }
-  onDeleteBranch(name) {
-    this.commitSelection.deleteBranch(name);
+  onDeleteBranch(branch) {
+    if (branch.isRemote) {
+      this.commitSelection.deleteRemoteBranch(branch.name);
+    } else {
+      this.commitSelection.deleteBranch(branch.name);
+    }
   }
 }
