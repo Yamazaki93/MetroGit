@@ -788,13 +788,15 @@ function deleteTag(name) {
 
 function deleteBranch(name){
     return Repo.getCurrentBranch().then(ref => {
-        if(ref.shorthand() === name) {
+        if(ref.name() === name) {
             return Promise.reject('IS_CURRENT_BRANCH');
         }
         return Repo.getBranch(name)
     }).then(ref => {
         return ref.delete();
     }).then(res => {
+        return refreshRepo()
+    }).then(() => {
         return Promise.resolve()
     })
 }
