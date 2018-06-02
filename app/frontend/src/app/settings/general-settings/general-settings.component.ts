@@ -11,6 +11,7 @@ export class GeneralSettingsComponent extends SettingsComponent {
 
   private _autoFetchInterval = 1;
   private _pullOption = 'ffonly';
+  private _tooltip = true;
   private pullOptions = [
     {
       id: 'ffonly',
@@ -31,6 +32,8 @@ export class GeneralSettingsComponent extends SettingsComponent {
     this._autoFetchInterval = val === "" ? 0 : Number(val);
     let opt = this.settings.getAppSetting('gen-pulloption');
     this._pullOption = opt === "" ? 'ffonly' : opt;
+    let tp = this.settings.getAppSetting('gen-tooltip');
+    this._tooltip = tp === "" ? true : Boolean(tp);
   }
 
   onIntervalChange(newVal: number) {
@@ -43,5 +46,8 @@ export class GeneralSettingsComponent extends SettingsComponent {
   }
   clearCred() {
     this.settings.clearSecureCache();
+  }
+  updateTooltip(enabled) {
+
   }
 }
