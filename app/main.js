@@ -14,6 +14,7 @@ const fileWatcher = require('./git/file-watcher');
 const updater = require('./infrastructure/auto-updater');
 const externalFile = require('./git/external-file-view');
 const releaseNote = require('./infrastructure/release-note');
+const submodules = require('./git/submodules');
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
@@ -26,6 +27,7 @@ function createWindow() {
     // init services
     secureStorage.init(win);
     fileWatcher.init(win);
+    submodules.init(win);
     externalFile.init(fileWatcher);
     settingsService.init(win, secureStorage);
     releaseNote.init(settingsService, win);
@@ -84,6 +86,12 @@ function createWindow() {
                         releaseNote.openReleaseNote();
                     }
                 },
+                {
+                    label: "About",
+                    click(item, focusedWindow) {
+                        releaseNote.openAboutPage();
+                    }
+                }
             ]
         }
     ];

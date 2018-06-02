@@ -5,7 +5,9 @@ import { RepoService } from '../services/repo.service';
 import { Router } from '@angular/router';
 import { LayoutService } from '../services/layout.service';
 import { D3Service } from '../d3/d3.service';
-import { HotkeysService, Hotkey } from 'angular2-hotkeys';
+import { SubmodulesService } from '../services/submodules.service';
+import { SubmoduleDetailsPanelComponent } from '../submodule-details-panel/submodule-details-panel.component';
+import { UpdaterService } from '../../infrastructure/updater.service';
 
 @Component({
   selector: 'app-branch-viewer',
@@ -19,21 +21,26 @@ export class BranchViewerComponent implements OnInit {
   remote = [];
   local = [];
   tags = [];
+  submoduleNames = [];
   repoName = "";
   branchName = "";
   branchTarget = "";
   showLocal = true;
   showRemote = true;
   showTags = true;
+  showSubmodules = true;
+  updateAvailable = false;
   private collapseRemote = false;
   private collapseLocal = false;
   @ViewChild('openRepoPanel') openRepoPanel: OpenRepoPanelComponent;
+  @ViewChild('submodulePanel') submodulePanel: SubmoduleDetailsPanelComponent;
   constructor(
     private repoService: RepoService,
     private route: Router,
     private layout: LayoutService,
     private d3: D3Service,
-    private hotkeys: HotkeysService,
+    private submodules: SubmodulesService,
+    private updater: UpdaterService
   ) {
     this.repoService.repoChange.subscribe(info => {
       let that = this;
@@ -50,6 +57,16 @@ export class BranchViewerComponent implements OnInit {
       this.refs = data.references;
       this.updateReferences(data.references);
     });
+    this.submodules.submoduleChanged.subscribe(subm => {
+      this.submoduleNames = subm;
+    });
+    this.submodules.submoduleSelected.subscribe(name => {
+      this.submodulePanel.submoduleName = name;
+      this.submodulePanel.toggled = true;
+    });
+    this.updater.updateAvailableChange.subscribe(ava => {
+      this.updateAvailable = ava;
+    });
     if (this.repoService.hasRepository) {
       this.repoName = this.repoService.repoName;
       this.branchName = this.repoService.currentBranch.name;
@@ -57,9 +74,12 @@ export class BranchViewerComponent implements OnInit {
       this.refs = this.repoService.refs;
       this.updateReferences(this.refs);
     }
+    this.submoduleNames = this.submodules.submodules;
     this.toggled = layout.isNavToggled;
     this.showLocal = layout.isLocalShown;
     this.showRemote = layout.isRemoteShown;
+    this.showTags = layout.isTagsShown;
+    this.showSubmodules = layout.isSubmoduleShown;
     layout.filePanelChanged.subscribe(filePanelOpen => {
       if (this.toggled && filePanelOpen) {
         this.toggleNavigation();
@@ -68,6 +88,7 @@ export class BranchViewerComponent implements OnInit {
     layout.navPanelChanged.subscribe(navOpen => {
       this.toggled = navOpen;
     });
+    this.updateAvailable = this.updater.isUpdateAvailable;
   }
 
   ngOnInit() {
@@ -93,7 +114,11 @@ export class BranchViewerComponent implements OnInit {
     this.layout.isTagsShown = this.showTags;
   }
   goToSettings(): void {
-    this.route.navigateByUrl('/settings');
+    if (this.updateAvailable) {
+      this.route.navigateByUrl('/settings/updater');
+    } else {
+      this.route.navigateByUrl('/settings');
+    }
   }
   goToCurrentBranch(): void {
     this.d3.scrollTo(this.branchTarget);
@@ -120,5 +145,9 @@ export class BranchViewerComponent implements OnInit {
   toggleCollapseLocal($event) {
     this.collapseLocal = !this.collapseLocal;
     $event.stopPropagation();
+  }
+  toggleSubm() {
+    this.showSubmodules = !this.showSubmodules;
+    this.layout.isSubmoduleShown = this.showSubmodules;
   }
 }
