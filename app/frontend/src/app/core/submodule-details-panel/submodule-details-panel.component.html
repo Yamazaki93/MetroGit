@@ -1,0 +1,20 @@
+<div class="panel-container smooth" [class.toggled]="toggled">
+  <div class="close-btn-container">
+    <a class="close-btn" (click)="toggled = false">
+      <i class="icon-x"></i>
+    </a>
+  </div>
+  <div class="content-container p-3" *ngIf="details">
+    <h4><i class="icon-box mr-3"></i>Submodule: {{_name}}</h4>
+    <h5>Head @ {{details.hid.substring(0, 6)}}</h5>
+    <app-committer-card [author]="details.author" [email]="details.email" [time]="details.date"></app-committer-card>
+    <div class="mt-3 d-flex flex-column message-container">
+      <div class="message-title-container p-2">
+        <h5>{{details.message}}</h5>
+      </div>
+      <div class="message-content-container p-2">
+        <ng-container *ngIf="detail">{{details.detail}}</ng-container>
+      </div>
+    </div>
+  </div>
+</div>
