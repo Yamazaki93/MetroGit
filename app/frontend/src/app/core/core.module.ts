@@ -46,6 +46,7 @@ import { HotkeyModule } from 'angular2-hotkeys';
 import { SubmodulesService } from './services/submodules.service';
 import { SubmoduleDetailsPanelComponent } from './submodule-details-panel/submodule-details-panel.component';
 import { CommitterCardComponent } from './committer-card/committer-card.component';
+import { FileCountsComponent } from './file-counts/file-counts.component';
 
 
 @NgModule({
@@ -66,7 +67,7 @@ import { CommitterCardComponent } from './committer-card/committer-card.componen
     CreateBranchPromptComponent,
     TagPromptComponent,
   ],
-  declarations: [BranchViewerComponent, GitViewComponent, SubwayComponent, SubwayStationsComponent, SubwayMapVisualComponent, NodeVisualComponent, LinkVisualComponent, SubwayStationAnnotComponent, ActionToolbarComponent, OpenRepoPanelComponent, StatusBarComponent, PromptComponent, EnterLoginPromptComponent, PromptContainerDirective, BranchListComponent, BranchItemComponent, SshPasswordPromptComponent, CommitDetailComponent, CommitDetailInfoComponent, CommitDetailCiComponent, CiConsoleOutputComponent, ForcePushPromptComponent, CreateBranchPromptComponent, FileViewPanelComponent, ExternalFileViewerComponent, TagPromptComponent, MapSeparatorComponent, SubmoduleDetailsPanelComponent, CommitterCardComponent],
+  declarations: [BranchViewerComponent, GitViewComponent, SubwayComponent, SubwayStationsComponent, SubwayMapVisualComponent, NodeVisualComponent, LinkVisualComponent, SubwayStationAnnotComponent, ActionToolbarComponent, OpenRepoPanelComponent, StatusBarComponent, PromptComponent, EnterLoginPromptComponent, PromptContainerDirective, BranchListComponent, BranchItemComponent, SshPasswordPromptComponent, CommitDetailComponent, CommitDetailInfoComponent, CommitDetailCiComponent, CiConsoleOutputComponent, ForcePushPromptComponent, CreateBranchPromptComponent, FileViewPanelComponent, ExternalFileViewerComponent, TagPromptComponent, MapSeparatorComponent, SubmoduleDetailsPanelComponent, CommitterCardComponent, FileCountsComponent],
   exports: [RouterModule],
   providers: [D3Service, RepoService, LayoutService, CredentialsService, CiIntegrationService, CommitSelectionService, AppveyorCiService, CommitChangeService, SubmodulesService],
 })

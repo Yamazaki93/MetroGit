@@ -37,16 +37,7 @@
     </div>
   </div>
   <div class="modification-summary-container mt-2" *ngIf="!commit.virtual">
-    <h5>
-      <span class="mr-2 commit-summary text-warning" placement="bottom" ngbTooltip="Modified" container="body" *ngIf="commit.fileSummary.modified">
-        <i class="icon-file-text"></i>{{commit.fileSummary.modified}}</span>
-      <span class="mr-2 commit-summary text-success" placement="bottom" ngbTooltip="Added" container="body" *ngIf="commit.fileSummary.added">
-        <i class="icon-file-plus"></i>{{commit.fileSummary.added}}</span>
-      <span class="mr-2 commit-summary text-danger" placement="bottom" ngbTooltip="Deleted" container="body" *ngIf="commit.fileSummary.deleted">
-        <i class="icon-file-minus"></i>{{commit.fileSummary.deleted}}</span>
-      <span class="mr-2 commit-summary text-primary" placement="bottom" ngbTooltip="Renamed" container="body" *ngIf="commit.fileSummary.renamed">
-        <i class="icon-file"></i>{{commit.fileSummary.renamed}}</span>
-    </h5>
+    <app-file-counts [modified]="commit.fileSummary.modified" [newCount]="commit.fileSummary.added" [deleted]="commit.fileSummary.deleted" [renamed]="commit.fileSummary.renamed"></app-file-counts>
   </div>
   <div class="mt-2 file-details-container d-flex flex-column" *ngIf="!commit.virtual">
     <h5>File Details</h5>
@@ -70,16 +61,7 @@
   <div class="mt-2 file-details-container d-flex flex-column" *ngIf="commit.virtual">
     <div class="d-flex mb-2 flex-no-shrink">
       <div class="modification-summary-container flex-no-shrink" *ngIf="commit.unstagedSummary">
-        <h5>
-          <span class="mr-2 commit-summary text-warning" placement="bottom" ngbTooltip="Modified" container="body" *ngIf="commit.unstagedSummary.modified">
-            <i class="icon-file-text"></i>{{commit.unstagedSummary.modified}}</span>
-          <span class="mr-2 commit-summary text-success" placement="bottom" ngbTooltip="Added" container="body" *ngIf="commit.unstagedSummary.newCount">
-            <i class="icon-file-plus"></i>{{commit.unstagedSummary.newCount}}</span>
-          <span class="mr-2 commit-summary text-danger" placement="bottom" ngbTooltip="Deleted" container="body" *ngIf="commit.unstagedSummary.deleted">
-            <i class="icon-file-minus"></i>{{commit.unstagedSummary.deleted}}</span>
-          <span class="mr-2 commit-summary text-primary" placement="bottom" ngbTooltip="Renamed" container="body" *ngIf="commit.unstagedSummary.renamed">
-            <i class="icon-file"></i>{{commit.unstagedSummary.renamed}}</span>
-        </h5>
+        <app-file-counts [modified]="commit.unstagedSummary.modified" [newCount]="commit.unstagedSummary.newCount" [deleted]="commit.unstagedSummary.deleted" [renamed]="commit.unstagedSummary.renamed"></app-file-counts>
       </div>
       <div class="full-width">
         <h5>Unstaged Files</h5>
@@ -111,16 +93,7 @@
   <div class="mt-2 file-details-container d-flex flex-column" *ngIf="commit.virtual">-->
     <div class="d-flex mb-2 mt-2 flex-no-shrink">
       <div class="modification-summary-container flex-no-shrink" *ngIf="commit.stagedSummary">
-        <h5>
-          <span class="mr-2 commit-summary text-warning" placement="bottom" ngbTooltip="Modified" container="body" *ngIf="commit.stagedSummary.modified">
-            <i class="icon-file-text"></i>{{commit.stagedSummary.modified}}</span>
-          <span class="mr-2 commit-summary text-success" placement="bottom" ngbTooltip="Added" container="body" *ngIf="commit.stagedSummary.newCount">
-            <i class="icon-file-plus"></i>{{commit.stagedSummary.newCount}}</span>
-          <span class="mr-2 commit-summary text-danger" placement="bottom" ngbTooltip="Deleted" container="body" *ngIf="commit.stagedSummary.deleted">
-            <i class="icon-file-minus"></i>{{commit.stagedSummary.deleted}}</span>
-          <span class="mr-2 commit-summary text-primary" placement="bottom" ngbTooltip="Renamed" container="body" *ngIf="commit.stagedSummary.renamed">
-            <i class="icon-file"></i>{{commit.stagedSummary.renamed}}</span>
-        </h5>
+        <app-file-counts [modified]="commit.stagedSummary.modified" [newCount]="commit.stagedSummary.newCount" [deleted]="commit.stagedSummary.deleted" [renamed]="commit.stagedSummary.renamed"></app-file-counts>
       </div>
       <div class="full-width">
         <h5>Staged Files</h5>
