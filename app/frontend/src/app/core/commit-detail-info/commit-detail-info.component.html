@@ -8,7 +8,7 @@
         <small>
           <i class="icon-git-commit mr-1"></i>{{commit.sha.substring(0, 6)}}</small>
         <br>
-        <small placement="left" ngbTooltip="Parent commit">
+        <small placement="left" [ngbTooltip]="tooltip? 'Parent commit' : ''">
           <i class="icon-git-merge mr-1"></i>
           <a href="javascript:void(0)" *ngFor="let parent of commit.parents" (click)="selection.select(parent)">
             <span class="mr-1">{{parent.substring(0, 6)}}</span>
