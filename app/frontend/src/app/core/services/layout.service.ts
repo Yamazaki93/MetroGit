@@ -10,7 +10,14 @@ export class LayoutService {
   isTagsShown = true;
   isDetailPanelOpen = false;
   isSubmoduleShown = true;
-  tooltipEnabled = true;
+
+  set tooltipEnabled(tp) {
+    this._tooltip = tp;
+    this.tooltipChanged.emit(tp);
+  }
+  get tooltipEnabled() {
+    return this._tooltip;
+  }
 
   set isNavToggled(val) {
     if (this._nav !== val) {
@@ -33,9 +40,11 @@ export class LayoutService {
 
   @Output() filePanelChanged = new EventEmitter<boolean>();
   @Output() navPanelChanged = new EventEmitter<boolean>();
+  @Output() tooltipChanged = new EventEmitter<boolean>();
 
   private _file = false;
   private _nav = true;
+  private _tooltip = true;
 
   constructor(
     private hotkeys: HotkeysService,
@@ -51,7 +60,7 @@ export class LayoutService {
     }, undefined, "Expand left panel"));
     this.electron.onCD('Settings-EffectiveUpdated', (event, arg) => {
       this.tooltipEnabled = arg['gen-tooltip'] === "" ? true : Boolean(arg['gen-tooltip']);
-    })
+    });
   }
 
 }

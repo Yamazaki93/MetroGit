@@ -48,6 +48,7 @@ export class GeneralSettingsComponent extends SettingsComponent {
     this.settings.clearSecureCache();
   }
   updateTooltip(enabled) {
-
+    this._tooltip = enabled;
+    this.settings.setSetting('gen-tooltip', this._tooltip);
   }
 }
