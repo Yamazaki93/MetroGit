@@ -20,6 +20,7 @@ export class CommitDetailInfoComponent implements OnInit {
     this._mode = m;
   }
   @Input() commit: CommitDetail | WIPCommit;
+  private committing = false;
   private set newCommitMessage(msg) {
     this._message = msg;
     this.setCommitMessages();
@@ -52,6 +53,9 @@ export class CommitDetailInfoComponent implements OnInit {
     });
     this.commitChange.detailChange.subscribe(det => {
       this._detail = det;
+    });
+    this.commitChange.commitingChange.subscribe(cmting => {
+      this.committing = cmting;
     });
   }
 

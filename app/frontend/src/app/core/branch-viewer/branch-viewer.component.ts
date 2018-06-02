@@ -8,7 +8,6 @@ import { D3Service } from '../d3/d3.service';
 import { SubmodulesService } from '../services/submodules.service';
 import { SubmoduleDetailsPanelComponent } from '../submodule-details-panel/submodule-details-panel.component';
 import { UpdaterService } from '../../infrastructure/updater.service';
-
 @Component({
   selector: 'app-branch-viewer',
   templateUrl: './branch-viewer.component.html',
