@@ -1,4 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
+import { LayoutService } from '../services/layout.service';
 
 @Component({
   selector: 'app-file-counts',
@@ -11,7 +12,15 @@ export class FileCountsComponent implements OnInit {
   @Input() newCount = 0;
   @Input() deleted = 0;
   @Input() renamed = 0;
-  constructor() { }
+  private tooltip = true;
+  constructor(
+    private layout: LayoutService
+  ) {
+    layout.tooltipChanged.subscribe(tp => {
+      this.tooltip = tp;
+    });
+    this.tooltip = layout.tooltipEnabled;
+  }
 
   ngOnInit() {
   }
