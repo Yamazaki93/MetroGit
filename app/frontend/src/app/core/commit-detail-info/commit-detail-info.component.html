@@ -39,24 +39,8 @@
   <div class="modification-summary-container mt-2" *ngIf="!commit.virtual">
     <app-file-counts [modified]="commit.fileSummary.modified" [newCount]="commit.fileSummary.added" [deleted]="commit.fileSummary.deleted" [renamed]="commit.fileSummary.renamed"></app-file-counts>
   </div>
-  <div class="mt-2 file-details-container d-flex flex-column" *ngIf="!commit.virtual">
-    <h5>File Details</h5>
-    <div class="modified-file-list p-2">
-      <div class="modified-file-entry p-1" *ngFor="let file of commit.files" (click)="openFileDetails(file.path)">
-        <span class="mr-2 text-warning" *ngIf="file.isModified">
-          <i class="icon-file-text"></i>
-        </span>
-        <span class="mr-2 text-success" *ngIf="file.isAdded && !file.isRenamed">
-          <i class="icon-file-plus"></i>
-        </span>
-        <span class="mr-2 text-danger" *ngIf="file.isDeleted && !file.isRenamed">
-          <i class="icon-file-minus"></i>
-        </span>
-        <span class="mr-2 text-primary" *ngIf="file.isRenamed">
-          <i class="icon-file"></i>
-        </span>{{getShortenedPath(file.path)}}
-      </div>
-    </div>
+  <div class="mt-2" *ngIf="!commit.virtual">
+    <app-commit-file-list #commitFilesList [files]="commit.files"></app-commit-file-list>
   </div>
   <div class="mt-2 file-details-container d-flex flex-column" *ngIf="commit.virtual">
     <div class="d-flex mb-2 flex-no-shrink">

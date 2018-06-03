@@ -1,4 +1,4 @@
-import { Component, OnInit, Sanitizer, Input, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Sanitizer, Input, Output, EventEmitter, ViewChild, AfterViewChecked } from '@angular/core';
 import { D3Service } from '../d3/d3.service';
 import { DomSanitizer } from '@angular/platform-browser';
 import { CommitDetail, WIPCommit } from '../prototypes/commit';
@@ -9,18 +9,26 @@ import { Router } from '@angular/router';
 import { CredentialsService } from '../services/credentials.service';
 import { CommitChangeService } from '../services/commit-change.service';
 import { LayoutService } from '../services/layout.service';
+import { CommitFileListComponent } from '../commit-file-list/commit-file-list.component';
+import { Subscription } from 'rxjs/Subscription';
 
 @Component({
   selector: 'app-commit-detail-info',
   templateUrl: './commit-detail-info.component.html',
   styleUrls: ['./commit-detail-info.component.scss']
 })
-export class CommitDetailInfoComponent implements OnInit {
+export class CommitDetailInfoComponent implements OnInit, AfterViewChecked {
 
   @Input() set fileViewMode(m: string) {
     this._mode = m;
   }
-  @Input() commit: CommitDetail | WIPCommit;
+  @Input() set commit(cmt) {
+    this._commit = cmt;
+  }
+  get commit() {
+    return this._commit;
+  }
+  @ViewChild('commitFilesList') commitFilesList: CommitFileListComponent;
   private committing = false;
   private set newCommitMessage(msg) {
     this._message = msg;
@@ -40,6 +48,8 @@ export class CommitDetailInfoComponent implements OnInit {
   private _detail = "";
   private _mode = "";
   private tooltip = true;
+  private _commit: CommitDetail | WIPCommit;
+  private _fileSelectSub: Subscription;
   constructor(
     private d3: D3Service,
     private sanitize: DomSanitizer,
@@ -67,6 +77,17 @@ export class CommitDetailInfoComponent implements OnInit {
   }
 
   ngOnInit() {
+  }
+
+  ngAfterViewChecked(): void {
+    if (this.commitFilesList) {
+      if (this._fileSelectSub) {
+        this._fileSelectSub.unsubscribe();
+      }
+      this._fileSelectSub = this.commitFilesList.fileSelected.subscribe(path => {
+        this.openFileDetails(path);
+      });
+    }
   }
   getShortenedPath(path) {
     if (path.length > 65) {
