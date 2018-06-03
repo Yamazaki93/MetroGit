@@ -11,6 +11,7 @@ import { CommitChangeService } from '../services/commit-change.service';
 import { LayoutService } from '../services/layout.service';
 import { CommitFileListComponent } from '../commit-file-list/commit-file-list.component';
 import { Subscription } from 'rxjs/Subscription';
+import { FileCountsComponent } from '../file-counts/file-counts.component';
 
 @Component({
   selector: 'app-commit-detail-info',
@@ -24,11 +25,13 @@ export class CommitDetailInfoComponent implements OnInit, AfterViewChecked {
   }
   @Input() set commit(cmt) {
     this._commit = cmt;
+
   }
   get commit() {
     return this._commit;
   }
   @ViewChild('commitFilesList') commitFilesList: CommitFileListComponent;
+  @ViewChild('commitFileCounts') commitFileCounts: FileCountsComponent;
   private committing = false;
   private set newCommitMessage(msg) {
     this._message = msg;
@@ -50,6 +53,10 @@ export class CommitDetailInfoComponent implements OnInit, AfterViewChecked {
   private tooltip = true;
   private _commit: CommitDetail | WIPCommit;
   private _fileSelectSub: Subscription;
+  private _filterModifiedSub: Subscription;
+  private _filterAddedSub: Subscription;
+  private _filterDeletedSub: Subscription;
+  private _filterRenamedSub: Subscription;
   constructor(
     private d3: D3Service,
     private sanitize: DomSanitizer,
@@ -86,6 +93,32 @@ export class CommitDetailInfoComponent implements OnInit, AfterViewChecked {
       }
       this._fileSelectSub = this.commitFilesList.fileSelected.subscribe(path => {
         this.openFileDetails(path);
+      });
+    }
+    if (this.commitFileCounts && this.commitFilesList) {
+      if (this._filterAddedSub) {
+        this._filterAddedSub.unsubscribe();
+      }
+      this._filterAddedSub = this.commitFileCounts.newClicked.subscribe(() => {
+        this.commitFilesList.applyFilter(true, false, false, false);
+      });
+      if (this._filterModifiedSub) {
+        this._filterModifiedSub.unsubscribe();
+      }
+      this._filterModifiedSub = this.commitFileCounts.modifiedClicked.subscribe(() => {
+        this.commitFilesList.applyFilter(false, false, true, false);
+      });
+      if (this._filterDeletedSub) {
+        this._filterDeletedSub.unsubscribe();
+      }
+      this._filterDeletedSub = this.commitFileCounts.deletedClicked.subscribe(() => {
+        this.commitFilesList.applyFilter(false, true, false, false);
+      });
+      if (this._filterRenamedSub) {
+        this._filterRenamedSub.unsubscribe();
+      }
+      this._filterRenamedSub = this.commitFileCounts.renamedClicked.subscribe(() => {
+        this.commitFilesList.applyFilter(false, false, false, true);
       });
     }
   }

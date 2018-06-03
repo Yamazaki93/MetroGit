@@ -37,9 +37,9 @@
     </div>
   </div>
   <div class="modification-summary-container mt-2" *ngIf="!commit.virtual">
-    <app-file-counts [modified]="commit.fileSummary.modified" [newCount]="commit.fileSummary.added" [deleted]="commit.fileSummary.deleted" [renamed]="commit.fileSummary.renamed"></app-file-counts>
+    <app-file-counts #commitFileCounts [modified]="commit.fileSummary.modified" [newCount]="commit.fileSummary.added" [deleted]="commit.fileSummary.deleted" [renamed]="commit.fileSummary.renamed"></app-file-counts>
   </div>
-  <div class="mt-2" *ngIf="!commit.virtual">
+  <div class="mt-2 d-flex" *ngIf="!commit.virtual">
     <app-commit-file-list #commitFilesList [files]="commit.files"></app-commit-file-list>
   </div>
   <div class="mt-2 file-details-container d-flex flex-column" *ngIf="commit.virtual">

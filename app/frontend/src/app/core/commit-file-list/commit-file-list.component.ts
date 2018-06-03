@@ -1,4 +1,5 @@
 import { Component, OnInit, EventEmitter, Output, Input } from '@angular/core';
+import { FileListFilterMask } from './file-list-filter';
 
 @Component({
   selector: 'app-commit-file-list',
@@ -9,11 +10,20 @@ export class CommitFileListComponent implements OnInit {
 
   @Input() files: any[];
   @Output() fileSelected: EventEmitter<string> = new EventEmitter<string>();
-  constructor() { }
+  private defaultFilterMask: FileListFilterMask = new FileListFilterMask(true, true, true, true);
+  private currentFilter: FileListFilterMask;
+  constructor() {
+    this.clearFilter();
+  }
 
   ngOnInit() {
   }
-
+  applyFilter(added = false, deleted = false, modified = false, renamed = false) {
+    this.currentFilter = new FileListFilterMask(added, deleted, modified, renamed);
+  }
+  clearFilter() {
+    this.currentFilter = this.defaultFilterMask;
+  }
   private selectFile(path) {
     this.fileSelected.emit(path);
   }

@@ -1,7 +1,23 @@
 <div class="file-details-container d-flex flex-column">
-  <h5>File Details</h5>
+  <h5>File Details
+    <span class="mr-2 text-warning" *ngIf="!currentFilter.showAll() && currentFilter.modified">
+      <i class="icon-file-text"></i>
+    </span>
+    <span class="mr-2 text-success" *ngIf="!currentFilter.showAll() && currentFilter.added">
+      <i class="icon-file-plus"></i>
+    </span>
+    <span class="mr-2 text-danger" *ngIf="!currentFilter.showAll() && currentFilter.deleted">
+      <i class="icon-file-minus"></i>
+    </span>
+    <span class="mr-2 text-primary" *ngIf="!currentFilter.showAll() && currentFilter.renamed">
+      <i class="icon-file"></i>
+    </span>
+    <a class="mr-2 action-button" *ngIf="!currentFilter.showAll()" (click)="clearFilter()">
+      <i class="icon-x"></i>Clear Filter
+    </a>
+  </h5>
   <div class="modified-file-list p-2">
-    <div class="modified-file-entry p-1" *ngFor="let file of files" (click)="selectFile(file.path)">
+    <div class="modified-file-entry p-1" *ngFor="let file of files | fileListFilter:currentFilter " (click)="selectFile(file.path)">
       <span class="mr-2 text-warning" *ngIf="file.isModified">
         <i class="icon-file-text"></i>
       </span>

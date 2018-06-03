@@ -48,6 +48,7 @@ import { SubmoduleDetailsPanelComponent } from './submodule-details-panel/submod
 import { CommitterCardComponent } from './committer-card/committer-card.component';
 import { FileCountsComponent } from './file-counts/file-counts.component';
 import { CommitFileListComponent } from './commit-file-list/commit-file-list.component';
+import { FileListFilter } from './commit-file-list/file-list-filter';
 
 
 @NgModule({
@@ -68,7 +69,7 @@ import { CommitFileListComponent } from './commit-file-list/commit-file-list.com
     CreateBranchPromptComponent,
     TagPromptComponent,
   ],
-  declarations: [BranchViewerComponent, GitViewComponent, SubwayComponent, SubwayStationsComponent, SubwayMapVisualComponent, NodeVisualComponent, LinkVisualComponent, SubwayStationAnnotComponent, ActionToolbarComponent, OpenRepoPanelComponent, StatusBarComponent, PromptComponent, EnterLoginPromptComponent, PromptContainerDirective, BranchListComponent, BranchItemComponent, SshPasswordPromptComponent, CommitDetailComponent, CommitDetailInfoComponent, CommitDetailCiComponent, CiConsoleOutputComponent, ForcePushPromptComponent, CreateBranchPromptComponent, FileViewPanelComponent, ExternalFileViewerComponent, TagPromptComponent, MapSeparatorComponent, SubmoduleDetailsPanelComponent, CommitterCardComponent, FileCountsComponent, CommitFileListComponent],
+  declarations: [BranchViewerComponent, GitViewComponent, SubwayComponent, SubwayStationsComponent, SubwayMapVisualComponent, NodeVisualComponent, LinkVisualComponent, SubwayStationAnnotComponent, ActionToolbarComponent, OpenRepoPanelComponent, StatusBarComponent, PromptComponent, EnterLoginPromptComponent, PromptContainerDirective, BranchListComponent, BranchItemComponent, SshPasswordPromptComponent, CommitDetailComponent, CommitDetailInfoComponent, CommitDetailCiComponent, CiConsoleOutputComponent, ForcePushPromptComponent, CreateBranchPromptComponent, FileViewPanelComponent, ExternalFileViewerComponent, TagPromptComponent, MapSeparatorComponent, SubmoduleDetailsPanelComponent, CommitterCardComponent, FileCountsComponent, CommitFileListComponent, FileListFilter],
   exports: [RouterModule],
   providers: [D3Service, RepoService, LayoutService, CredentialsService, CiIntegrationService, CommitSelectionService, AppveyorCiService, CommitChangeService, SubmodulesService],
 })

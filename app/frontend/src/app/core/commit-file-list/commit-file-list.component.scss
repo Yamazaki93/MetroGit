@@ -1,3 +1,7 @@
+:host {
+    width: 100%;
+}
+
 .file-details-container {
     min-height: 0;
     height: 100%;
@@ -33,4 +37,12 @@
             line-height: 20px;
         }
     }
+}
+
+.action-button {
+    cursor: pointer;
+    font-size: 12px;
+    background: var(--gray);
+    border-radius: 3px;
+    padding: 3px;
 }
