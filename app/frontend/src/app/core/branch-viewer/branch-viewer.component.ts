@@ -31,6 +31,7 @@ export class BranchViewerComponent implements OnInit {
   updateAvailable = false;
   private collapseRemote = false;
   private collapseLocal = false;
+  private tooltip = true;
   @ViewChild('openRepoPanel') openRepoPanel: OpenRepoPanelComponent;
   @ViewChild('submodulePanel') submodulePanel: SubmoduleDetailsPanelComponent;
   constructor(
@@ -79,10 +80,14 @@ export class BranchViewerComponent implements OnInit {
     this.showRemote = layout.isRemoteShown;
     this.showTags = layout.isTagsShown;
     this.showSubmodules = layout.isSubmoduleShown;
+    this.tooltip = layout.tooltipEnabled;
     layout.filePanelChanged.subscribe(filePanelOpen => {
       if (this.toggled && filePanelOpen) {
         this.toggleNavigation();
       }
+    });
+    layout.tooltipChanged.subscribe(tp => {
+      this.tooltip = tp;
     });
     layout.navPanelChanged.subscribe(navOpen => {
       this.toggled = navOpen;

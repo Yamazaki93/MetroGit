@@ -8,6 +8,7 @@ import { NotificationsService } from 'angular2-notifications';
 import { Router } from '@angular/router';
 import { CredentialsService } from '../services/credentials.service';
 import { CommitChangeService } from '../services/commit-change.service';
+import { LayoutService } from '../services/layout.service';
 
 @Component({
   selector: 'app-commit-detail-info',
@@ -38,6 +39,7 @@ export class CommitDetailInfoComponent implements OnInit {
   private _message = "";
   private _detail = "";
   private _mode = "";
+  private tooltip = true;
   constructor(
     private d3: D3Service,
     private sanitize: DomSanitizer,
@@ -45,6 +47,7 @@ export class CommitDetailInfoComponent implements OnInit {
     private noti: NotificationsService,
     private cred: CredentialsService,
     private commitChange: CommitChangeService,
+    private layout: LayoutService
   ) {
     this.newCommitMessage = this.commitChange.newCommitMessage;
     this.newCommitDetail = this.commitChange.newCommitDetail;
@@ -57,6 +60,10 @@ export class CommitDetailInfoComponent implements OnInit {
     this.commitChange.commitingChange.subscribe(cmting => {
       this.committing = cmting;
     });
+    layout.tooltipChanged.subscribe(tp => {
+      this.tooltip = tp;
+    });
+    this.tooltip = layout.tooltipEnabled;
   }
 
   ngOnInit() {
