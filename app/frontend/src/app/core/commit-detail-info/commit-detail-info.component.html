@@ -73,8 +73,6 @@
         </div>
       </div>
     </div>
-    <!--</div>
-  <div class="mt-2 file-details-container d-flex flex-column" *ngIf="commit.virtual">-->
     <div class="d-flex mb-2 mt-2 flex-no-shrink">
       <div class="modification-summary-container flex-no-shrink" *ngIf="commit.stagedSummary">
         <app-file-counts [modified]="commit.stagedSummary.modified" [newCount]="commit.stagedSummary.newCount" [deleted]="commit.stagedSummary.deleted" [renamed]="commit.stagedSummary.renamed"></app-file-counts>
