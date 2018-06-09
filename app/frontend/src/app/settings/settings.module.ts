@@ -13,8 +13,6 @@ import { FormsModule } from '@angular/forms';
 import { JiraSettingsComponent } from './jira-settings/jira-settings.component';
 import { TagInputModule } from 'ngx-chips';
 import { ProfileSettingsComponent } from './profile-settings/profile-settings.component';
-import { RepoProfileComponent } from './repo-profile/repo-profile.component';
-import { UpdaterComponent } from './updater/updater.component';
 
 const appRoutes: Routes = [
   {
@@ -34,12 +32,6 @@ const appRoutes: Routes = [
       },
       {
         path: 'profile', component: ProfileSettingsComponent
-      },
-      {
-        path: 'repo-profile', component: RepoProfileComponent
-      },
-      {
-        path: 'updater', component: UpdaterComponent
       }
     ]
   },
@@ -57,7 +49,7 @@ const appRoutes: Routes = [
   exports: [
     RouterModule, CiSettingsComponent
   ],
-  declarations: [SettingsPageComponent, SettingsNavComponent, CiSettingsComponent, AuthSettingsComponent, GeneralSettingsComponent, JiraSettingsComponent, ProfileSettingsComponent, RepoProfileComponent, UpdaterComponent],
+  declarations: [SettingsPageComponent, SettingsNavComponent, CiSettingsComponent, AuthSettingsComponent, GeneralSettingsComponent, JiraSettingsComponent, ProfileSettingsComponent],
   providers: [SettingsService],
 })
 export class SettingsModule { }

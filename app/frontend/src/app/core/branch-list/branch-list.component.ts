@@ -19,18 +19,11 @@ export class BranchListComponent implements OnInit, AfterViewInit {
   }
   @Input() rootIcon = "";
   @Input() rootPath = "";
-  @Input() set itemIcon(icn) {
-    this._itemIcon = icn;
-    this.updateBranchVisual();
-  }
-  get itemIcon() {
-    return this._itemIcon;
-  }
+  @Input() itemIcon = 'git-branch';
   private _branches = [];
   private items = [];
   private basePad = 25;
   private baseCls = "mr-2";
-  private _itemIcon = 'git-branch';
   private _collapseAll = false;
   constructor(
     private d3: D3Service,

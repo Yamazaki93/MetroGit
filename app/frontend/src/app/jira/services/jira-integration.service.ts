@@ -12,7 +12,6 @@ export class JiraIntegrationService {
   @Output() subtaskRetrieved: EventEmitter<Issue> = new EventEmitter<Issue>();
   @Output() enabledChanged = new EventEmitter<boolean>();
   @Output() assignableRetrieved = new EventEmitter<{ key: string, result: Profile[] }>();
-  @Output() issueQueryRetrieved: EventEmitter<Issue[]> = new EventEmitter<Issue[]>();
   enabled = false;
   private jiraKeys = [];
   private resolutions = [];
@@ -56,9 +55,6 @@ export class JiraIntegrationService {
     });
     electron.onCD('JIRA-AssignableUsersRetrieved', (event, arg) => {
       this.assignableRetrieved.emit(arg.result);
-    });
-    electron.onCD('JIRA-IssueQueryResultRetrieved', (event, arg) => {
-      this.issueQueryRetrieved.emit(arg.issues);
     });
   }
   parseKeyFromMessage(message, detail) {
@@ -105,13 +101,5 @@ export class JiraIntegrationService {
   }
   assignIssue(key, name) {
     this.electron.ipcRenderer.send('JIRA-AssignIssue', { key: key, name: name });
-  }
-  searchIssuesByKey(keyQuery, fields?) {
-    let jql = `key = "${keyQuery}"`;
-    this.electron.ipcRenderer.send('JIRA-SearchIssues', { jql: jql, fields: fields });
-  }
-  searchIssuesBySummary(textQuery, fields?) {
-    let jql = `summary ~ "\\"${textQuery}\\""`;
-    this.electron.ipcRenderer.send('JIRA-SearchIssues', { jql: jql, fields: fields });
   }
 }

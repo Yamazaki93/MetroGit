@@ -1,8 +1,6 @@
 $primary-color: #FFF;
 $item-height: 46px;
 $width: 400px;
-$badge-size: 20px;
-
 :host {
     z-index: 12;
 }
@@ -91,21 +89,8 @@ app-open-repo-panel {
 
 .action-button {
     cursor: pointer;
-    position: relative;
     &:hover {
         background: rgba(0, 0, 0, 0.2);
-    }
-    .badge{
-        position: absolute;
-        border-radius: 50%;
-        width: $badge-size;
-        height: $badge-size;
-        top: 8px;
-        left: 13px;
-        font-size: 12px;
-        padding: 0.25em 0;
-        line-height: 14px;
-        color: #FFF !important;
     }
 }
 

@@ -1,23 +1,21 @@
-<div class="jira-detail-container p-3 d-flex flex-column justify-content-start">
+<div class="jira-detail-container p-3 d-flex flex-column justify-content-start" *ngIf="issue">
   <div class="d-flex flex-no-shrink align-content-start">
-    <div class="icon-container mr-1" style="padding-top: 3px;"  *ngIf="issue">
+    <div class="icon-container mr-1" style="padding-top: 3px;">
       <object [data]="priorityIconUrl" style="width: 20px;"></object>
     </div>
-    <div class="full-width">
-      <app-key-selector #keySelector (issueSelected)="loadIssue($event)" [currentIssueKey]="currentIssueKey"></app-key-selector>
-    </div>
-    <div class="external-link mr-2"  *ngIf="issue" placement="left" ngbTooltip="Refresh" container="body" (click)="refreshIssue()">
+    <h5 class="text-muted full-width">{{currentIssueKey}}</h5>
+    <div class="external-link mr-2" placement="left" ngbTooltip="Refresh" container="body" (click)="refreshIssue()">
       <h5>
         <i class="icon-refresh-cw"></i>
       </h5>
     </div>
-    <div class="external-link" *ngIf="issue" placement="left" ngbTooltip="Open in JIRA" container="body" (click)="openIssue()">
+    <div class="external-link" placement="left" ngbTooltip="Open in JIRA" container="body" (click)="openIssue()">
       <h5>
         <i class="icon-external-link"></i>
       </h5>
     </div>
   </div>
-  <div class="full-width d-flex flex-no-shrink"  *ngIf="issue">
+  <div class="full-width d-flex flex-no-shrink">
     <div class="icon-container mr-3 pt-1">
       <object [data]="issueIconUrl" style="width: 30px;"></object>
     </div>
@@ -26,12 +24,14 @@
     </div>
 
   </div>
-  <div class="mt-3 full-width flex-no-shrink"  *ngIf="issue">
+  <div class="mt-3 full-width flex-no-shrink">
     <app-jira-rich-text [rawText]="issue.fields.description"></app-jira-rich-text>
   </div>
-  <div class="mt-3 issue-status-container row flex-no-shrink"  *ngIf="issue">
+  <div class="mt-3 issue-status-container row flex-no-shrink">
     <div class="col-3">
       <label>Status</label>
+      <!-- <div class="p-2 rounded" [class.bg-dark]="issue.fields.status.statusCategory.colorName!=='green' && issue.fields.status.statusCategory.colorName!=='yellow' "
+        [class.bg-success]="issue.fields.status.statusCategory.colorName==='green'" [class.bg-primary]="issue.fields.status.statusCategory.colorName==='yellow'">{{issue.fields.status.name}}</div> -->
       <app-transition-control (transitioning)="onRequestPosted()" [key]="issue.key" [padding]="2" [status]="issue.fields.status"
         [transitions]="issue.transitions"></app-transition-control>
       <small *ngIf="issue.fields.resolution">
@@ -39,6 +39,10 @@
     </div>
     <div class="col-3">
       <label>Assignee</label>
+      <!-- <div class="p-2 rounded bg-dark profile-container">
+        <img [src]="issue.fields.assignee.safeAvatarUrl" class="mr-1" width="24px" *ngIf="issue.fields.assignee" />
+        <span *ngIf="issue.fields.assignee">{{issue.fields.assignee.displayName}}</span>
+      </div> -->
       <app-profile-selector (profileSelected)="onRequestPosted()" [key]="issue.key" [profile]="issue.fields.assignee"></app-profile-selector>
     </div>
     <div class="col-3" *ngIf="issue.fields.storyPoints !== undefined">
@@ -55,7 +59,7 @@
       </div>
     </div>
   </div>
-  <div class="mt-3 full-width flex-no-shrink" *ngIf="issue && issue.fields.subtasks && !issue.fields.issuetype.subtask">
+  <div class="mt-3 full-width flex-no-shrink" *ngIf="issue.fields.subtasks">
     <h5>Subtasks</h5>
     <div class="subtasks">
       <div class="mt-1 subtask d-flex p-2 justify-content-stretch bg-dark" *ngFor="let subtask of issue.fields.subtasks">
@@ -78,7 +82,7 @@
       </div>
     </div>
   </div>
-  <div class="mt-3 comments-container d-flex flex-column" *ngIf="issue">
+  <div class="mt-3 comments-container d-flex flex-column">
     <div class="d-flex">
       <h5>Recent Comments</h5>
       <div class="external-link  ml-2" style="padding-top: 3px;" (click)="addComment()">

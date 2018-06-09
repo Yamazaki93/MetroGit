@@ -6,7 +6,6 @@ import { FileDetail } from '../prototypes/file-detail';
 import { PromptInjectorService } from '../../infrastructure/prompt-injector.service';
 import { TagPromptComponent } from '../tag-prompt/tag-prompt.component';
 import { NotificationsService } from 'angular2-notifications';
-import { CredentialsService } from './credentials.service';
 
 @Injectable()
 export class CommitSelectionService {
@@ -52,7 +51,6 @@ export class CommitSelectionService {
     private electron: ElectronService,
     private promptInj: PromptInjectorService,
     private noti: NotificationsService,
-    private cred: CredentialsService
   ) {
     this.electron.onCD('Repo-CommitDetailRetrieved', (event, arg) => {
       this.selectedCommit = arg.commit;
@@ -74,29 +72,16 @@ export class CommitSelectionService {
       this._fileDetail = arg;
       this.fileDetailChanged.emit(this._fileDetail);
     });
-    this.electron.onCD('Repo-BranchDeleted', (event, arg) => {
-      if (arg.upstream) {
-        let notification = this.noti.success("Branch Deleted", "Click here to delete the upstream branch");
-        notification.click.subscribe(() => {
-          this.deleteRemoteBranch(arg.upstream);
-        });
-      }
-    });
-    this.electron.onCD('Repo-BranchDeleteFailed', (event, arg) => {
-      if (arg.detail === 'IS_CURRENT_BRANCH') {
-        this.noti.error("Current Branch", "You are trying to delete the current branch, please checkout another branch before deleting");
-      }
-    });
   }
 
-  selectFileDetail(file, sha = null, fullFile = false) {
+  selectFileDetail(file, sha = null) {
     if (!sha) {
       sha = this.selectedCommit.sha;
     }
     this._selectedFile = file;
     this.selectedFileChange.emit(file);
     this.gettingFileDetail.emit();
-    this.electron.ipcRenderer.send('Repo-GetFileDetail', { file: file, commit: sha, fullFile: fullFile });
+    this.electron.ipcRenderer.send('Repo-GetFileDetail', { file: file, commit: sha });
   }
   select(commit) {
     if (commit && (!this.selectedCommit || commit !== this.selectedCommit.sha)) {
@@ -134,14 +119,5 @@ export class CommitSelectionService {
   }
   deleteTag(name): void {
     this.electron.ipcRenderer.send('Repo-DeleteTag', { name: name });
-  }
-  deleteBranch(name): void {
-    this.electron.ipcRenderer.send('Repo-DeleteBranch', {name: name});
-  }
-  deleteRemoteBranch(name): void {
-    let username = this.cred.username;
-    let password = this.cred.password;
-    this.electron.ipcRenderer.send('Repo-DeleteBranch', {name: name, username: username, password: password});
-
   }
 }
