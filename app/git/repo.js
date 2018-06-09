@@ -113,12 +113,6 @@ function tryPush(remote, refs, tries, username, password) {
             certificateCheck: function () {
                 return 1;
             },
-            // pending refactor 
-            // pushUpdateReference: function (ref, status, data) {
-            //     if (status.indexOf('declined') >= 0) {
-            //         e = new Error(status);
-            //     }
-            // }
         }
     }).catch(err => {
         return consolidateAuthError(err);
@@ -786,40 +780,6 @@ function deleteTag(name) {
     })
 }
 
-function deleteBranch(name, username, password){
-    let branch;
-    let upstream;
-    return Repo.getCurrentBranch().then(ref => {
-        if(ref.name() === name) {
-            return Promise.reject('IS_CURRENT_BRANCH');
-        }
-        return Repo.getBranch(name)
-    }).then(ref => {
-        branch = ref;
-        return ref.delete();
-    }).then(res => {
-        if(branch.isRemote() && username && password) {
-            return getCurrentFirstRemote().then(rmt => {
-                let ref = `:refs/heads/${branch.shorthand().split('/').slice(1).join('/')}`;
-                return tryPush(rmt, [ref], 1, username, password)
-            }).then(() => {
-                return refreshRepo();
-            })
-        }
-        return refreshRepo();
-    }).then(() => {
-        return findMatchingRemote(branch).then(ref => {
-            if(ref) {
-                return Promise.resolve({upstream: ref.name()});
-            } else {
-                return Promise.resolve();
-            }
-        }).catch(() => {
-            return Promise.resolve()
-        })
-    })
-}
-
 function pushTag(username, password, name, toDelete) {
     return checkSSHKey().then(() => {
         return getCurrentFirstRemote()
@@ -866,5 +826,4 @@ module.exports = {
     createTag: requireRepo(createTag),
     deleteTag: requireRepo(deleteTag),
     pushTag: requireRepo(pushTag),
-    deleteBranch: requireRepo(deleteBranch),
 }

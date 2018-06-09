@@ -30,7 +30,7 @@ export class SubwayMapVisualComponent implements OnInit, AfterViewInit, OnDestro
         that._commits = cmts;
         that._updateHeight();
         that._updateWidth();
-        that.graph.initGraph(that.svg);
+        this.graph.initGraph(this.svg);
         that.cdr.detectChanges();
       });
     }

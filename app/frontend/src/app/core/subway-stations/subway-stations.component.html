@@ -4,7 +4,7 @@
     <div class="background" [class.selected]="commit.sha === selected"></div>
     <div class="commit-info-detail-container d-flex">
       <div class="ml-1 committer text-center" [style.background]="getColorByAuthor(commit)" *ngIf="!commit.virtual">
-        {{d3Service.getAuthor(commit.author)}}
+        {{d3Service.getAuthor(commit)}}
       </div>
       <div class="files-summary ml-1" *ngIf="commit.virtual">
         <span class="mr-1 commit-summary modification" *ngIf="commit.fileSummary.modified">

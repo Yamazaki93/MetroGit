@@ -36,7 +36,6 @@ export class D3Service {
           let b = newBuilds[key];
           this.updateCommitStatus(b.commit, b.overall);
         });
-        this.mapChange.emit();
       }
     });
   }
@@ -51,7 +50,6 @@ export class D3Service {
         let b = this.ci.buildResults[key];
         this.updateCommitStatus(b.commit, b.overall);
       });
-      this.mapChange.emit();
     } else {
       this.clearCommitsCIStatus();
     }
@@ -329,7 +327,11 @@ export class D3Service {
 
   updateCommitStatus(commit: string, status: string) {
     if (this.ciEnabled && this.currentMap) {
-      this.currentMap.updateCommitStatus(commit, status);
+      let that = this;
+      setTimeout(() => {
+        that.currentMap.updateCommitStatus(commit, status);
+        that.mapChange.emit();
+      });
     }
   }
   clearCommitsCIStatus() {
@@ -340,8 +342,8 @@ export class D3Service {
     }
   }
 
-  getAuthor(author) {
-    let firstChars = author.split(' ').map(n => n.length > 0 ? n[0].toUpperCase() : "");
+  getAuthor(commit) {
+    let firstChars = commit.author.split(' ').map(n => n.length > 0 ? n[0].toUpperCase() : "");
     let name = "";
     firstChars.forEach(f => {
       if (f > 'A' && f < 'Z' && name.length < 2) {

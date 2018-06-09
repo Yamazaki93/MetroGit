@@ -19,7 +19,6 @@ import { ContextMenuModule } from 'ngx-contextmenu';
 import { ExternalFileViewerComponent } from './core/external-file-viewer/external-file-viewer.component';
 import { HotkeyModule } from 'angular2-hotkeys';
 import { ReleaseNoteComponent } from './infrastructure/release-note/release-note.component';
-import { AboutPageComponent } from './infrastructure/about-page/about-page.component';
 
 
 const appRoutes: Routes = [
@@ -45,7 +44,6 @@ const appRoutes: Routes = [
     path: 'file/:sha', component: ExternalFileViewerComponent
   },
   { path: 'release-note', component: ReleaseNoteComponent },
-  { path: 'about', component: AboutPageComponent },
   { path: '', redirectTo: 'git', pathMatch: 'full' }
 ];
 
