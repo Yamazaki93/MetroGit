@@ -61,6 +61,7 @@ Also, please consider <a class="bmc-button" target="_blank" href="https://www.bu
 Or, alternatively
 
 BTC: 3CAgw9vNPNXHR1YaWmJe98DDiTqdgKkv8Y
+
 ETH: 0xea96AA397a799E77f5991A2568099698329C3D39
 
 ## FAQ and Issues
