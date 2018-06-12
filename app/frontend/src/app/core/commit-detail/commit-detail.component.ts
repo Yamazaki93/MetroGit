@@ -1,10 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { CommitDetail } from '../prototypes/commit';
 import { CommitSelectionService } from '../services/commit-selection.service';
 import { CiIntegrationService } from '../services/ci-integration.service';
 import { JiraIntegrationService } from '../../jira/services/jira-integration.service';
 import { LayoutService } from '../services/layout.service';
 import { FileDetail } from '../prototypes/file-detail';
+import { FileViewPanelComponent } from '../file-view-panel/file-view-panel.component';
 
 @Component({
   selector: 'app-commit-detail',
@@ -20,6 +21,13 @@ export class CommitDetailComponent implements OnInit {
   private selectedTab = "";
   private selectedFile = "";
   private fileDetail: FileDetail;
+  private set fileViewMode(m: string) {
+    this._mode = m;
+  }
+  private get fileViewMode() {
+    return this._mode;
+  }
+  private _mode = 'hunk';
   constructor(
     private selection: CommitSelectionService,
     private ci: CiIntegrationService,
@@ -34,7 +42,6 @@ export class CommitDetailComponent implements OnInit {
           this.selectedTab = 'info';
         }
       } else {
-        this.toggled = false;
         this.fileToggled = false;
       }
     });

@@ -27,7 +27,21 @@ function openReleaseNote(){
     win.maximize();
 }
 
+function openAboutPage() {
+    let win = new BrowserWindow({});
+    win.setMenu(null);
+    let address = url.format({
+        pathname: path.join(__dirname, '../frontend/dist/index.html'),
+        hash: `/about`,
+        protocol: 'file:',
+        slashes: true,
+    });
+    win.loadURL(address);
+    win.maximize();
+}
+
 module.exports = {
     init: init,
     openReleaseNote: openReleaseNote,
+    openAboutPage: openAboutPage
 }
