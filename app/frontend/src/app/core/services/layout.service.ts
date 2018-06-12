@@ -8,6 +8,7 @@ export class LayoutService {
   isRemoteShown = true;
   isTagsShown = true;
   isDetailPanelOpen = false;
+  isSubmoduleShown = true;
 
   set isNavToggled(val) {
     if (this._nav !== val) {

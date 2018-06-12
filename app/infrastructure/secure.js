@@ -24,11 +24,9 @@ function getPass(account) {
 }
 
 function setPass(account, password) {
-    if(account && password) {
-        return keytar.setPassword(app, account, password).catch(err => {
-            window.webContents.send('Secure-SetPasswordFailed', { error: 'GENERIC', detail: err });
-        });
-    }
+    return keytar.setPassword(app, account, password).catch(err => {
+        window.webContents.send('Secure-SetPasswordFailed', { error: 'GENERIC', detail: err });
+    });
 }
 
 function clearCache() {

@@ -1,0 +1,45 @@
+.key-selector-container{
+    cursor: pointer;
+    position: relative;
+    .form-control{
+        padding: 0 5px;
+    }
+    .edit-actions{
+        position: absolute;
+        padding: 3px;
+        border-radius: 3px;
+        background: rgba(0, 0, 0, 0.2);
+        right: 0;
+        top: 25px;
+    }
+    .issues{
+        z-index: 1;
+        position: absolute;
+        display: none;
+        top: 25px;
+        width: 100%;
+        background: #FFF;
+        border-radius: 3px;
+        border: solid 1px var(--gray);
+        color: var(--gray-dark);
+        overflow: hidden;
+        &.toggled{
+            display: block;
+        }
+        .issue{
+            width: 100%;
+            &:hover{
+                background: rgba(0, 0, 0, 0.2);
+            }
+        }
+        .issue-text{
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+    }
+}
+
+.flex-no-shrink{
+    flex-shrink: 0;
+}
