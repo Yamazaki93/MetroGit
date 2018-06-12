@@ -13,25 +13,14 @@ ipcMain.on('Updater', (event, arg) => {
         autoUpdater.downloadUpdate();
     }
 });
-ipcMain.on('Updater-Check', (event, arg) => {
-    checkUpdate();
-})
-autoUpdater.on('update-available', info => {
-    window.webContents.send('Updater-Checking', {inProgress: false});
-    window.webContents.send('Updater', {msg: 'update-available', version: info.version });
-});
-autoUpdater.on('update-not-available', () => {
-    window.webContents.send('Updater-Checking', {inProgress: false});
-    window.webContents.send('Updater', {msg: 'update-not-available'});
+autoUpdater.on('update-available', () => {
+    window.webContents.send('Updater', {msg: 'update-available'});
 });
 autoUpdater.on('download-progress', (progress) => {
     window.webContents.send('Updater', {msg: 'downloading-update', percentage: progress.percent});
 });
 autoUpdater.on('update-downloaded', () => {
     window.webContents.send('Updater', {msg: 'download-complete'});
-});
-autoUpdater.on('checking-for-update', () => {
-    window.webContents.send('Updater-Checking', {inProgress: true});
 });
 
 
@@ -40,14 +29,8 @@ function init(win, sett) {
     settings = sett;
     // auto check update 30 secs after init
     setTimeout(() => {
-        checkUpdate();
-    }, 30 * 1000);
-}
-
-function checkUpdate() {
-    if(window) {
         autoUpdater.checkForUpdates();
-    }
+    }, 30 * 1000);
 }
 
 module.exports = {

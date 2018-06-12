@@ -10,7 +10,6 @@ import { AddCommentPromptComponent } from './add-comment-prompt/add-comment-prom
 import { FormsModule } from '@angular/forms';
 import { ProfileSelectorComponent } from './profile-selector/profile-selector.component';
 import { ProfileFilterPipe } from './profile-selector/profile-filter';
-import { KeySelectorComponent } from './key-selector/key-selector.component';
 
 
 @NgModule({
@@ -27,6 +26,6 @@ import { KeySelectorComponent } from './key-selector/key-selector.component';
     AddCommentPromptComponent
   ],
   exports: [ JiraDetailComponent ],
-  declarations: [JiraDetailComponent, JiraRichTextComponent, TransitionControlComponent, AddCommentPromptComponent, ProfileSelectorComponent, ProfileFilterPipe, KeySelectorComponent]
+  declarations: [JiraDetailComponent, JiraRichTextComponent, TransitionControlComponent, AddCommentPromptComponent, ProfileSelectorComponent, ProfileFilterPipe]
 })
 export class JiraModule { }

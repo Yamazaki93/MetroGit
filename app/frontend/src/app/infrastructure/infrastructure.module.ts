@@ -9,14 +9,13 @@ import { PromptInjectorService } from './prompt-injector.service';
 import { StatusBarService } from './status-bar.service';
 import { UpdaterService } from './updater.service';
 import { ReleaseNoteComponent } from './release-note/release-note.component';
-import { AboutPageComponent } from './about-page/about-page.component';
 
 @NgModule({
   imports: [
     CommonModule
   ],
   exports: [LoadingScreenComponent, SpinnerComponent, IcheckComponent],
-  declarations: [LoadingScreenComponent, SpinnerComponent, IcheckComponent, ReleaseNoteComponent, AboutPageComponent],
+  declarations: [LoadingScreenComponent, SpinnerComponent, IcheckComponent, ReleaseNoteComponent],
   providers: [LoadingService, ElectronService, PromptInjectorService, StatusBarService, UpdaterService]
 })
 export class InfrastructureModule { }

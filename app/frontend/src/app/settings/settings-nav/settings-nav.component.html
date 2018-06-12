@@ -26,11 +26,6 @@
       <div class="setting-separator">
         Repository Settings: {{repoName}}
       </div>
-      <div class="setting-option-container action-button" (click)="this.route.navigateByUrl('settings/repo-profile')">
-        <h4>
-          <i class="icon-user mr-3"></i>Repo Profile
-        </h4>
-      </div>
       <div class="setting-option-container action-button" (click)="this.route.navigateByUrl('settings/ci')">
         <h4>
           <i class="icon-check-circle mr-3"></i>CI
@@ -46,10 +41,6 @@
         </h4>
       </div>
     </div>
-  </div>
-  <div class="setting-option-container action-button" (click)="this.route.navigateByUrl('settings/updater')">
-    <h4>
-      <i class="icon-refresh-cw mr-3"></i>Update</h4>
   </div>
   <div class="setting-option-container action-button" (click)="goToGitView()">
     <h4>

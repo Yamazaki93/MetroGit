@@ -8,11 +8,6 @@
   <span class="expand" [class.icon-chevron-up]="toggled" [class.icon-chevron-down]="!toggled" *ngIf="item.items"></span>
   <app-branch-item [collapse]="_collapse" [item]="subItem" *ngFor="let subItem of item.items; trackBy: trackBy"></app-branch-item>
 </div>
-<context-menu #branchMenu>
-  <ng-template contextMenuItem (execute)="onDeleteBranch($event.item)">
-    <span class="text-danger">Delete Branch</span>
-  </ng-template>
-</context-menu>
 <context-menu #tagMenu>
   <ng-template contextMenuItem (execute)="onDeleteTag($event.item.shorthand)">
     <span class="text-danger">Delete Tag</span>

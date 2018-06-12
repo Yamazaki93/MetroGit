@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, OnDestroy, ViewChild } from '@angular/core';
+import { Component, OnInit, Input, OnDestroy } from '@angular/core';
 import { CommitMessage } from '../models/commit-message';
 import { JiraIntegrationService } from '../services/jira-integration.service';
 import { Issue } from '../models/issue';
@@ -8,7 +8,6 @@ import { Subscription } from 'rxjs/Subscription';
 import * as moment from 'moment';
 import { PromptInjectorService } from '../../infrastructure/prompt-injector.service';
 import { AddCommentPromptComponent } from '../add-comment-prompt/add-comment-prompt.component';
-import { KeySelectorComponent } from '../key-selector/key-selector.component';
 
 @Component({
   selector: 'app-jira-detail',
@@ -17,18 +16,16 @@ import { KeySelectorComponent } from '../key-selector/key-selector.component';
 })
 export class JiraDetailComponent implements OnInit, OnDestroy {
 
-  @ViewChild('keySelector') keySelector: KeySelectorComponent;
   @Input() set commit(cmt: CommitMessage) {
-    if (cmt) {
-      let result = this.jira.parseKeyFromMessage(cmt.message, cmt.detail);
-      if (result.length > 0) {
-        this.currentIssueKey = result[0];
-        this.loading = true;
-        this.jira.getIssue(this.currentIssueKey);
-      }
-    } else if (!this.issue) {
+    let result = this.jira.parseKeyFromMessage(cmt.message, cmt.detail);
+    this.issue = null;
+    if (result.length > 0) {
+      this.currentIssueKey = result[0];
+      this.loading = true;
+      this.jira.getIssue(this.currentIssueKey);
+    } else {
+      this.issue = null;
       this.currentIssueKey = "";
-      this.keySelector.enableEditing();
     }
   }
   private currentIssueKey = "";
@@ -48,22 +45,24 @@ export class JiraDetailComponent implements OnInit, OnDestroy {
     this.subs.push(jira.issueRetrieved.subscribe(iss => {
       if (!iss) {
         this.loading = false;
-      }  else if (iss.key === this.currentIssueKey) {
+      } else if (!iss.fields.issuetype.subtask && iss.key === this.currentIssueKey) {
         this.issue = iss;
         this.formatCurrentIssue();
         this.querySubtasks();
         this.loading = false;
-      } else if (iss.fields.issuetype.subtask && this.issue && this.issue.fields.subtasks) {
-        let subtaskKeys = this.issue.fields.subtasks.map(sub => sub.key);
-        let index = subtaskKeys.indexOf(iss.key);
-        if (index !== -1) {
-          this.issue.fields.subtasks.forEach(task => {
-            if (task.key === iss.key) {
-              task.transitions = iss.transitions;
-              task.fields.status = iss.fields.status;
-            }
-          });
-          this.loading = false;
+      } else {
+        if (this.issue && this.issue.fields.subtasks) {
+          let subtaskKeys = this.issue.fields.subtasks.map(sub => sub.key);
+          let index = subtaskKeys.indexOf(iss.key);
+          if (index !== -1) {
+            this.issue.fields.subtasks.forEach(task => {
+              if (task.key === iss.key) {
+                task.transitions = iss.transitions;
+                task.fields.status = iss.fields.status;
+              }
+            });
+            this.loading = false;
+          }
         }
       }
     }));
@@ -133,9 +132,5 @@ export class JiraDetailComponent implements OnInit, OnDestroy {
     this.loading = true;
     this.jira.getIssue(this.currentIssueKey);
   }
-  loadIssue(key) {
-    this.loading = true;
-    this.currentIssueKey = key;
-    this.jira.getIssue(key);
-  }
+
 }
