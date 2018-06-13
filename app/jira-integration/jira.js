@@ -174,11 +174,20 @@ function addSubtask(event, arg) {
             "fields": {
                 "project": {
                     "id": arg.projectId
-                }
+                },
+                "parent": {
+                    "key": arg.key
+                },
+                "issuetype": {
+                    "id": "10102"
+                },
+                "summary": arg.name,
+                "description" : "description"
             }
         });
     }
 }
+
 function searchIssues(event, arg) {
     if (conn) {
         let url = `/search`;
