@@ -6,12 +6,12 @@
     <div class="full-width">
       <app-key-selector #keySelector (issueSelected)="loadIssue($event)" [currentIssueKey]="currentIssueKey"></app-key-selector>
     </div>
-    <div class="external-link mr-2"  *ngIf="issue" placement="left" ngbTooltip="Refresh" container="body" (click)="refreshIssue()">
+    <div class="external-link mr-2"  *ngIf="issue" placement="left" [ngbTooltip]="tooltip? 'Refresh' : ''" container="body" (click)="refreshIssue()">
       <h5>
         <i class="icon-refresh-cw"></i>
       </h5>
     </div>
-    <div class="external-link" *ngIf="issue" placement="left" ngbTooltip="Open in JIRA" container="body" (click)="openIssue()">
+    <div class="external-link" *ngIf="issue" placement="left" [ngbTooltip]="tooltip? 'Open in JIRA' : ''" container="body" (click)="openIssue()">
       <h5>
         <i class="icon-external-link"></i>
       </h5>

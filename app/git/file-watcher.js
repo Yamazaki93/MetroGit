@@ -278,6 +278,9 @@ function getFileLines(commit, path) {
             return Promise.reject('PATH_NOT_FILE');
         }
     }).then(blob => {
+        if(blob.isBinary()) {
+            return [{op: "binary", content: "Binary File Content", oldLineno: -1, newLineno: -1}]
+        }
         let lines = blob.toString().split(/\r?\n/);
         let hunkLike = lines.map((l, index) => {
             return {
