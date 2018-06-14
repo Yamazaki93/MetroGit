@@ -1,9 +1,9 @@
 <form class="form-inline" name="credentialForm">
   <h5 class="mr-2">Select resolution for {{key}}</h5>
   <div class="form-group mr-2">
-    <div class="input-group">
+    <div class="input-group mb-2">
       <select [(ngModel)]="_resolution" class="form-control" name="resolution">
-        <option *ngFor="let c of resolutions" [ngValue]="c.id">{{c.name}}</option>
+        <option *ngFor="let c of resolutions" [ngValue]="c.name">{{c.name}}</option>
       </select>
     </div>
   </div>
