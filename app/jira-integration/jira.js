@@ -62,6 +62,7 @@ function initJira(event, arg) {
                     return Promise.reject(error);
                 });
                 getResolution();
+                getIssueTypes();
             } else {
                 conn = null;
             }
@@ -179,7 +180,7 @@ function addSubtask(event, arg) {
                     "key": arg.key
                 },
                 "issuetype": {
-                    "id": "10102"
+                    "id": arg.subtaskId
                 },
                 "summary": arg.name,
                 "description" : "description"

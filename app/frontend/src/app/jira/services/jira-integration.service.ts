@@ -116,7 +116,7 @@ export class JiraIntegrationService {
     this.electron.ipcRenderer.send('JIRA-AssignIssue', { key: key, name: name });
   }
   addSubtask(key, name, projectId) {
-    this.electron.ipcRenderer.send('JIRA-AddSubtask', { key: key, name: name, projectId: projectId});
+    this.electron.ipcRenderer.send('JIRA-AddSubtask', { key: key, name: name, projectId: projectId, subtaskId: this.subtaskType.id});
   }
   searchIssuesByKey(keyQuery, fields?) {
     let jql = `key = "${keyQuery}"`;
