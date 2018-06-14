@@ -1,0 +1,10 @@
+<h5>
+  <span class="mr-2 commit-summary text-warning" placement="bottom" [ngbTooltip]="tooltip? 'Modified' : ''" container="body" *ngIf="modified" (click)="modifiedClicked.emit()">
+    <i class="icon-file-text"></i>{{modified}}</span>
+  <span class="mr-2 commit-summary text-success" placement="bottom" [ngbTooltip]="tooltip? 'Added' : ''" container="body" *ngIf="newCount" (click)="newClicked.emit()">
+    <i class="icon-file-plus"></i>{{newCount}}</span>
+  <span class="mr-2 commit-summary text-danger" placement="bottom" [ngbTooltip]="tooltip? 'Deleted' : ''" container="body" *ngIf="deleted" (click)="deletedClicked.emit()">
+    <i class="icon-file-minus"></i>{{deleted}}</span>
+  <span class="mr-2 commit-summary text-primary" placement="bottom" [ngbTooltip]="tooltip? 'Renamed' : ''" container="body" *ngIf="renamed" (click)="renamedClicked.emit()">
+    <i class="icon-file"></i>{{renamed}}</span>
+</h5>

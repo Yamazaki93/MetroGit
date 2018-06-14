@@ -1,5 +1,6 @@
 import { Injectable, EventEmitter, Output } from '@angular/core';
 import { HotkeysService, Hotkey } from 'angular2-hotkeys';
+import { ElectronService } from '../../infrastructure/electron.service';
 
 @Injectable()
 export class LayoutService {
@@ -8,6 +9,15 @@ export class LayoutService {
   isRemoteShown = true;
   isTagsShown = true;
   isDetailPanelOpen = false;
+  isSubmoduleShown = true;
+
+  set tooltipEnabled(tp) {
+    this._tooltip = tp;
+    this.tooltipChanged.emit(tp);
+  }
+  get tooltipEnabled() {
+    return this._tooltip;
+  }
 
   set isNavToggled(val) {
     if (this._nav !== val) {
@@ -30,12 +40,15 @@ export class LayoutService {
 
   @Output() filePanelChanged = new EventEmitter<boolean>();
   @Output() navPanelChanged = new EventEmitter<boolean>();
+  @Output() tooltipChanged = new EventEmitter<boolean>();
 
   private _file = false;
   private _nav = true;
+  private _tooltip = true;
 
   constructor(
-    private hotkeys: HotkeysService
+    private hotkeys: HotkeysService,
+    private electron: ElectronService,
   ) {
     this.hotkeys.add(new Hotkey('shift+left', (event: KeyboardEvent): boolean => {
       this.isNavToggled = false;
@@ -45,6 +58,9 @@ export class LayoutService {
       this.isNavToggled = true;
       return false;
     }, undefined, "Expand left panel"));
+    this.electron.onCD('Settings-EffectiveUpdated', (event, arg) => {
+      this.tooltipEnabled = arg['gen-tooltip'] === "" ? true : Boolean(arg['gen-tooltip']);
+    });
   }
 
 }

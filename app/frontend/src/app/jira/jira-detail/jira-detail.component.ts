@@ -10,6 +10,7 @@ import { PromptInjectorService } from '../../infrastructure/prompt-injector.serv
 import { AddCommentPromptComponent } from '../add-comment-prompt/add-comment-prompt.component';
 import { SubtaskPromptComponent } from '../subtask-prompt/subtask-prompt.component';
 import { KeySelectorComponent } from '../key-selector/key-selector.component';
+import { LayoutService } from '../../core/services/layout.service';
 
 @Component({
   selector: 'app-jira-detail',
@@ -39,12 +40,14 @@ export class JiraDetailComponent implements OnInit, OnDestroy {
   private reporterIconUrl: SafeUrl;
   private assigneeIconUrl: SafeUrl;
   private loading = false;
+  private tooltip = true;
   private subs: Subscription[] = [];
   constructor(
     private electron: ElectronService,
     private jira: JiraIntegrationService,
     private sanitizer: DomSanitizer,
     private promptInj: PromptInjectorService,
+    private layout: LayoutService
   ) {
     this.subs.push(jira.issueRetrieved.subscribe(iss => {
       if (!iss) {
@@ -68,6 +71,10 @@ export class JiraDetailComponent implements OnInit, OnDestroy {
         }
       }
     }));
+    layout.tooltipChanged.subscribe(tp => {
+      this.tooltip = tp;
+    });
+    this.tooltip = layout.tooltipEnabled;
   }
 
   ngOnInit() {

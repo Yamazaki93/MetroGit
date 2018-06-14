@@ -1,0 +1,49 @@
+$primary-color: #FFF;
+
+:host{
+    height: 100%;
+    position: absolute;
+    top: 0;
+    background-color: var(--gray-dark);
+}
+
+.panel-container{
+    box-shadow: 0 0 8px rgba(0, 0, 0, 0.8);
+    width: 0px;
+    color: $primary-color;
+    height: 100%;
+    position: relative;
+    overflow: hidden;
+    &.toggled{
+        width: 600px;
+    }
+
+    .close-btn-container{
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        .close-btn{
+            cursor: pointer;
+        }
+        i{
+            font-size: 30px;
+        }
+    }
+    .message-title-container {
+        background: rgba(0, 0, 0, 0.2);
+        border-bottom: solid 2px #222;
+        h5 {
+            margin: 0;
+        }
+        user-select: initial;
+    }
+    .message-container {
+        height: 100%;
+    }
+    .message-content-container {
+        background: rgba(0, 0, 0, 0.2);
+        overflow-y: auto;
+        user-select: initial;
+        height: 100%;
+    }
+}

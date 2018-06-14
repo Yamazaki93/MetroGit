@@ -2,6 +2,7 @@ import { Component, OnInit, Input } from '@angular/core';
 import { CommitDetail } from '../prototypes/commit';
 import { CiIntegrationService } from '../services/ci-integration.service';
 import { AppveyorCiService } from '../services/appveyor-ci.service';
+import { LayoutService } from '../services/layout.service';
 
 @Component({
   selector: 'app-commit-detail-ci',
@@ -15,6 +16,7 @@ export class CommitDetailCiComponent implements OnInit {
   private showAppveyor = false;
   private appveyorOutput = "";
   private loadingAppveyor = false;
+  private tooltip = true;
 
   @Input() set selectedCommit(cmt: CommitDetail) {
     this.commit = cmt;
@@ -25,7 +27,8 @@ export class CommitDetailCiComponent implements OnInit {
   }
   constructor(
     private ci: CiIntegrationService,
-    private appveyor: AppveyorCiService
+    private appveyor: AppveyorCiService,
+    private layout: LayoutService
   ) {
     ci.buildsUpdated.subscribe(builds => {
       if (this.commit && builds[this.commit.sha]) {
@@ -37,6 +40,10 @@ export class CommitDetailCiComponent implements OnInit {
       this.loadingAppveyor = false;
       this.appveyorOutput = log.output;
     });
+    layout.tooltipChanged.subscribe(tp => {
+      this.tooltip = tp;
+    });
+    this.tooltip = layout.tooltipEnabled;
   }
 
   updateBuildResult(result) {

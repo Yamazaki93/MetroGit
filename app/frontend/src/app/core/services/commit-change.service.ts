@@ -14,6 +14,11 @@ export class CommitChangeService {
   @Output() messageChange = new EventEmitter<string>();
   @Output() detailChange = new EventEmitter<string>();
   @Output() stashed = new EventEmitter();
+  @Output() commitingChange = new EventEmitter<boolean>();
+  private set commiting(cmting: boolean) {
+    this._commiting = cmting;
+    this.commitingChange.emit(this._commiting);
+  }
   defaultKey = "";
   set newCommitMessage(msg) {
     this._message = msg;
@@ -31,6 +36,7 @@ export class CommitChangeService {
   }
   private _message = "";
   private _detail = "";
+  private _commiting = false;
   private selectedCommit: WIPCommit;
   constructor(
     private electron: ElectronService,
@@ -44,9 +50,11 @@ export class CommitChangeService {
     this.electron.onCD('Repo-Committed', (event, arg) => {
       this.newCommitMessage = "";
       this.newCommitDetail = "";
+      this.commiting = false;
     });
     this.electron.onCD('Repo-CommitFail', (event, arg) => {
       this.noti.error("Commit Error", "An error occured during commit, please try again");
+      this.commiting = false;
     });
     this.electron.onCD('Settings-EffectiveUpdated', (event, arg) => {
       if (arg['jira-enabled'] && arg['jira-keys']) {
@@ -147,7 +155,8 @@ export class CommitChangeService {
     this.electron.ipcRenderer.send('Repo-DiscardAll', {});
   }
   tryCommit(): void {
-    if (this.newCommitMessage.length && this.selectedCommit) {
+    if (this.newCommitMessage.length && this.selectedCommit && !this.commiting) {
+      this.commiting = true;
       if (this.selectedCommit.staged.length) {
         this.commitStaged();
       } else {

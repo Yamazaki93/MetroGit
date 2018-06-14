@@ -5,14 +5,14 @@
     </a>
   </div>
   <app-action-toolbar *ngIf="repoName !== ''"></app-action-toolbar>
-  <div class="repo-info-container toggle-visible action-button smooth" placement="right" ngbTooltip="Current Repository: {{repoName}}"
+  <div class="repo-info-container toggle-visible action-button smooth" placement="right" [ngbTooltip]="tooltip? 'Current Repository: ' + repoName : ''"
     container="body" (click)="toggleOpenRepo()">
     <h4>
       <i class="icon-folder mr-3"></i>
       <span class="nav-text">{{repoName}}</span>
     </h4>
   </div>
-  <div class="repo-info-container smooth action-button" placement="right" ngbTooltip="Current Branch" container="body" *ngIf="branchName !== ''"
+  <div class="repo-info-container smooth action-button" placement="right" [ngbTooltip]="tooltip? 'Current Branch' : ''" container="body" *ngIf="branchName !== ''"
     (click)="goToCurrentBranch()">
     <h4>
       <i class="icon-git-branch mr-3"></i>{{branchName}}</h4>
@@ -60,13 +60,26 @@
         </a>
         <app-branch-list [branches]="tags" [itemIcon]="'tag'"></app-branch-list>
       </li>
+      <li *ngIf="repoName !== ''" class="expandable smooth" [class.toggled]="showSubmodules">
+        <a class="smooth-1 action-button" (click)="toggleSubm()">
+          <h4>
+            <span class="icon-box mr-3"></span>
+            <span class="nav-text">Submodules</span>
+          </h4>
+        </a>
+        <app-branch-list [branches]="submoduleNames" [itemIcon]="'box'"></app-branch-list>
+      </li>
     </ul>
   </div>
-  <div class="repo-info-container toggle-visible action-button smooth" (click)="goToSettings()">
+  <div class="repo-info-container toggle-visible action-button smooth" (click)="goToSettings()"  placement="right" [ngbTooltip]="updateAvailable? 'Update available' : ''" container="body">
     <h4>
-      <i class="icon-settings mr-3 text-primary"></i>
+      <i class="icon-settings mr-3"></i>
       <span class="nav-text">Settings</span>
     </h4>
+    <div class="badge bg-primary" *ngIf="updateAvailable">
+      !
+    </div>
   </div>
 </div>
 <app-open-repo-panel class="smooth" [class.toggled]="toggled" #openRepoPanel></app-open-repo-panel>
+<app-submodule-details-panel class="smooth" [class.toggled]="toggled" #submodulePanel></app-submodule-details-panel>

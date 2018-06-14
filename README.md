@@ -58,6 +58,12 @@ Hi there, if you like this app, find it useful or just like this subway map, I'd
 
 Also, please consider <a class="bmc-button" target="_blank" href="https://www.buymeacoffee.com/mjCsGWDTS"><img src="https://www.buymeacoffee.com/assets/img/BMC-btn-logo.svg" alt="Buy me a tea"><span style="margin-left:5px">Buy me a tea</span></a>, I live on black tea basically 😉
 
+Or, alternatively
+
+BTC: 3CAgw9vNPNXHR1YaWmJe98DDiTqdgKkv8Y
+
+ETH: 0xea96AA397a799E77f5991A2568099698329C3D39
+
 ## FAQ and Issues
 
 Checkout the Wiki [FAQ Page](https://github.com/Yamazaki93/MetroGit/wiki/FAQ) for frequently asked questions. If you've found a bug, security issue or want to suggest a feature, feel free to post them to the Issues section (please search for existing issues and FAQ before posting new ones 🙂)
