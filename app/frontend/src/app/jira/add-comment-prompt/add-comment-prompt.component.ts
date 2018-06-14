@@ -13,7 +13,6 @@ export class AddCommentPromptComponent implements OnInit, Prompt {
   key: string;
 
   @Output() canceling = new EventEmitter();
-  @Output() adding = new EventEmitter();
   private comment = "";
   constructor(
     private jira: JiraIntegrationService
@@ -25,7 +24,6 @@ export class AddCommentPromptComponent implements OnInit, Prompt {
   enter() {
     this.jira.addComment(this.key, this.comment);
     this.toClose.emit();
-    this.adding.emit();
   }
 
   close() {

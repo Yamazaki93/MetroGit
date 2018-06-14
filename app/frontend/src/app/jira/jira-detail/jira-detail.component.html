@@ -22,7 +22,8 @@
       <object [data]="issueIconUrl" style="width: 30px;"></object>
     </div>
     <div class="full-width selectable">
-      <h5>{{issue.fields.summary}}</h5>
+      <!-- <h5>{{issue.fields.summary}}</h5> -->
+      <app-title-editor (toConfirm)="updateTitle()" [(text)]="issue.fields.summary"></app-title-editor>
     </div>
 
   </div>
@@ -56,7 +57,12 @@
     </div>
   </div>
   <div class="mt-3 full-width flex-no-shrink" *ngIf="issue && issue.fields.subtasks && !issue.fields.issuetype.subtask">
-    <h5>Subtasks</h5>
+    <div class="d-flex">
+      <h5>Subtasks</h5>
+      <div class="external-link  ml-2" style="padding-top: 3px;" (click)="addSubtask()">
+        <i class="icon-plus"></i>
+      </div>
+    </div>
     <div class="subtasks">
       <div class="mt-1 subtask d-flex p-2 justify-content-stretch bg-dark" *ngFor="let subtask of issue.fields.subtasks">
         <div class="subtask-priority mr-2">

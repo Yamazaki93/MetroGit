@@ -11,6 +11,7 @@ export interface Issue extends KeyedItem {
     fields: {
         issuetype: IssueType;
         project: {
+            id: string;
             key: string;
             name: string;
             avatarUrls: {
