@@ -185,6 +185,8 @@ function addSubtask(event, arg) {
                 "summary": arg.name,
                 "description" : "description"
             }
+        }).then(result => {
+            getIssue(event, arg);
         });
     }
 }
