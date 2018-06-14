@@ -1,0 +1,12 @@
+<form class="form-inline" name="credentialForm">
+  <h5 class="mr-2">Select resolution for {{key}}</h5>
+  <div class="form-group mr-2">
+    <div class="input-group">
+      <select [(ngModel)]="_resolution" class="form-control" name="resolution">
+        <option *ngFor="let c of resolutions" [ngValue]="c.id">{{c.name}}</option>
+      </select>
+    </div>
+  </div>
+  <a class="btn btn-primary btn-sm mb-2 mr-2" (click)="enter()">Submit</a>
+  <a class="btn btn-secondary btn-sm mb-2" (click)="close()">Cancel</a>
+</form>
