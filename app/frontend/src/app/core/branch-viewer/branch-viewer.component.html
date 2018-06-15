@@ -71,7 +71,7 @@
       </li>
     </ul>
   </div>
-  <div class="repo-info-container toggle-visible action-button smooth" (click)="goToSettings()"  placement="right" [ngbTooltip]="updateAvailable? 'Update available' : ''" container="body">
+  <div class="repo-info-container toggle-visible action-button smooth" (click)="goToSettings()"  placement="right" [ngbTooltip]="updateAvailable && tooltip ? 'Update available' : ''" container="body">
     <h4>
       <i class="icon-settings mr-3"></i>
       <span class="nav-text">Settings</span>
