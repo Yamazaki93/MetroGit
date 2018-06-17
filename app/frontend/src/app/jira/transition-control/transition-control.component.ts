@@ -39,7 +39,7 @@ export class TransitionControlComponent implements OnInit {
     let selectResolution = false;
     this.transitions.forEach(t => {
       if (t.id === transitionID && t.to.statusCategory.key === 'done') {
-        if (t.fields.resolution.required) {
+        if (t.fields.resolution && t.fields.resolution.required) {
           let pmpt = this.prompt.injectComponent(ResolutionSelectorComponent);
           pmpt.key = this.key;
           selectResolution = true;
