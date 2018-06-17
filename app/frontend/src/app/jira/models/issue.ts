@@ -41,4 +41,7 @@ export interface Issue extends KeyedItem {
         storyPoints?: number;
     };
     transitions: Transition[];
+    editmeta: {
+        fields: any;
+    };
 }

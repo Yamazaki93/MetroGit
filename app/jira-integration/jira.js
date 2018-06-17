@@ -72,9 +72,9 @@ function initJira(event, arg) {
 
 function getIssue(event, arg) {
     if (conn) {
-        return Promise.all([getJiraIssue(arg.key), getJiraIssueMeta(arg.key)]).then(result => {
-            checkStoryFields(result[0]);
-            event.sender.send('JIRA-IssueRetrieved', { issue: result[0].data, meta: result[1] })
+        return getJiraIssue(arg.key).then(result => {
+            checkStoryFields(result);
+            event.sender.send('JIRA-IssueRetrieved', { issue: result.data})
         })
     }
 }
@@ -92,22 +92,12 @@ function addComment(event, arg) {
 
 function getJiraIssue(key) {
     if (conn) {
-        return conn.get(`/issue/${key}?expand=renderedFields,names,transitions`).then(result => {
+        return conn.get(`/issue/${key}?expand=renderedFields,names,transitions,transitions.fields`).then(result => {
             result.data.fields.description = result.data.renderedFields.description;
             return result;
         });
     } else {
         return Promise.reject('NO_CONN');
-    }
-}
-
-function getJiraIssueMeta(key){
-    if(conn){
-        return conn.get(`/issue/${key}/editmeta`).then(result => {
-            return result.data;
-        })
-    } else {
-        return Promise.reject('NO_CONN')
     }
 }
 

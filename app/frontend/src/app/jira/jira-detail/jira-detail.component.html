@@ -71,7 +71,7 @@
         <div class="flex-no-shrink">
           <!-- <div class="p-1 rounded" [class.bg-dark]="subtask.fields.status.statusCategory.colorName!=='green' && subtask.fields.status.statusCategory.colorName!=='yellow' "
             [class.bg-success]="subtask.fields.status.statusCategory.colorName==='green'" [class.bg-primary]="subtask.fields.status.statusCategory.colorName==='yellow'">{{subtask.fields.status.name}}</div> -->
-          <app-transition-control (transitioning)="onTransitioning()" [key]="subtask.key" [padding]="1" [status]="subtask.fields.status"
+          <app-transition-control (transitioning)="onRequestPosted()" [key]="subtask.key" [padding]="1" [status]="subtask.fields.status"
             [transitions]="subtask.transitions"></app-transition-control>
 
         </div>

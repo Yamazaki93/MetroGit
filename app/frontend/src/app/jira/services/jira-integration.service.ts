@@ -17,7 +17,6 @@ export class JiraIntegrationService {
   @Output() resolutionRetrieved: EventEmitter<Resolution[]> = new EventEmitter<Resolution[]>();
   enabled = false;
   private jiraKeys = [];
-  resolutionEnabled = false;
   resolutions = [];
   constructor(
     private electron: ElectronService,
@@ -37,7 +36,6 @@ export class JiraIntegrationService {
     });
     electron.onCD('JIRA-IssueRetrieved', (event, arg) => {
       this.issueRetrieved.emit(arg.issue);
-      this.resolutionEnabled = arg.meta.resolution !== undefined;
     });
     electron.onCD('JIRA-ResolutionsRetrieved', (event, arg) => {
       this.resolutions = arg.resolutions;
