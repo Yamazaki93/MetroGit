@@ -8,6 +8,7 @@ import { Subscription } from 'rxjs/Subscription';
 import * as moment from 'moment';
 import { PromptInjectorService } from '../../infrastructure/prompt-injector.service';
 import { AddCommentPromptComponent } from '../add-comment-prompt/add-comment-prompt.component';
+import { SubtaskPromptComponent } from '../subtask-prompt/subtask-prompt.component';
 import { KeySelectorComponent } from '../key-selector/key-selector.component';
 import { LayoutService } from '../../core/services/layout.service';
 
@@ -129,7 +130,7 @@ export class JiraDetailComponent implements OnInit, OnDestroy {
     this.loading = true;
   }
   addComment() {
-    this.loading = true;
+    this.delayEnableLoading();
     let comp = this.promptInj.injectComponent(AddCommentPromptComponent);
     comp.key = this.currentIssueKey;
     comp.canceling.subscribe(closingPromptForm => {
@@ -139,6 +140,28 @@ export class JiraDetailComponent implements OnInit, OnDestroy {
   refreshIssue() {
     this.loading = true;
     this.jira.getIssue(this.currentIssueKey);
+  }
+  addSubtask() {
+    this.delayEnableLoading();
+    let elem = this.promptInj.injectComponent(SubtaskPromptComponent);
+    elem.key = this.issue.key;
+    elem.toCancel.subscribe(() => {
+      this.loading = false;
+    });
+    elem.toEnter.subscribe(name => {
+      this.jira.addSubtask(this.currentIssueKey, name, this.issue.fields.project.id);
+    });
+  }
+  updateTitle() {
+    this.loading = true;
+    this.jira.updateIssue(this.issue.key, {summary: this.issue.fields.summary}, null);
+  }
+
+  private delayEnableLoading() {
+    let that = this;
+    setTimeout(() => {
+      that.loading = true;
+    }, 400);
   }
   loadIssue(key) {
     this.loading = true;

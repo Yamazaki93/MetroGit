@@ -4,6 +4,7 @@ import { Issue } from '../models/issue';
 import { NotificationsService } from 'angular2-notifications';
 import { StatusBarService } from '../../infrastructure/status-bar.service';
 import { Profile } from '../models/profile';
+import { IssueType } from '../models/issue-type';
 import { Resolution } from '../models/resolution';
 
 @Injectable()
@@ -17,7 +18,9 @@ export class JiraIntegrationService {
   @Output() resolutionRetrieved: EventEmitter<Resolution[]> = new EventEmitter<Resolution[]>();
   enabled = false;
   private jiraKeys = [];
-  resolutions = [];
+  resolutions: Resolution[] = [];
+  private issueTypes: IssueType[] = [];
+  private subtaskType: IssueType;
   constructor(
     private electron: ElectronService,
     private noti: NotificationsService,
@@ -41,6 +44,10 @@ export class JiraIntegrationService {
       this.resolutions = arg.resolutions;
       this.resolutionRetrieved.emit(this.resolutions);
     });
+    electron.onCD('JIRA-IssueTypesRetrieved', (event, arg) => {
+      this.issueTypes = arg.issueTypes;
+      this.subtaskType = arg.subtaskType;
+    });
     electron.onCD('JIRA-Error', (event, arg) => {
       noti.error("Error", "Your JIRA setup doesn't seemed to be correct, please enter the correct settings");
     });
@@ -49,6 +56,7 @@ export class JiraIntegrationService {
     });
     electron.onCD('JIRA-OperationFailed', (event, arg) => {
       noti.error("Failed", "Operation failed, please reload this issue and try again");
+      this.issueRetrieved.emit(null);
     });
     electron.onCD('JIRA-NotFound', (event, arg) => {
       noti.warn("Not Found", "JIRA issue not found, server returned 404");
@@ -108,6 +116,9 @@ export class JiraIntegrationService {
   }
   assignIssue(key, name) {
     this.electron.ipcRenderer.send('JIRA-AssignIssue', { key: key, name: name });
+  }
+  addSubtask(key, name, projectId) {
+    this.electron.ipcRenderer.send('JIRA-AddSubtask', { key: key, name: name, projectId: projectId, subtaskId: this.subtaskType.id});
   }
   searchIssuesByKey(keyQuery, fields?) {
     let jql = `key = "${keyQuery}"`;
