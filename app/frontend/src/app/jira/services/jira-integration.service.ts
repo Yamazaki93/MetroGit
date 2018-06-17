@@ -15,9 +15,10 @@ export class JiraIntegrationService {
   @Output() enabledChanged = new EventEmitter<boolean>();
   @Output() assignableRetrieved = new EventEmitter<{ key: string, result: Profile[] }>();
   @Output() issueQueryRetrieved: EventEmitter<Issue[]> = new EventEmitter<Issue[]>();
+  @Output() resolutionRetrieved: EventEmitter<Resolution[]> = new EventEmitter<Resolution[]>();
   enabled = false;
   private jiraKeys = [];
-  private resolutions: Resolution[] = [];
+  resolutions: Resolution[] = [];
   private issueTypes: IssueType[] = [];
   private subtaskType: IssueType;
   constructor(
@@ -41,6 +42,7 @@ export class JiraIntegrationService {
     });
     electron.onCD('JIRA-ResolutionsRetrieved', (event, arg) => {
       this.resolutions = arg.resolutions;
+      this.resolutionRetrieved.emit(this.resolutions);
     });
     electron.onCD('JIRA-IssueTypesRetrieved', (event, arg) => {
       this.issueTypes = arg.issueTypes;

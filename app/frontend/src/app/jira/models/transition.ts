@@ -8,4 +8,5 @@ export interface Transition {
     isGlobal: boolean;
     isInitial: boolean;
     isConditional: boolean;
+    fields: any;
 }

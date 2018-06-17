@@ -76,7 +76,7 @@ function getIssue(event, arg) {
     if (conn) {
         return getJiraIssue(arg.key).then(result => {
             checkStoryFields(result);
-            event.sender.send('JIRA-IssueRetrieved', { issue: result.data })
+            event.sender.send('JIRA-IssueRetrieved', { issue: result.data})
         })
     }
 }
@@ -94,7 +94,7 @@ function addComment(event, arg) {
 
 function getJiraIssue(key) {
     if (conn) {
-        return conn.get(`/issue/${key}?expand=renderedFields,names,transitions`).then(result => {
+        return conn.get(`/issue/${key}?expand=renderedFields,names,transitions,transitions.fields`).then(result => {
             result.data.fields.description = result.data.renderedFields.description;
             return result;
         });

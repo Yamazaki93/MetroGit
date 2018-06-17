@@ -13,6 +13,7 @@ import { ProfileFilterPipe } from './profile-selector/profile-filter';
 import { SubtaskPromptComponent } from './subtask-prompt/subtask-prompt.component';
 import { TitleEditorComponent } from './title-editor/title-editor.component';
 import { KeySelectorComponent } from './key-selector/key-selector.component';
+import { ResolutionSelectorComponent } from './resolution-selector/resolution-selector.component';
 
 
 @NgModule({
@@ -27,9 +28,10 @@ import { KeySelectorComponent } from './key-selector/key-selector.component';
   ],
   entryComponents: [
     AddCommentPromptComponent,
-    SubtaskPromptComponent
+    SubtaskPromptComponent,
+    ResolutionSelectorComponent
   ],
   exports: [ JiraDetailComponent ],
-  declarations: [JiraDetailComponent, JiraRichTextComponent, TransitionControlComponent, AddCommentPromptComponent, ProfileSelectorComponent, ProfileFilterPipe, KeySelectorComponent, SubtaskPromptComponent, TitleEditorComponent]
+  declarations: [JiraDetailComponent, JiraRichTextComponent, TransitionControlComponent, AddCommentPromptComponent, ProfileSelectorComponent, ProfileFilterPipe, KeySelectorComponent, SubtaskPromptComponent, TitleEditorComponent, ResolutionSelectorComponent]
 })
 export class JiraModule { }

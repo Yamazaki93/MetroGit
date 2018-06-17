@@ -2,6 +2,8 @@ import { Component, OnInit, Input, EventEmitter, Output, HostBinding, ElementRef
 import { Status } from '../models/status';
 import { Transition } from '../models/transition';
 import { JiraIntegrationService } from '../services/jira-integration.service';
+import { PromptInjectorService } from '../../infrastructure/prompt-injector.service';
+import { ResolutionSelectorComponent } from '../resolution-selector/resolution-selector.component';
 
 @Component({
   selector: 'app-transition-control',
@@ -20,6 +22,7 @@ export class TransitionControlComponent implements OnInit {
   constructor(
     private jira: JiraIntegrationService,
     private eref: ElementRef,
+    private prompt: PromptInjectorService,
   ) {
   }
 
@@ -33,8 +36,24 @@ export class TransitionControlComponent implements OnInit {
   }
 
   doTransition(transitionID) {
-    this.transitioning.emit();
-    this.jira.updateIssue(this.key, null, {"id": transitionID});
+    let selectResolution = false;
+    this.transitions.forEach(t => {
+      if (t.id === transitionID && t.to.statusCategory.key === 'done') {
+        if (t.fields.resolution && t.fields.resolution.required) {
+          let pmpt = this.prompt.injectComponent(ResolutionSelectorComponent);
+          pmpt.key = this.key;
+          selectResolution = true;
+          pmpt.toEnter.subscribe(resolution => {
+            this.transitioning.emit();
+            this.jira.updateIssue(this.key, { "resolution": { "name": resolution } }, { "id": transitionID });
+          });
+        }
+      }
+    });
+    if (!selectResolution) {
+      this.transitioning.emit();
+      this.jira.updateIssue(this.key, null, { "id": transitionID });
+    }
   }
 
 }
