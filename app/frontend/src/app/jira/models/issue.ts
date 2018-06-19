@@ -11,6 +11,7 @@ export interface Issue extends KeyedItem {
     fields: {
         issuetype: IssueType;
         project: {
+            id: string;
             key: string;
             name: string;
             avatarUrls: {
@@ -41,4 +42,7 @@ export interface Issue extends KeyedItem {
         storyPoints?: number;
     };
     transitions: Transition[];
+    editmeta: {
+        fields: any;
+    };
 }

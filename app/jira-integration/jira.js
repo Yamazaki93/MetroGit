@@ -15,6 +15,7 @@ ipcMain.on('JIRA-UpdateIssue', requireArgParams(updateIssue, ['key', 'data']));
 ipcMain.on('JIRA-AddComment', requireArgParams(addComment, ['key', 'body']));
 ipcMain.on('JIRA-GetAssignableUsers', requireArgParams(findAssignableUsers, ['key']));
 ipcMain.on('JIRA-AssignIssue', requireArgParams(assignIssue, ['key', 'name']));
+ipcMain.on('JIRA-AddSubtask', requireArgParams(addSubtask, ['key', 'name']));
 ipcMain.on('JIRA-SearchIssues', requireArgParams(searchIssues, ['jql']));
 
 function init(sett, sec, win) {
@@ -47,7 +48,7 @@ function initJira(event, arg) {
                         } else if (error.response.status === 404) {
                             window.webContents.send('JIRA-NotFound', {});
                             return Promise.reject(error);
-                        } else if(error.request.path.indexOf('search') !== -1) {
+                        } else if (error.request.path.indexOf('search') !== -1) {
                             // swallow search errors
                             return Promise.resolve('QUERY_ISSUE');
                         } else {
@@ -61,6 +62,7 @@ function initJira(event, arg) {
                     return Promise.reject(error);
                 });
                 getResolution();
+                getIssueTypes();
             } else {
                 conn = null;
             }
@@ -74,7 +76,7 @@ function getIssue(event, arg) {
     if (conn) {
         return getJiraIssue(arg.key).then(result => {
             checkStoryFields(result);
-            event.sender.send('JIRA-IssueRetrieved', { issue: result.data })
+            event.sender.send('JIRA-IssueRetrieved', { issue: result.data})
         })
     }
 }
@@ -92,7 +94,7 @@ function addComment(event, arg) {
 
 function getJiraIssue(key) {
     if (conn) {
-        return conn.get(`/issue/${key}?expand=renderedFields,names,transitions`).then(result => {
+        return conn.get(`/issue/${key}?expand=renderedFields,names,transitions,transitions.fields`).then(result => {
             result.data.fields.description = result.data.renderedFields.description;
             return result;
         });
@@ -104,14 +106,34 @@ function getJiraIssue(key) {
 function getResolution() {
     if (conn) {
         return conn.get(`/resolution`).then(result => {
-            window.webContents.send('JIRA-ResolutionsRetrieved', { resolutions: result });
+            window.webContents.send('JIRA-ResolutionsRetrieved', { resolutions: result.data });
+        })
+    }
+}
+
+function getIssueTypes() {
+    if (conn) {
+        return conn.get('/issuetype').then(result => {
+            let subtaskType;
+            result.data.forEach(issueType => {
+                if (issueType.subtask) {
+                    subtaskType = issueType;
+                }
+            })
+            window.webContents.send('JIRA-IssueTypesRetrieved', { issueTypes: result.data, subtaskType: subtaskType })
         })
     }
 }
 
 function updateIssue(event, arg) {
     if (conn) {
-        return conn.post(`/issue/${arg.key}/transitions`, arg.data).then(result => {
+        let req;
+        if (arg.data.transition) {
+            req = conn.post(`/issue/${arg.key}/transitions`, arg.data);
+        } else {
+            req = conn.put(`/issue/${arg.key}`, arg.data);
+        }
+        return req.then(result => {
             return getIssue(event, arg);
         })
     }
@@ -142,6 +164,28 @@ function findAssignableUsers(event, arg) {
 function assignIssue(event, arg) {
     if (conn) {
         return conn.put(`/issue/${arg.key}/assignee`, { name: arg.name }).then(result => {
+            getIssue(event, arg);
+        });
+    }
+}
+
+function addSubtask(event, arg) {
+    if (conn) {
+        return conn.post(`/issue`, {
+            "fields": {
+                "project": {
+                    "id": arg.projectId
+                },
+                "parent": {
+                    "key": arg.key
+                },
+                "issuetype": {
+                    "id": arg.subtaskId
+                },
+                "summary": arg.name,
+                "description" : "description"
+            }
+        }).then(result => {
             getIssue(event, arg);
         });
     }

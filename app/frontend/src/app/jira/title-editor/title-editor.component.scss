@@ -1,0 +1,24 @@
+.title-container {
+    width: 100%;
+    position: relative;
+    border-radius: 5px;
+    padding: 3px;
+    cursor: pointer;
+    h5 i {
+        display: none;
+    }
+    &:hover {
+        background: rgba(0, 0, 0, 0.2);
+        h5 i {
+            display: inline;
+        }
+    }
+    .edit-actions {
+        padding: 3px;
+        background: var(--gray-dark);
+        border-radius: 3px;
+        right: 0;
+        top: 38px;
+        position: absolute;
+    }
+}

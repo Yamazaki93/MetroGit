@@ -4,6 +4,8 @@ import { Issue } from '../models/issue';
 import { NotificationsService } from 'angular2-notifications';
 import { StatusBarService } from '../../infrastructure/status-bar.service';
 import { Profile } from '../models/profile';
+import { IssueType } from '../models/issue-type';
+import { Resolution } from '../models/resolution';
 
 @Injectable()
 export class JiraIntegrationService {
@@ -13,20 +15,27 @@ export class JiraIntegrationService {
   @Output() enabledChanged = new EventEmitter<boolean>();
   @Output() assignableRetrieved = new EventEmitter<{ key: string, result: Profile[] }>();
   @Output() issueQueryRetrieved: EventEmitter<Issue[]> = new EventEmitter<Issue[]>();
+  @Output() resolutionRetrieved: EventEmitter<Resolution[]> = new EventEmitter<Resolution[]>();
+  @Output() changeIssue: EventEmitter<string> = new EventEmitter<string>();
   enabled = false;
+  jiraUrl = "";
   private jiraKeys = [];
-  private resolutions = [];
+  resolutions: Resolution[] = [];
+  private issueTypes: IssueType[] = [];
+  private subtaskType: IssueType;
   constructor(
     private electron: ElectronService,
     private noti: NotificationsService,
-    private statusBarSvc: StatusBarService
+    private statusBarSvc: StatusBarService,
   ) {
     electron.onCD('Settings-EffectiveUpdated', (event, arg) => {
       if (!arg['jira-enabled'] || !arg['jira-keys'] || arg['jira-keys'].split(';').length === 0) {
         this.enabled = false;
         this.jiraKeys = [];
+        this.jiraUrl = "";
       } else {
         this.jiraKeys = arg['jira-keys'].split(';');
+        this.jiraUrl = arg['jira-address'];
         this.enabled = true;
       }
       this.enabledChanged.emit(this.enabled);
@@ -35,8 +44,13 @@ export class JiraIntegrationService {
     electron.onCD('JIRA-IssueRetrieved', (event, arg) => {
       this.issueRetrieved.emit(arg.issue);
     });
-    electron.onCD('JIRA-TransitionsRetrieved', (event, arg) => {
+    electron.onCD('JIRA-ResolutionsRetrieved', (event, arg) => {
       this.resolutions = arg.resolutions;
+      this.resolutionRetrieved.emit(this.resolutions);
+    });
+    electron.onCD('JIRA-IssueTypesRetrieved', (event, arg) => {
+      this.issueTypes = arg.issueTypes;
+      this.subtaskType = arg.subtaskType;
     });
     electron.onCD('JIRA-Error', (event, arg) => {
       noti.error("Error", "Your JIRA setup doesn't seemed to be correct, please enter the correct settings");
@@ -46,6 +60,7 @@ export class JiraIntegrationService {
     });
     electron.onCD('JIRA-OperationFailed', (event, arg) => {
       noti.error("Failed", "Operation failed, please reload this issue and try again");
+      this.issueRetrieved.emit(null);
     });
     electron.onCD('JIRA-NotFound', (event, arg) => {
       noti.warn("Not Found", "JIRA issue not found, server returned 404");
@@ -106,6 +121,9 @@ export class JiraIntegrationService {
   assignIssue(key, name) {
     this.electron.ipcRenderer.send('JIRA-AssignIssue', { key: key, name: name });
   }
+  addSubtask(key, name, projectId) {
+    this.electron.ipcRenderer.send('JIRA-AddSubtask', { key: key, name: name, projectId: projectId, subtaskId: this.subtaskType.id});
+  }
   searchIssuesByKey(keyQuery, fields?) {
     let jql = `key = "${keyQuery}"`;
     this.electron.ipcRenderer.send('JIRA-SearchIssues', { jql: jql, fields: fields });
@@ -113,5 +131,8 @@ export class JiraIntegrationService {
   searchIssuesBySummary(textQuery, fields?) {
     let jql = `summary ~ "\\"${textQuery}\\""`;
     this.electron.ipcRenderer.send('JIRA-SearchIssues', { jql: jql, fields: fields });
+  }
+  navigateToIssue(key) {
+    this.changeIssue.emit(key);
   }
 }

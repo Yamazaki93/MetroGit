@@ -1,46 +1,47 @@
 <div class="p-3">
   <h2>
-    <i class="icon-package mr-3"></i>Release Notes 0.2.0</h2>
+    <i class="icon-package mr-3"></i>Release Notes 0.3.0</h2>
   <div class="content-container full-width">
     <h3>
       <i class="icon-star mr-3"></i>Highlights</h3>
     <ul>
-      <li>File Details View - Now MetroGit has built-in file viewer so you can easily see changes for each commit. Need to see
-        more than one file? No problem, just click
-        <i class="mr-2 ml-2 icon-external-link"></i> and a separate window will open, allowing you to see changes side by side
+      <li>JIRA Tab Rebooted - You get to see any JIRA issue you want! The details tab is reworked to allow using the JIRA UI
+        when no commits are selected. JIRA UI is also reworked to include searching for JIRA issue by key and summary. Also
+        added functions: adding JIRA subtask, editing JIRA title, select JIRA resolution on-the-fly during transition
         <br/>
-        <img src="assets/release-note/MG0.2.0-1.gif">
+
       </li>
-      <li>Keyboard Shortcuts - Speed up your work, literally! MetroGit now has keyboard shortcut for commonly used operations
-        such as push, pull. Press ? to see all available keyboard shortcuts
+      <li>Viewing Entire File With Changes - Tired of seeing broken changes when seeing commits? Now you can toggle between whole
+        file mode and hunks mode to see changes in a whole new way. In whole file mode, the changes in the commit
+        are conveniently color coded and mixed in with the rest of the contents. Also added: file viewer now distinguish
+        betwen binary and non-binary files and you can now filter by change type in the "File Changes" list
         <br/>
-        <img src="assets/release-note/MG0.2.0-2.gif">
       </li>
-      <li>Tags Management - Create and delete tags is now supported in MetroGit. Right click on a commit in the map to create
-        a tag and right click a tag in the map or in the list to delete it
+      <li>Repositiory Profile - Switching between work and personal use has never been easier. MetroGit now allows setting up
+        profile per repository so you can commit with different name and email per repository. The profile will be automatically
+        applied when you open another repo.
         <br/>
-        <img src="assets/release-note/MG0.2.0-3.gif">
       </li>
-      <li>Stash Management - Now you can pop, apply or delete a specific dash via right-click menu in the map</li>
-      <li>Reset - MetroGit supports hard and soft reset, just right click on a commit in the map and select the reset type
+      <li>Viewing of Submodules - Now you can see submodules and their commit information next to your commits.
         <br/>
-        <img src="assets/release-note/MG0.2.0-4.gif">
+      </li>
+      <li>New In-App Updater - Settings section now includes a brand new update component. Allowing manual checking of updates and downloading updates.
+        <br/>
       </li>
     </ul>
     <h3>
       <i class="icon-plus-circle mr-3"></i>New</h3>
     <ul>
-      <li>Change JIRA Issue Assignee</li>
-      <li>Rebuild Specific Commit in AppVeyor</li>
-      <li>Release Notes Page (that's this page you are seeing 😉)</li>
-      <li>Time Separator Line in Map</li>
+      <li>About Page</li>
+      <li>Delete Branch</li>
+      <li>Turn On/Off Tooltips</li>
     </ul>
-    <h3>
+    <!--<h3>
       <i class="icon-alert-triangle mr-3"></i>Bugfixes</h3>
     <ul>
       <li>#26 Strange Files Committed</li>
       <li>#46 FileDetailPanel Remains Open After Changes Committed</li>
       <li>#51 MacOS Menu Not Showing Correctly</li>
-    </ul>
+    </ul>-->
   </div>
 </div>

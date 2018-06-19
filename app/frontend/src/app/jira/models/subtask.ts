@@ -14,4 +14,7 @@ export interface Subtask extends KeyedItem {
         safePriorityIconUrl?: SafeResourceUrl;
     };
     transitions: Transition[];
+    editmeta: {
+        fields: any;
+    };
 }

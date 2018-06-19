@@ -1,5 +1,6 @@
 import { Component, OnInit, Input, ViewChild, ElementRef, AfterViewChecked } from '@angular/core';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
+import { JiraIntegrationService } from '../services/jira-integration.service';
 
 @Component({
   selector: 'app-jira-rich-text',
@@ -15,6 +16,7 @@ export class JiraRichTextComponent implements OnInit, AfterViewChecked {
 
   private richText: SafeHtml;
   constructor(
+    private jira: JiraIntegrationService,
     private sanitizer: DomSanitizer
   ) { }
 
@@ -24,7 +26,11 @@ export class JiraRichTextComponent implements OnInit, AfterViewChecked {
     let eles = this.container.nativeElement.getElementsByTagName('a');
     if (eles && eles.length) {
       for (let i = 0; i < eles.length; i++) {
-        eles[i].setAttribute('href', 'javascript:void(0)');
+        if (eles[i].classList.contains('jira-issue-macro-key') && eles[i].getAttribute('href').indexOf(`https://${this.jira.jiraUrl}/browse`) !== -1) {
+          let url = eles[i].getAttribute('href');
+          url = url.replace(`https://${this.jira.jiraUrl}/browse/`, '#jira-issue/');
+          eles[i].setAttribute('href', url);
+        }
       }
     }
   }

@@ -22,7 +22,8 @@
       <object [data]="issueIconUrl" style="width: 30px;"></object>
     </div>
     <div class="full-width selectable">
-      <h5>{{issue.fields.summary}}</h5>
+      <!-- <h5>{{issue.fields.summary}}</h5> -->
+      <app-title-editor (toConfirm)="updateTitle()" [(text)]="issue.fields.summary"></app-title-editor>
     </div>
 
   </div>
@@ -56,14 +57,19 @@
     </div>
   </div>
   <div class="mt-3 full-width flex-no-shrink" *ngIf="issue && issue.fields.subtasks && !issue.fields.issuetype.subtask">
-    <h5>Subtasks</h5>
+    <div class="d-flex">
+      <h5>Subtasks</h5>
+      <div class="external-link  ml-2" style="padding-top: 3px;" (click)="addSubtask()">
+        <i class="icon-plus"></i>
+      </div>
+    </div>
     <div class="subtasks">
       <div class="mt-1 subtask d-flex p-2 justify-content-stretch bg-dark" *ngFor="let subtask of issue.fields.subtasks">
         <div class="subtask-priority mr-2">
           <object [data]="subtask.fields.safePriorityIconUrl" style="width: 20px; height: 20px;"></object>
         </div>
         <div class="mr-2 text-muted subtask-key">
-          {{subtask.key}}
+          <a [routerLink]="'/jira-issue/' + subtask.key">{{subtask.key}}</a>
         </div>
         <div class="subtask-summary">
           {{subtask.fields.summary}}
@@ -71,7 +77,7 @@
         <div class="flex-no-shrink">
           <!-- <div class="p-1 rounded" [class.bg-dark]="subtask.fields.status.statusCategory.colorName!=='green' && subtask.fields.status.statusCategory.colorName!=='yellow' "
             [class.bg-success]="subtask.fields.status.statusCategory.colorName==='green'" [class.bg-primary]="subtask.fields.status.statusCategory.colorName==='yellow'">{{subtask.fields.status.name}}</div> -->
-          <app-transition-control (transitioning)="onTransitioning()" [key]="subtask.key" [padding]="1" [status]="subtask.fields.status"
+          <app-transition-control (transitioning)="onRequestPosted()" [key]="subtask.key" [padding]="1" [status]="subtask.fields.status"
             [transitions]="subtask.transitions"></app-transition-control>
 
         </div>
@@ -79,7 +85,7 @@
     </div>
   </div>
   <div class="mt-3 comments-container d-flex flex-column" *ngIf="issue">
-    <div class="d-flex">
+    <div class="d-flex flex-no-shrink">
       <h5>Recent Comments</h5>
       <div class="external-link  ml-2" style="padding-top: 3px;" (click)="addComment()">
         <i class="icon-plus"></i>
