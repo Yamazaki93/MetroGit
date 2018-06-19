@@ -71,6 +71,11 @@ export class JiraDetailComponent implements OnInit, OnDestroy {
         }
       }
     }));
+    this.subs.push(jira.changeIssue.subscribe(iss => {
+      this.onRequestPosted();
+      this.currentIssueKey = iss;
+      this.jira.getIssue(iss);
+    }));
     layout.tooltipChanged.subscribe(tp => {
       this.tooltip = tp;
     });

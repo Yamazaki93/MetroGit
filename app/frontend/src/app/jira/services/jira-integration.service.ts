@@ -16,7 +16,9 @@ export class JiraIntegrationService {
   @Output() assignableRetrieved = new EventEmitter<{ key: string, result: Profile[] }>();
   @Output() issueQueryRetrieved: EventEmitter<Issue[]> = new EventEmitter<Issue[]>();
   @Output() resolutionRetrieved: EventEmitter<Resolution[]> = new EventEmitter<Resolution[]>();
+  @Output() changeIssue: EventEmitter<string> = new EventEmitter<string>();
   enabled = false;
+  jiraUrl = "";
   private jiraKeys = [];
   resolutions: Resolution[] = [];
   private issueTypes: IssueType[] = [];
@@ -24,14 +26,16 @@ export class JiraIntegrationService {
   constructor(
     private electron: ElectronService,
     private noti: NotificationsService,
-    private statusBarSvc: StatusBarService
+    private statusBarSvc: StatusBarService,
   ) {
     electron.onCD('Settings-EffectiveUpdated', (event, arg) => {
       if (!arg['jira-enabled'] || !arg['jira-keys'] || arg['jira-keys'].split(';').length === 0) {
         this.enabled = false;
         this.jiraKeys = [];
+        this.jiraUrl = "";
       } else {
         this.jiraKeys = arg['jira-keys'].split(';');
+        this.jiraUrl = arg['jira-address'];
         this.enabled = true;
       }
       this.enabledChanged.emit(this.enabled);
@@ -127,5 +131,8 @@ export class JiraIntegrationService {
   searchIssuesBySummary(textQuery, fields?) {
     let jql = `summary ~ "\\"${textQuery}\\""`;
     this.electron.ipcRenderer.send('JIRA-SearchIssues', { jql: jql, fields: fields });
+  }
+  navigateToIssue(key) {
+    this.changeIssue.emit(key);
   }
 }

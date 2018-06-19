@@ -20,6 +20,7 @@ import { ExternalFileViewerComponent } from './core/external-file-viewer/externa
 import { HotkeyModule } from 'angular2-hotkeys';
 import { ReleaseNoteComponent } from './infrastructure/release-note/release-note.component';
 import { AboutPageComponent } from './infrastructure/about-page/about-page.component';
+import { JIRAIssueGuard } from './jira/services/jira-issue-link-guard';
 
 
 const appRoutes: Routes = [
@@ -43,6 +44,9 @@ const appRoutes: Routes = [
   { path: 'git', component: GitViewComponent },
   {
     path: 'file/:sha', component: ExternalFileViewerComponent
+  },
+  {
+    path: 'jira-issue/:key', canActivate: [JIRAIssueGuard], component: GitViewComponent
   },
   { path: 'release-note', component: ReleaseNoteComponent },
   { path: 'about', component: AboutPageComponent },
