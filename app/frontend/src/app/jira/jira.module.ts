@@ -15,11 +15,13 @@ import { TitleEditorComponent } from './title-editor/title-editor.component';
 import { KeySelectorComponent } from './key-selector/key-selector.component';
 import { ResolutionSelectorComponent } from './resolution-selector/resolution-selector.component';
 import { JIRAIssueGuard } from './services/jira-issue-link-guard';
+import { RouterModule } from '@angular/router';
 
 
 @NgModule({
   imports: [
     CommonModule,
+    RouterModule,
     NgbModule,
     FormsModule,
     InfrastructureModule

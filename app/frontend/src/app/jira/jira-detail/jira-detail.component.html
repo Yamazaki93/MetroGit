@@ -69,7 +69,7 @@
           <object [data]="subtask.fields.safePriorityIconUrl" style="width: 20px; height: 20px;"></object>
         </div>
         <div class="mr-2 text-muted subtask-key">
-          {{subtask.key}}
+          <a [routerLink]="'/jira-issue/' + subtask.key">{{subtask.key}}</a>
         </div>
         <div class="subtask-summary">
           {{subtask.fields.summary}}
