@@ -53,14 +53,17 @@ function getCurrentFirstRemote() {
 }
 
 function findMatchingRemote(currentBranch) {
-    return getCurrentFirstRemote().then(remote => {
-        let remoteName = remote.name();
-        return Repo.getReference(remoteName + '/' + currentBranch.shorthand());
-    }).then(rmt => {
-        return rmt;
-    }).catch(err => {
-        return Promise.reject('UPSTREAM_NOT_FOUND')
-    });
+    // return getCurrentFirstRemote().then(remote => {
+    //     let remoteName = remote.name();
+    //     return Repo.getReference(remoteName + '/' + currentBranch.shorthand());
+    // }).then(rmt => {
+    //     return rmt;
+    // }).catch(err => {
+    //     return Promise.reject('UPSTREAM_NOT_FOUND')
+    // });
+    return NodeGit.Branch.upstream(currentBranch).catch(err => {
+        return Promise.reject('UPSTREAM_NOT_FOUND');
+    })
 }
 
 function tryFetch(remote, tries, username, password) {
@@ -220,6 +223,7 @@ function push(username, password, force) {
     let currentBranch;
     let firstRemote;
     let remoteBranch;
+    let pushedRemote;
     let originalTarget;
     return checkSSHKey().then(() => {
         return getCurrentFirstRemote()
@@ -230,12 +234,7 @@ function push(username, password, force) {
         return Repo.getCurrentBranch();
     }).then(res => {
         currentBranch = res;
-        return findMatchingRemote(res).catch(err => {
-            if (err === 'UPSTREAM_NOT_FOUND') {
-                return Promise.resolve();
-            } else {
-                return Promise.reject(err);
-            }
+        return NodeGit.Branch.upstream(res).catch(err => {
         });
     }).then(rmt => {
         if (!rmt) {
@@ -252,17 +251,25 @@ function push(username, password, force) {
             return Promise.reject('UP_TO_DATE');
         } else {
             notifyBlockingOperation(true, "Pushing...");
+            pushedRemote = remoteBranch === undefined ? currentBranch : remoteBranch;
             let ref;
             if (force) {
                 // force push by adding a plus sign
-                ref = `+${currentBranch.name()}:${currentBranch.name()}`
+                ref = `+${currentBranch.name()}:${pushedRemote.name()}`
             } else {
-                ref = `${currentBranch.name()}:${currentBranch.name()}`
+                ref = `${currentBranch.name()}:${pushedRemote.name()}`
             }
             return tryPush(firstRemote, [ref], 1, username, password).then(() => {
                 return tryFetch(firstRemote, 1, username, password);
             }).then(() => {
-                return findMatchingRemote(currentBranch);
+                // setting upstream automatically
+                if(!remoteBranch) {
+                    return NodeGit.Branch.setUpstream(currentBranch, pushedRemote.shorthand()).then(() => {
+                        return NodeGit.Branch.upstream(currentBranch);
+                    })
+                } else {
+                    return NodeGit.Branch.upstream(currentBranch);
+                }
             }).then(newRemote => {
                 // checking if after push the target stays the same as original target
                 // if yes, then push was rejected somehow by remote
@@ -788,7 +795,6 @@ function deleteTag(name) {
 
 function deleteBranch(name, username, password){
     let branch;
-    let upstream;
     return Repo.getCurrentBranch().then(ref => {
         if(ref.name() === name) {
             return Promise.reject('IS_CURRENT_BRANCH');
