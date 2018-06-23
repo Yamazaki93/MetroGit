@@ -53,14 +53,6 @@ function getCurrentFirstRemote() {
 }
 
 function findMatchingRemote(currentBranch) {
-    // return getCurrentFirstRemote().then(remote => {
-    //     let remoteName = remote.name();
-    //     return Repo.getReference(remoteName + '/' + currentBranch.shorthand());
-    // }).then(rmt => {
-    //     return rmt;
-    // }).catch(err => {
-    //     return Promise.reject('UPSTREAM_NOT_FOUND')
-    // });
     return NodeGit.Branch.upstream(currentBranch).catch(err => {
         return Promise.reject('UPSTREAM_NOT_FOUND');
     })
@@ -264,7 +256,7 @@ function push(username, password, force) {
             }).then(() => {
                 // setting upstream automatically
                 if(!remoteBranch) {
-                    return NodeGit.Branch.setUpstream(currentBranch, pushedRemote.shorthand()).then(() => {
+                    return NodeGit.Branch.setUpstream(currentBranch, firstRemote.name() + '/' + pushedRemote.shorthand()).then(() => {
                         return NodeGit.Branch.upstream(currentBranch);
                     })
                 } else {
