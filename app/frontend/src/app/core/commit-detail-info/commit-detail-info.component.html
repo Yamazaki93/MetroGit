@@ -26,7 +26,7 @@
         <div class="d-flex">
           <input *ngIf="commit.virtual" (keydown)="onKeyDown($event)" [(ngModel)]="newCommitMessage" (focus)="fillKeyIfNeeded()" name="newMessage"
             type="text" placeholder="Commit Message...">
-          <h5 class="ml-1 word-count" *ngIf="newCommitMessage.length > 30" [class.text-warning]="newCommitMessage.length > 50">{{50 - newCommitMessage.length}}</h5>
+          <h5 class="ml-1 word-count" *ngIf="newCommitMessage.length > 30 && commit.virtual" [class.text-warning]="newCommitMessage.length > 50">{{50 - newCommitMessage.length}}</h5>
         </div>
       </div>
       <div class="message-content-container p-2">
