@@ -705,7 +705,11 @@ function checkout(branchName) {
             let newName = branchName.replace(`${name}/`, '')
             return Repo.getReference(branchName).then(ref => {
                 let target = ref.target();
-                return Repo.createBranch(newName, target, true)
+                return Repo.createBranch(newName, target, true).then(localRef => {
+                    return NodeGit.Branch.setUpstream(localRef, branchName).then(() => {
+                        return localRef;
+                    });
+                })
             })
         } else {
             return Repo.getReference(branchName);
