@@ -29,7 +29,16 @@ $primary-color: #FFF;
             font-size: 30px;
         }
     }
-    .content-container {
-        border-bottom: 1px solid #222;
+}
+.recent-item{
+    width: 100%;
+    cursor: pointer;
+    border-top: 1px solid #222;
+    border-bottom: 1px solid #222;
+    h5{
+        margin: 0;
+    }
+    &:hover{
+        background: rgba(0, 0, 0, 0.2);
     }
 }
