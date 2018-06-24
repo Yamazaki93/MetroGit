@@ -10,6 +10,7 @@ import { StatusBarService } from './status-bar.service';
 import { UpdaterService } from './updater.service';
 import { ReleaseNoteComponent } from './release-note/release-note.component';
 import { AboutPageComponent } from './about-page/about-page.component';
+import { CacheService } from './cache.service';
 
 @NgModule({
   imports: [
@@ -17,6 +18,6 @@ import { AboutPageComponent } from './about-page/about-page.component';
   ],
   exports: [LoadingScreenComponent, SpinnerComponent, IcheckComponent],
   declarations: [LoadingScreenComponent, SpinnerComponent, IcheckComponent, ReleaseNoteComponent, AboutPageComponent],
-  providers: [LoadingService, ElectronService, PromptInjectorService, StatusBarService, UpdaterService]
+  providers: [LoadingService, ElectronService, PromptInjectorService, StatusBarService, UpdaterService, CacheService]
 })
 export class InfrastructureModule { }

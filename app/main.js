@@ -31,7 +31,7 @@ function createWindow() {
     externalFile.init(fileWatcher);
     settingsService.init(win, secureStorage);
     releaseNote.init(settingsService, win);
-    cache.init();
+    cache.init(settingsService, win);
     repo.init(win, settingsService, secureStorage, fileWatcher);
     autoFetch.init(win, settingsService);
     repoCH.init(repo, settingsService, secureStorage);
