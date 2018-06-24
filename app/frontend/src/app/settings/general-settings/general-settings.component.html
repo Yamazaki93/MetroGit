@@ -22,6 +22,15 @@
     <small class="form-text text-muted">Your local unsaved changes will be stashed, then popped after pull</small>
   </div>
   <div class="form-group">
+    <label for="exampleInputPassword1">Auto Cache Cleanup</label>
+    <div class="input-group mb-2">
+      <select [(ngModel)]="_cacheCleanupOption" (change)="onCacheCleanupOptionChange()" class="form-control" name="pullOptions">
+        <option *ngFor="let c of cacheCleanupOptions" [ngValue]="c.id">{{c.name}}</option>
+      </select>
+    </div>
+    <small class="form-text text-muted">MetroGit will automatically clean cached file folder on startup based on selected option</small>
+  </div>
+  <div class="form-group">
     <div class="input-group mb-2">
       <label for="exampleInputPassword1">Enable Tooltip</label>
       <app-icheck class="ml-2" [checked]="_tooltip" (checkedChange)="updateTooltip($event)"></app-icheck>
