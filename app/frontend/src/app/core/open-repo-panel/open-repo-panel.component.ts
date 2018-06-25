@@ -26,5 +26,7 @@ export class OpenRepoPanelComponent implements OnInit {
   openBrowseDialog() {
     this.repoService.openBrowse();
   }
-
+  openRepo(workingDir) {
+    this.repoService.openRepo(workingDir);
+  }
 }

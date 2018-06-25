@@ -10,7 +10,7 @@
     <a class="btn btn-primary" (click)="openBrowseDialog()">Browse</a>
   </div>
   <div class="content-container" *ngFor="let r of history">
-    <div class="recent-item smooth-1 pl-3 pr-3 pt-1 pb-1 d-flex">
+    <div class="recent-item smooth-1 pl-3 pr-3 pt-1 pb-1 d-flex" (click)="openRepo(r.path)">
       <div class="full-width">
         <h5>{{r.name}}</h5>
         <small class="text-muted">{{r.path}}</small>
