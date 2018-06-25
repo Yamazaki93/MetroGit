@@ -52,9 +52,13 @@ function getCurrentFirstRemote() {
     })
 }
 
-function findMatchingRemote(currentBranch) {
+function findMatchingRemote(currentBranch, inhibitError = false) {
     return NodeGit.Branch.upstream(currentBranch).catch(err => {
-        return Promise.reject('UPSTREAM_NOT_FOUND');
+        if (inhibitError) {
+            return Promise.resolve(undefined);
+        } else {
+            return Promise.reject('UPSTREAM_NOT_FOUND');
+        }
     })
 }
 
@@ -211,11 +215,10 @@ function pullWrapper(username, password, option) {
     });
 }
 
-function push(username, password, force) {
+function pushWrapper(username, password, force) {
     let currentBranch;
-    let firstRemote;
     let remoteBranch;
-    let pushedRemote;
+    let firstRemote;
     let originalTarget;
     return checkSSHKey().then(() => {
         return getCurrentFirstRemote()
@@ -226,56 +229,64 @@ function push(username, password, force) {
         return Repo.getCurrentBranch();
     }).then(res => {
         currentBranch = res;
-        return NodeGit.Branch.upstream(res).catch(err => {
-        });
+        return findMatchingRemote(currentBranch, true)
     }).then(rmt => {
-        if (!rmt) {
-            return Promise.resolve({ behind: true })
-        }
         remoteBranch = rmt;
         originalTarget = remoteBranch.target().toString();
-        return NodeGit.Graph.aheadBehind(Repo, remoteBranch.target(), currentBranch.target());
-    }).then(result => {
-        // result.ahead means remote branch is ahead of local
-        if (result.ahead && !force) {
-            return Promise.reject('FORCE_REQUIRED');
-        } else if (!result.behind && !result.ahead) {
-            return Promise.reject('UP_TO_DATE');
-        } else {
-            notifyBlockingOperation(true, "Pushing...");
-            pushedRemote = remoteBranch === undefined ? currentBranch : remoteBranch;
-            let ref;
-            if (force) {
-                // force push by adding a plus sign
-                ref = `+${currentBranch.name()}:refs/heads/${pushedRemote.shorthand().replace(`${firstRemote.name()}/`, '')}`
-            } else {
-                ref = `${currentBranch.name()}:refs/heads/${pushedRemote.shorthand().replace(`${firstRemote.name()}/`, '')}`
+        return checkRemoteRefState(currentBranch, remoteBranch, force);
+    }).then(() => {
+        return push(firstRemote, remoteBranch, currentBranch, username, password, force).then(newRemote => {
+            // checking if after push the target stays the same as original target
+            // if yes, then push was rejected somehow by remote
+            if (newRemote.target().toString() === originalTarget) {
+                return Promise.reject('REMOTE_UNCHANGED');
             }
-            return tryPush(firstRemote, [ref], 1, username, password).then(() => {
-                return tryFetch(firstRemote, 1, username, password);
-            }).then(() => {
-                // setting upstream automatically
-                if(!remoteBranch) {
-                    return NodeGit.Branch.setUpstream(currentBranch, firstRemote.name() + '/' + pushedRemote.shorthand()).then(() => {
-                        return NodeGit.Branch.upstream(currentBranch);
-                    })
-                } else {
-                    return NodeGit.Branch.upstream(currentBranch);
-                }
-            }).then(newRemote => {
-                // checking if after push the target stays the same as original target
-                // if yes, then push was rejected somehow by remote
-                if (newRemote.target().toString() === originalTarget) {
-                    return Promise.reject('REMOTE_UNCHANGED');
-                }
-            });
-        }
+        });
     }).then(() => {
         notifyBlockingOperation(false);
         refreshRepo();
     }).catch(err => {
         notifyBlockingOperation(false);
         return Promise.reject(err);
+    });
+}
+
+function push(firstRemote, remoteBranch, currentBranch, username, password, force) {
+    notifyBlockingOperation(true, "Pushing...");
+    let pushedRemote = remoteBranch === undefined ? currentBranch : remoteBranch;
+    let ref;
+    if (force) {
+        // force push by adding a plus sign
+        ref = `+${currentBranch.name()}:refs/heads/${pushedRemote.shorthand().replace(`${firstRemote.name()}/`, '')}`
+    } else {
+        ref = `${currentBranch.name()}:refs/heads/${pushedRemote.shorthand().replace(`${firstRemote.name()}/`, '')}`
+    }
+    return tryPush(firstRemote, [ref], 1, username, password).then(() => {
+        return tryFetch(firstRemote, 1, username, password);
+    }).then(() => {
+        // setting upstream automatically
+        if (!remoteBranch) {
+            return NodeGit.Branch.setUpstream(currentBranch, firstRemote.name() + '/' + pushedRemote.shorthand()).then(() => {
+                return NodeGit.Branch.upstream(currentBranch);
+            })
+        } else {
+            return NodeGit.Branch.upstream(currentBranch);
+        }
+    });
+}
+
+function checkRemoteRefState(currentBranch, remoteBranch, force) {
+    if (!remoteBranch) {
+        return Promise.resolve()
+    }
+    return NodeGit.Graph.aheadBehind(Repo, remoteBranch.target(), currentBranch.target()).then(result => {
+        if (result.ahead && !force) {
+            return Promise.reject('FORCE_REQUIRED');
+        } else if (!result.behind && !result.ahead) {
+            return Promise.reject('UP_TO_DATE');
+        } else {
+            return Promise.resolve();
+        }
     });
 }
 
@@ -789,10 +800,10 @@ function deleteTag(name) {
     })
 }
 
-function deleteBranch(name, username, password){
+function deleteBranch(name, username, password) {
     let branch;
     return Repo.getCurrentBranch().then(ref => {
-        if(ref.name() === name) {
+        if (ref.name() === name) {
             return Promise.reject('IS_CURRENT_BRANCH');
         }
         return Repo.getBranch(name)
@@ -800,7 +811,7 @@ function deleteBranch(name, username, password){
         branch = ref;
         return ref.delete();
     }).then(res => {
-        if(branch.isRemote() && username && password) {
+        if (branch.isRemote() && username && password) {
             return getCurrentFirstRemote().then(rmt => {
                 let ref = `:refs/heads/${branch.shorthand().split('/').slice(1).join('/')}`;
                 return tryPush(rmt, [ref], 1, username, password)
@@ -811,8 +822,8 @@ function deleteBranch(name, username, password){
         return refreshRepo();
     }).then(() => {
         return findMatchingRemote(branch).then(ref => {
-            if(ref) {
-                return Promise.resolve({upstream: ref.name()});
+            if (ref) {
+                return Promise.resolve({ upstream: ref.name() });
             } else {
                 return Promise.resolve();
             }
@@ -850,7 +861,7 @@ module.exports = {
     getCurrentRemotes: requireRepo(getCurrentRemotes),
     getCurrentFirstRemote: requireRepo(getCurrentFirstRemote),
     pullWrapper: requireRepo(pullWrapper),
-    push: requireRepo(push),
+    push: requireRepo(pushWrapper),
     stage: requireRepo(stage),
     unstage: requireRepo(unstage),
     commitStaged: requireRepo(commitStaged),
