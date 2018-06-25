@@ -43,15 +43,22 @@ $primary-color: #FFF;
             opacity: 1;
         }
     }
-    .full-width{
-        width: 100%;
-    }
-    .flex-no-shrink{
-        flex-shrink: 0;
-    }
     .action-button-container{
         opacity: 0;
         align-items: center;
     }
 
+}
+.full-width{
+    width: 100%;
+}
+.flex-no-shrink{
+    flex-shrink: 0;
+}
+.history-container{
+    min-height: 0;
+    overflow: auto;
+}
+.history{
+    height: 100%;
 }
