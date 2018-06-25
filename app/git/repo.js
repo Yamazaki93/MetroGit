@@ -247,9 +247,9 @@ function push(username, password, force) {
             let ref;
             if (force) {
                 // force push by adding a plus sign
-                ref = `+${currentBranch.name()}:${pushedRemote.name()}`
+                ref = `+${currentBranch.name()}:refs/heads/${pushedRemote.shorthand().replace(`${firstRemote.name()}/`, '')}`
             } else {
-                ref = `${currentBranch.name()}:${pushedRemote.name()}`
+                ref = `${currentBranch.name()}:refs/heads/${pushedRemote.shorthand().replace(`${firstRemote.name()}/`, '')}`
             }
             return tryPush(firstRemote, [ref], 1, username, password).then(() => {
                 return tryFetch(firstRemote, 1, username, password);
