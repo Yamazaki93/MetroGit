@@ -40,5 +40,19 @@ $primary-color: #FFF;
     }
     &:hover{
         background: rgba(0, 0, 0, 0.2);
+        .action-button-container {
+            opacity: 1;
+        }
     }
+    .full-width{
+        width: 100%;
+    }
+    .flex-no-shrink{
+        flex-shrink: 0;
+    }
+    .action-button-container{
+        opacity: 0;
+        align-items: center;
+    }
+
 }
