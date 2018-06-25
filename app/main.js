@@ -15,6 +15,7 @@ const updater = require('./infrastructure/auto-updater');
 const externalFile = require('./git/external-file-view');
 const releaseNote = require('./infrastructure/release-note');
 const submodules = require('./git/submodules');
+const history = require('./git/repo-history');
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
@@ -37,6 +38,7 @@ function createWindow() {
     repoCH.init(repo, settingsService, secureStorage);
     appveyorService.init(settingsService, secureStorage, win, cache);
     jiraService.init(settingsService, secureStorage, win);
+    history.init(settingsService, win);
     shellMisc.init();
     updater.init(win, settingsService);
 

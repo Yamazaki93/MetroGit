@@ -7,7 +7,7 @@ const { requireArgParams } = require('../infrastructure/handler-helper');
 let window;
 let secureStorage;
 let settingsFile;
-let settingsObj = { app_settings: { langulage: 'en', repoHistory: [] }, repos: [], currentRepo: undefined };
+let settingsObj = { app_settings: { langulage: 'en'}, repos: [], currentRepo: undefined };
 let defaultSettings = settingsObj;
 let repoSettingsObj = {};
 let privContent = "";
@@ -195,6 +195,10 @@ let get = function (key) {
     return undefined;
 }
 
+let getRepos = function() {
+    return settingsObj.repos;
+}
+
 module.exports = {
     init: init,
     save: save,
@@ -202,6 +206,7 @@ module.exports = {
     update: update,
     get: get,
     setRepo: setRepo,
+    getRepos: getRepos,
     updateRepoSetting: updateRepoSetting,
     privateKey: () => privContent,
     publicKey: () => publicContent,
