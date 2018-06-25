@@ -7,7 +7,8 @@ const { requireArgParams } = require('../infrastructure/handler-helper');
 let window;
 let secureStorage;
 let settingsFile;
-let settingsObj = { app_settings: { langulage: 'en' }, repos: [], currentRepo: undefined };
+let settingsObj = { app_settings: { langulage: 'en', repoHistory: [] }, repos: [], currentRepo: undefined };
+let defaultSettings = settingsObj;
 let repoSettingsObj = {};
 let privContent = "";
 let publicContent = "";
@@ -59,6 +60,14 @@ function openBrowseFolderDialog(event, arg) {
 }
 let load = function (path) {
     settingsObj = JSON.parse(fs.readFileSync(path));
+    // backward compatible app settings initialization
+    let defaultAppSettingKeys = Object.keys(settingsObj.app_settings);
+    defaultAppSettingKeys.forEach(k => {
+        if(!settingsObj.app_settings[k]) {
+            settingsObj.app_settings[k] = defaultSettings.app_settings[k];
+        }
+    })
+    save();
     if (settingsObj.currentRepo) {
         initRepoSettings(settingsObj.currentRepo.id);
     }
@@ -167,19 +176,11 @@ let saveRepoSettings = function () {
 }
 
 let update = function (key, value) {
-    if (key === 'repos' || key === 'currentRepo') {
-        // guard internal settings
-        return;
-    }
     settingsObj.app_settings[key] = value;
     save();
 }
 
 let updateRepoSetting = function (key, value) {
-    if (key === 'repos' || key === 'currentRepo') {
-        // guard internal settings
-        return;
-    }
     repoSettingsObj[key] = value;
     save();
 }
