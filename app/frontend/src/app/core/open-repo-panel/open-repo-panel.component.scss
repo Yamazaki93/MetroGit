@@ -30,3 +30,35 @@ $primary-color: #FFF;
         }
     }
 }
+.recent-item{
+    width: 100%;
+    cursor: pointer;
+    border-top: 1px solid #222;
+    h5{
+        margin: 0;
+    }
+    &:hover{
+        background: rgba(0, 0, 0, 0.2);
+        .action-button-container {
+            opacity: 1;
+        }
+    }
+    .action-button-container{
+        opacity: 0;
+        align-items: center;
+    }
+
+}
+.full-width{
+    width: 100%;
+}
+.flex-no-shrink{
+    flex-shrink: 0;
+}
+.history-container{
+    min-height: 0;
+    overflow: auto;
+}
+.history{
+    height: 100%;
+}

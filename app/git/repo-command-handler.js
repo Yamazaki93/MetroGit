@@ -29,12 +29,16 @@ ipcMain.on('Repo-CreateTag', requireArgParams(createTag, ['targetCommit', 'name'
 ipcMain.on('Repo-DeleteTag', requireArgParams(deleteTag, ['name']));
 ipcMain.on('Repo-DeleteBranch', requireArgParams(deleteBranch, ['name']));
 ipcMain.on('Repo-PushTag', requireArgParams(pushTag, ['username', 'password', 'name']));
-
+ipcMain.on('Repo-Close', closeRepo)
 
 function init(repo, sett, sec) {
     repoService = repo;
     settings = sett;
     secure = sec;
+}
+
+function closeRepo(event, arg) {
+    repoService.closeRepo();
 }
 
 function pull(event, arg) {

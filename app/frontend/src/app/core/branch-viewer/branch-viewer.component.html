@@ -12,7 +12,7 @@
       <span class="nav-text">{{repoName}}</span>
     </h4>
   </div>
-  <div class="repo-info-container smooth action-button" placement="right" [ngbTooltip]="tooltip? 'Current Branch' : ''" container="body" *ngIf="branchName !== ''"
+  <div class="repo-info-container smooth action-button" placement="right" [ngbTooltip]="tooltip? 'Current Branch' : ''" container="body" *ngIf="repoName !== ''"
     (click)="goToCurrentBranch()">
     <h4>
       <i class="icon-git-branch mr-3"></i>{{branchName}}</h4>

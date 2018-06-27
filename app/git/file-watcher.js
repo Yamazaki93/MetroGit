@@ -7,6 +7,7 @@ var window = null;
 var refreshInterval;
 
 ipcMain.on('Repo-Open', openRepo);
+ipcMain.on('Repo-Close', closeRepo);
 ipcMain.on('Repo-GetFileDetail', requireArgParams(getFileDetailWrapper, ['file', 'commit']))
 
 function init(win) {
@@ -14,6 +15,11 @@ function init(win) {
     window.on('close', (event) => {
         clearInterval(refreshInterval);
     })
+}
+
+function closeRepo(event, arg) {
+    Repo = null;
+    clearInterval(refreshInterval);
 }
 
 function openRepo(event, arg) {

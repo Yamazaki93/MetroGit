@@ -13,10 +13,19 @@ import { RepoService } from '../services/repo.service';
 export class SubwayComponent implements OnInit {
 
   @Input() commits: Commit[];
+  hasRepo = false;
   constructor(private repo: RepoService) {
+    this.hasRepo = repo.hasRepository;
     if (repo.hasRepository) {
       this.commits = repo.commits;
     }
+    repo.repoChange.subscribe(name => {
+      if (!name) {
+        this.hasRepo = false;
+      } else {
+        this.hasRepo = true;
+      }
+    });
   }
 
   ngOnInit() {
