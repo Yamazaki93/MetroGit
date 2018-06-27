@@ -4,13 +4,13 @@ const helper = require('./repo-helpers');
 var Repo = null;
 var window = null;
 var settings = null;
-var secure = null;
+var repoHistory = null;
 var refreshInterval = null;
 
-function init(win, sett, sec, fw) {
+function init(win, sett, history, fw) {
     window = win;
     settings = sett;
-    secure = sec;
+    repoHistory = history;
     fileWatch = fw;
     initPullOptions();
     window.on('close', (event) => {
@@ -475,6 +475,7 @@ function openRepo(workingDir) {
         repoName = paths[paths.length - 1];
         window.webContents.send('Repo-OpenSuccessful', { repoName: repoName, workingDir: workingDir });
         settings.setRepo(workingDir, repoName);
+        repoHistory.updateRepos();
         checkSSHKey();
         getCurrentRemotes().then(remotes => {
             if (remotes.length > 0) {
@@ -843,6 +844,12 @@ function pushTag(username, password, name, toDelete) {
     });
 }
 
+function closeRepo() {
+    Repo = undefined;
+    clearInterval(refreshInterval);
+    window.webContents.send('Repo-Closed', {});
+}
+
 module.exports = {
     init: init,
     openRepo: openRepo,
@@ -869,4 +876,5 @@ module.exports = {
     deleteTag: requireRepo(deleteTag),
     pushTag: requireRepo(pushTag),
     deleteBranch: requireRepo(deleteBranch),
+    closeRepo: requireRepo(closeRepo)
 }

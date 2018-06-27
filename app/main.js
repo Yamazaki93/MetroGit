@@ -33,12 +33,12 @@ function createWindow() {
     settingsService.init(win, secureStorage);
     releaseNote.init(settingsService, win);
     cache.init(settingsService, win);
-    repo.init(win, settingsService, secureStorage, fileWatcher);
+    history.init(settingsService, win);
+    repo.init(win, settingsService, history, fileWatcher);
     autoFetch.init(win, settingsService);
     repoCH.init(repo, settingsService, secureStorage);
     appveyorService.init(settingsService, secureStorage, win, cache);
     jiraService.init(settingsService, secureStorage, win);
-    history.init(settingsService, win);
     shellMisc.init();
     updater.init(win, settingsService);
 

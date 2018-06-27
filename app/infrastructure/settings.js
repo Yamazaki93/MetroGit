@@ -7,7 +7,7 @@ const { requireArgParams } = require('../infrastructure/handler-helper');
 let window;
 let secureStorage;
 let settingsFile;
-let settingsObj = { app_settings: { langulage: 'en'}, repos: [], currentRepo: undefined };
+let settingsObj = { app_settings: { langulage: 'en' }, repos: [], currentRepo: undefined };
 let defaultSettings = settingsObj;
 let repoSettingsObj = {};
 let privContent = "";
@@ -29,7 +29,7 @@ ipcMain.on('Settings-Set', (event, arg) => {
 });
 ipcMain.on('Settings-SetSecureRepo', requireArgParams(setSecureRepoSetting, ['key', 'value']));
 ipcMain.on('Settings-GetSecureRepo', requireArgParams(getSecureRepoSetting, ['key']));
-ipcMain.on('Settings-BrowseFile', openBrowseFolderDialog)
+ipcMain.on('Settings-BrowseFile', openBrowseFolderDialog);
 
 let save = function () {
     fs.writeFileSync(settingsFile, JSON.stringify(settingsObj), 'utf8');
@@ -63,7 +63,7 @@ let load = function (path) {
     // backward compatible app settings initialization
     let defaultAppSettingKeys = Object.keys(settingsObj.app_settings);
     defaultAppSettingKeys.forEach(k => {
-        if(!settingsObj.app_settings[k]) {
+        if (!settingsObj.app_settings[k]) {
             settingsObj.app_settings[k] = defaultSettings.app_settings[k];
         }
     })
@@ -134,7 +134,7 @@ let setRepo = function (workingDir, name) {
 
 let getEffectiveSettings = function () {
     let appKeys = Object.keys(settingsObj.app_settings);
-    let repoKeys = Object.keys(repoSettingsObj);
+    let repoKeys = repoSettingsObj ? Object.keys(repoSettingsObj) : [];
     let effective = {};
     let allKeys = union_arrays(appKeys, repoKeys);
     allKeys.forEach(function (k) {
@@ -186,7 +186,7 @@ let updateRepoSetting = function (key, value) {
 }
 
 let get = function (key) {
-    if (repoSettingsObj[key] !== undefined) {
+    if (repoSettingsObj && repoSettingsObj[key] !== undefined) {
         return repoSettingsObj[key];
     }
     if (settingsObj.app_settings[key] !== undefined) {
@@ -195,8 +195,27 @@ let get = function (key) {
     return undefined;
 }
 
-let getRepos = function() {
+let getRepos = function () {
     return settingsObj.repos;
+}
+
+function removeRepo(workingDir) {
+    settingsObj.repos.forEach( (r, i) => {
+        if (r.workingDir === workingDir) {
+            secureStorage.clearRepoCache(r.id);
+            if (fs.existsSync(appDir + r.id + '.json')) {
+                fs.unlinkSync(appDir + r.id + '.json');
+            }
+            settingsObj.repos.splice(i, 1);
+        }
+    });
+    if(settingsObj.currentRepo.workingDir === workingDir) {
+        settingsObj.currentRepo = undefined;
+        save();
+        window.webContents.send('Repo-CurrentRemoved', {});
+        repoSettingsObj = undefined;
+    }
+    notifySettingsUpdated();
 }
 
 module.exports = {
@@ -207,6 +226,7 @@ module.exports = {
     get: get,
     setRepo: setRepo,
     getRepos: getRepos,
+    removeRepo: removeRepo,
     updateRepoSetting: updateRepoSetting,
     privateKey: () => privContent,
     publicKey: () => publicContent,

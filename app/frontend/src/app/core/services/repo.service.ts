@@ -70,6 +70,18 @@ export class RepoService {
       this.hasRepository = true;
       this.loading.disableLoading();
     });
+    this.electron.onCD('Repo-CurrentRemoved', (event, arg) => {
+      this.electron.ipcRenderer.send('Repo-Close', {});
+    });
+    this.electron.onCD('Repo-Closed', (event, arg) => {
+      this._currentWorkingPath = "";
+      this.repoName = "";
+      this.repoChange.emit(this.repoName);
+      this.hasRepository = false;
+      this.currentBranch = null;
+      this.branchChange.emit(this.currentBranch);
+      this.notifyCommitDifference([]);
+    });
     this.electron.onCD('Repo-BranchPositionRetrieved', (event, arg) => {
       this.currentPos = arg;
       this.posUpdate.emit(this.currentPos);
@@ -308,7 +320,9 @@ export class RepoService {
       this._pendingOperation = null;
     }
   }
-
+  removeRepoSetting(workingDir) {
+    this.electron.ipcRenderer.send('Repo-RemoveHistory', {workingDir: workingDir});
+  }
 }
 
 interface Branch {

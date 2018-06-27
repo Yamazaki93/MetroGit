@@ -18,7 +18,7 @@
             <small class="text-muted">{{r.path}}</small>
           </div>
           <div class="flex-no-shrink d-flex action-button-container smooth-1">
-            <a class="text-danger">
+            <a class="text-danger" placement="right" container="body" [ngbTooltip]="tooltip? 'Delete repository configuration' : '' " (click)="removeRepoSetting(r.path, $event)">
               <i class="icon-trash-2"></i>
             </a>
           </div>
