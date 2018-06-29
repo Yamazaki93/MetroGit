@@ -68,6 +68,9 @@ export class SubwayStationsComponent implements OnInit, AfterViewInit, OnDestroy
   getColorByAuthor(commit: Commit) {
     return this.sanitize.bypassSecurityTrustStyle(`${this.d3Service.getColorByAuthor(commit.email)}`);
   }
+  getBranchColor(commit: Commit) {
+    return this.d3Service.colors[this.d3Service.currentMap.nodeDict[commit.sha].x_order % this.d3Service.colors.length];
+  }
   tryOpenMenu($event: MouseEvent, item: any) {
     if (!item.virtual && !item.isStash) {
       this.ctxService.show.next({

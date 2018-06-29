@@ -1,7 +1,7 @@
 <div class="commit-info-container">
   <div class="commit-info" [style.height.px]="height" *ngFor="let commit of _commits" [id]="'commit-info-' + commit.sha" (click)="select(commit.sha)"
     (contextmenu)="tryOpenMenu($event, commit)">
-    <div class="background" [class.selected]="commit.sha === selected"></div>
+    <div class="background" [style.background]="getBranchColor(commit)" [class.selected]="commit.sha === selected"></div>
     <div class="commit-info-detail-container d-flex">
       <div class="ml-1 committer text-center" [style.background]="getColorByAuthor(commit)" *ngIf="!commit.virtual">
         {{d3Service.getAuthor(commit.author)}}
