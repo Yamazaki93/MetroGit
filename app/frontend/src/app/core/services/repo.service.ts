@@ -64,10 +64,23 @@ export class RepoService {
 
   init(): void {
     this.electron.onCD('Repo-OpenSuccessful', (event, arg) => {
+      this._currentWorkingPath = arg.workingDir;
       this.repoName = arg.repoName;
       this.repoChange.emit(this.repoName);
       this.hasRepository = true;
       this.loading.disableLoading();
+    });
+    this.electron.onCD('Repo-CurrentRemoved', (event, arg) => {
+      this.electron.ipcRenderer.send('Repo-Close', {});
+    });
+    this.electron.onCD('Repo-Closed', (event, arg) => {
+      this._currentWorkingPath = "";
+      this.repoName = "";
+      this.repoChange.emit(this.repoName);
+      this.hasRepository = false;
+      this.currentBranch = null;
+      this.branchChange.emit(this.currentBranch);
+      this.notifyCommitDifference([]);
     });
     this.electron.onCD('Repo-BranchPositionRetrieved', (event, arg) => {
       this.currentPos = arg;
@@ -99,8 +112,7 @@ export class RepoService {
     });
     this.electron.on('Repo-FolderSelected', (event, arg) => {
       this._pendingOperation = null;
-      this._currentWorkingPath = arg.path;
-      this.openRepo();
+      this.openRepo(arg.path);
     });
     this.electron.onCD('Repo-BranchChanged', (event, arg) => {
       this.currentBranch = arg;
@@ -160,8 +172,7 @@ export class RepoService {
     this.electron.onCD('Settings-EffectiveUpdated', (event, arg) => {
       this.pulloption = arg['gen-pulloption'];
       if (arg.currentRepo && this._currentWorkingPath !== arg.currentRepo.workingDir) {
-        this._currentWorkingPath = arg.currentRepo.workingDir;
-        this.openRepo();
+        this.openRepo(arg.currentRepo.workingDir);
       }
     });
     this.electron.onCD('Repo-RefRetrieved', (event, arg) => {
@@ -265,10 +276,10 @@ export class RepoService {
     }
   }
 
-  openRepo(): void {
+  openRepo(workingDir): void {
     if (this.electron.available) {
       this.loading.enableLoading("Opening Repo...");
-      this.electron.ipcRenderer.send('Repo-Open', { workingDir: this._currentWorkingPath });
+      this.electron.ipcRenderer.send('Repo-Open', { workingDir: workingDir });
     }
   }
 
@@ -309,7 +320,9 @@ export class RepoService {
       this._pendingOperation = null;
     }
   }
-
+  removeRepoSetting(workingDir) {
+    this.electron.ipcRenderer.send('Repo-RemoveHistory', {workingDir: workingDir});
+  }
 }
 
 interface Branch {

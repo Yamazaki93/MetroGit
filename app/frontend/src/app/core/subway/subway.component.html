@@ -1,4 +1,4 @@
-<div class="subway-outer" [class.hidden]="!commits || commits.length === 0">
+<div class="subway-outer" *ngIf="commits && commits.length !== 0 && hasRepo">
   <div class="d-flex subway-container">
     <app-subway-station-annot></app-subway-station-annot>
     <app-subway-map-visual [commits]="commits"></app-subway-map-visual>

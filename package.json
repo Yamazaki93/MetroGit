@@ -49,6 +49,7 @@
   "dependencies": {
     "axios": "^0.18.0",
     "electron-updater": "^2.21.10",
+    "get-folder-size": "^2.0.0",
     "keytar": "^4.2.1",
     "nodegit": "^0.22.0",
     "read-last-line": "^1.1.0",

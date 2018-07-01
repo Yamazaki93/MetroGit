@@ -31,7 +31,11 @@ export class SubwayStationAnnotComponent implements OnInit {
       this.updateBranchInfo();
     });
     repo.branchChange.subscribe(bn => {
-      this.currentBranch = bn.name;
+      if (bn) {
+        this.currentBranch = bn.name;
+      } else {
+        this.currentBranch = "";
+      }
       this.updateBranchInfo();
     });
     d3.mapChange.subscribe(() => {

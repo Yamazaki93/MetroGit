@@ -49,6 +49,7 @@ import { CommitterCardComponent } from './committer-card/committer-card.componen
 import { FileCountsComponent } from './file-counts/file-counts.component';
 import { CommitFileListComponent } from './commit-file-list/commit-file-list.component';
 import { FileListFilter } from './commit-file-list/file-list-filter';
+import { HistoryService } from './services/history.service';
 
 
 @NgModule({
@@ -71,6 +72,6 @@ import { FileListFilter } from './commit-file-list/file-list-filter';
   ],
   declarations: [BranchViewerComponent, GitViewComponent, SubwayComponent, SubwayStationsComponent, SubwayMapVisualComponent, NodeVisualComponent, LinkVisualComponent, SubwayStationAnnotComponent, ActionToolbarComponent, OpenRepoPanelComponent, StatusBarComponent, PromptComponent, EnterLoginPromptComponent, PromptContainerDirective, BranchListComponent, BranchItemComponent, SshPasswordPromptComponent, CommitDetailComponent, CommitDetailInfoComponent, CommitDetailCiComponent, CiConsoleOutputComponent, ForcePushPromptComponent, CreateBranchPromptComponent, FileViewPanelComponent, ExternalFileViewerComponent, TagPromptComponent, MapSeparatorComponent, SubmoduleDetailsPanelComponent, CommitterCardComponent, FileCountsComponent, CommitFileListComponent, FileListFilter],
   exports: [RouterModule],
-  providers: [D3Service, RepoService, LayoutService, CredentialsService, CiIntegrationService, CommitSelectionService, AppveyorCiService, CommitChangeService, SubmodulesService],
+  providers: [D3Service, RepoService, LayoutService, CredentialsService, CiIntegrationService, CommitSelectionService, AppveyorCiService, CommitChangeService, SubmodulesService, HistoryService],
 })
 export class CoreModule { }

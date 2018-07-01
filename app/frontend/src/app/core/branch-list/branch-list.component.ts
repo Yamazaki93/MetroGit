@@ -57,16 +57,18 @@ export class BranchListComponent implements OnInit, AfterViewInit {
   }
   updateBranchVisual() {
     let rootFolder = { display: this.rootPath, items: [], padding: this.basePad, icon: this.rootIcon };
-    this._branches.forEach(b => {
-      let paths = b.shorthand.split('/');
-      this.placeBranchInFolder(paths, rootFolder, b, 1);
-    });
-    this.items = rootFolder.items;
-    this._branches.forEach(b => {
-      if (this.d3.currentMap && this.d3.currentMap.nodeDict[b.target]) {
-        b.color = this.d3.colors[this.d3.currentMap.nodeDict[b.target].x_order % this.d3.colors.length];
-      }
-    });
+    if (this._branches) {
+      this._branches.forEach(b => {
+        let paths = b.shorthand.split('/');
+        this.placeBranchInFolder(paths, rootFolder, b, 1);
+      });
+      this.items = rootFolder.items;
+      this._branches.forEach(b => {
+        if (this.d3.currentMap && this.d3.currentMap.nodeDict[b.target]) {
+          b.color = this.d3.colors[this.d3.currentMap.nodeDict[b.target].x_order % this.d3.colors.length];
+        }
+      });
+    }
   }
   trackBy(index, item) {
     return item.display;

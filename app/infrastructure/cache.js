@@ -1,18 +1,62 @@
 const fs = require('fs');
 const axios = require('axios');
 const homeDir = require('os').homedir();
-const cacheDir = homeDir + '/MetroGit/cache';
 const readLastLine = require('read-last-line');
+const getSize = require('get-folder-size');
+const path = require('path');
+const cacheDir = `${homeDir}${path.sep}MetroGit${path.sep}cache`;
 
+let settings;
+let window;
 
-function init() {
+function init(sett, win) {
     if (!fs.existsSync(cacheDir)) {
         fs.mkdirSync(cacheDir);
     }
+    settings = sett;
+    window = win;
+    let cleanup = settings.get('gen-cachecleanup')
+    if (cleanup && cleanup !== '0') {
+        setTimeout(() => {
+            trimCachedFiles(Number(cleanup));
+        }, 10 * 1000);
+    }
+}
+
+function trimCachedFiles(sizeLimit) {
+    getSize(cacheDir, (err, size) => {
+        size = size / 1024 / 1024; // size in MB
+        if(size > sizeLimit){
+            window.webContents.send('Cache-AutoCleanBegin');
+            let diff = size - sizeLimit;
+            fs.readdir(cacheDir, (err, files) => {
+                stats = files.map(f => {
+                    return fs.statSync(cacheDir + path.sep + f)
+                })
+                stats.sort(function(a, b) {
+                    return a.mtime.getTime() - 
+                           a.mtime.getTime();
+                });
+                let freedSize = 0;
+                let toDelete = [];
+                stats.forEach((f, index) => {
+                    let sz = f.size / 1024 / 1024;
+                    if (freedSize < diff) {
+                        freedSize += sz;
+                        toDelete.push(cacheDir + path.sep + files[index]);
+                    }
+                });
+                toDelete.forEach(file => {
+                    fs.unlinkSync(file);
+                })
+                window.webContents.send('Cache-AutoCleanSuccess');
+            })
+        }
+    })
 }
 
 function getCache(fileKey, lines) {
-    if(!lines) {
+    if (!lines) {
         lines = 100;
     }
     return readLastLine.read(`${cacheDir}/${fileKey}`, lines);

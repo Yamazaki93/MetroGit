@@ -11,6 +11,7 @@ export class GeneralSettingsComponent extends SettingsComponent {
 
   private _autoFetchInterval = 1;
   private _pullOption = 'ffonly';
+  private _cacheCleanupOption = '0';
   private _tooltip = true;
   private pullOptions = [
     {
@@ -26,12 +27,24 @@ export class GeneralSettingsComponent extends SettingsComponent {
       name: "Merge (Ceate merge commit if remote is ahead)"
     }
   ];
+  private cacheCleanupOptions = [
+    {
+      id: '0',
+      name: "Do not auto delete cached files"
+    },
+    {
+      id: '50',
+      name: "Keep cached size under 50MB"
+    }
+  ];
 
   getSettings() {
     let val = this.settings.getAppSetting('gen-autofetchinterval');
     this._autoFetchInterval = val === "" ? 0 : Number(val);
     let opt = this.settings.getAppSetting('gen-pulloption');
     this._pullOption = opt === "" ? 'ffonly' : opt;
+    let opt2 = this.settings.getAppSetting('gen-cachecleanup');
+    this._cacheCleanupOption = opt2 === "" ? '0' : opt2;
     let tp = this.settings.getAppSetting('gen-tooltip');
     this._tooltip = tp === "" ? true : Boolean(tp);
   }
@@ -43,6 +56,9 @@ export class GeneralSettingsComponent extends SettingsComponent {
 
   onPullOptionChange() {
     this.settings.setSetting('gen-pulloption', this._pullOption);
+  }
+  onCacheCleanupOptionChange() {
+    this.settings.setSetting('gen-cachecleanup', this._cacheCleanupOption);
   }
   clearCred() {
     this.settings.clearSecureCache();
