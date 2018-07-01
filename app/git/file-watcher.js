@@ -5,10 +5,12 @@ const NodeGit = require('nodegit');
 var Repo;
 var window = null;
 var refreshInterval;
+var fileRefreshInterval;
 
 ipcMain.on('Repo-Open', openRepo);
 ipcMain.on('Repo-Close', closeRepo);
 ipcMain.on('Repo-GetFileDetail', requireArgParams(getFileDetailWrapper, ['file', 'commit']))
+ipcMain.on('Repo-SubscribeFileUpdate', requireArgParams(subscribeUpdate, ['file', 'commit']))
 
 function init(win) {
     window = win;
@@ -20,11 +22,13 @@ function init(win) {
 function closeRepo(event, arg) {
     Repo = null;
     clearInterval(refreshInterval);
+    clearInterval(fileRefreshInterval);
 }
 
 function openRepo(event, arg) {
     Repo = null;
     clearInterval(refreshInterval);
+    clearInterval(fileRefreshInterval);
     if (arg.workingDir) {
         NodeGit.Repository.open(arg.workingDir).then(res => {
             Repo = res;
@@ -116,8 +120,24 @@ function getFileDetailWrapper(event, arg) {
         getFileDetail(arg.file, arg.commit, arg.fullFile).then(result => {
             event.sender.send('Repo-FileDetailRetrieved', result);
         }).catch(err => {
+            if(err === 'FILE_NOT_FOUND') {
+                event.sender.send('Repo-FileDetailNotFound', {});
+            }
         })
     }
+}
+
+function subscribeUpdate(event, arg) {
+    clearInterval(fileRefreshInterval);
+    fileRefreshInterval = setInterval(() => {
+        getFileDetail(arg.file, arg.commit, arg.fullFile).then(result => {
+            event.sender.send('Repo-FileDetailRetrieved', result);
+        }).catch(err => {
+            if(err === 'FILE_NOT_FOUND') {
+                event.sender.send('Repo-LiveUpdateFileNotFound', {});
+            }
+        });
+    }, 3*1000);
 }
 
 function getFileDetail(path, commit, fullFile = false) {

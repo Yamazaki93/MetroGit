@@ -97,6 +97,7 @@ export class CommitSelectionService {
     this.selectedFileChange.emit(file);
     this.gettingFileDetail.emit();
     this.electron.ipcRenderer.send('Repo-GetFileDetail', { file: file, commit: sha, fullFile: fullFile });
+    this.electron.ipcRenderer.send('Repo-SubscribeFileUpdate', {file: file, commit: sha, fullFile: fullFile});
   }
   select(commit) {
     if (commit && (!this.selectedCommit || commit !== this.selectedCommit.sha)) {
