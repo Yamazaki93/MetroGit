@@ -87,6 +87,10 @@ export class CommitSelectionService {
         this.noti.error("Current Branch", "You are trying to delete the current branch, please checkout another branch before deleting");
       }
     });
+    this.electron.onCD('Repo-LiveUpdateFileNotFound', (event, arg) => {
+      this._selectedFile = "";
+      this.selectedFileChange.emit(this._selectedFile);
+    });
   }
 
   selectFileDetail(file, sha = null, fullFile = false) {
