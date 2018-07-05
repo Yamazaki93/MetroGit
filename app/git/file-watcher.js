@@ -120,7 +120,7 @@ function getFileDetailWrapper(event, arg) {
         getFileDetail(arg.file, arg.commit, arg.fullFile).then(result => {
             event.sender.send('Repo-FileDetailRetrieved', result);
         }).catch(err => {
-            if(err === 'FILE_NOT_FOUND') {
+            if (err === 'FILE_NOT_FOUND') {
                 event.sender.send('Repo-FileDetailNotFound', {});
             }
         })
@@ -133,11 +133,11 @@ function subscribeUpdate(event, arg) {
         getFileDetail(arg.file, arg.commit, arg.fullFile).then(result => {
             event.sender.send('Repo-FileDetailRetrieved', result);
         }).catch(err => {
-            if(err === 'FILE_NOT_FOUND') {
+            if (err === 'FILE_NOT_FOUND') {
                 event.sender.send('Repo-LiveUpdateFileNotFound', {});
             }
         });
-    }, 3*1000);
+    }, 3 * 1000);
 }
 
 function getFileDetail(path, commit, fullFile = false) {
@@ -151,9 +151,7 @@ function getFileDetail(path, commit, fullFile = false) {
             })
         });
     } else if (commit === 'workdir') {
-        return Repo.refreshIndex().then(cmt => {
-            return Repo.index();
-        }).then(tree => {
+        return Repo.index().then(tree => {
             return NodeGit.Diff.indexToWorkdir(Repo, tree);
         }).then(diff => {
             return processDiff(diff, path, commit, fullFile);
@@ -255,7 +253,7 @@ function processDiff(diff, path, commit, fullFile = false) {
                         if (hunkLikeLines.length === 0) {
                             hunks = result;
                         } else {
-                            hunks = [{lines: hunkLikeLines}];
+                            hunks = [{ lines: hunkLikeLines }];
                         }
                         return { path: path, paths: path.split('/'), commit: commit, hunks: hunks, summary: { added: linesAdded, removed: linesRemoved } };
                     })
@@ -266,7 +264,7 @@ function processDiff(diff, path, commit, fullFile = false) {
             //special case for unstaged added file
             return NodeGit.Blob.createFromWorkdir(Repo, path).then(id => {
                 return Repo.getBlob(id);
-            }).then(blob => { 
+            }).then(blob => {
                 let lines = blob.toString().split(/\r?\n/);
                 let hunkLike = lines.map((l, index) => {
                     return {
@@ -278,7 +276,7 @@ function processDiff(diff, path, commit, fullFile = false) {
                 })
                 return hunkLike;
             }).then(hunkLike => {
-                return { path: path, paths: path.split('/'), commit: commit, hunks: [{lines: hunkLike}], summary: { added: hunkLike.length, removed: 0 } };
+                return { path: path, paths: path.split('/'), commit: commit, hunks: [{ lines: hunkLike }], summary: { added: hunkLike.length, removed: 0 } };
             })
         } else {
             return Promise.reject('FILE_NOT_FOUND');
@@ -304,8 +302,8 @@ function getFileLines(commit, path) {
             return Promise.reject('PATH_NOT_FILE');
         }
     }).then(blob => {
-        if(blob.isBinary()) {
-            return [{op: "binary", content: "Binary File Content", oldLineno: -1, newLineno: -1}]
+        if (blob.isBinary()) {
+            return [{ op: "binary", content: "Binary File Content", oldLineno: -1, newLineno: -1 }]
         }
         let lines = blob.toString().split(/\r?\n/);
         let hunkLike = lines.map((l, index) => {
