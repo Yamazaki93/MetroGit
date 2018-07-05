@@ -151,8 +151,8 @@ function getFileDetail(path, commit, fullFile = false) {
             })
         });
     } else if (commit === 'workdir') {
-        return Repo.index().then(tree => {
-            return NodeGit.Diff.indexToWorkdir(Repo, tree);
+        return NodeGit.Diff.indexToWorkdir(Repo, null, {
+            flags: NodeGit.Diff.OPTION.SHOW_UNTRACKED_CONTENT | NodeGit.Diff.OPTION.RECURSE_UNTRACKED_DIRS
         }).then(diff => {
             return processDiff(diff, path, commit, fullFile);
         })
@@ -175,7 +175,7 @@ function getFileDetail(path, commit, fullFile = false) {
 
 function processDiff(diff, path, commit, fullFile = false) {
     return diff.findSimilar({ renameThreshold: 50 }).then(() => {
-        return diff.patches();
+        return diff.patches()
     }).then(patches => {
         let patch;
         patches.forEach(p => {
@@ -260,24 +260,6 @@ function processDiff(diff, path, commit, fullFile = false) {
                 }
 
             });
-        } else if (!patch && commit === 'workdir') {
-            //special case for unstaged added file
-            return NodeGit.Blob.createFromWorkdir(Repo, path).then(id => {
-                return Repo.getBlob(id);
-            }).then(blob => {
-                let lines = blob.toString().split(/\r?\n/);
-                let hunkLike = lines.map((l, index) => {
-                    return {
-                        op: "+",
-                        content: l,
-                        oldLineno: -1,
-                        newLineno: index + 1
-                    }
-                })
-                return hunkLike;
-            }).then(hunkLike => {
-                return { path: path, paths: path.split('/'), commit: commit, hunks: [{ lines: hunkLike }], summary: { added: hunkLike.length, removed: 0 } };
-            })
         } else {
             return Promise.reject('FILE_NOT_FOUND');
         }
