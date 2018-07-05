@@ -50,8 +50,13 @@ export class CommitDetailComponent implements OnInit {
     });
     selection.selectedFileChange.subscribe(newFile => {
       this.selectedFile = newFile;
-      this.fileToggled = true;
-      this.layout.isFilePanelOpen = true;
+      if (newFile) {
+        this.fileToggled = true;
+        this.layout.isFilePanelOpen = true;
+      } else {
+        this.fileToggled = false;
+        this.layout.isFilePanelOpen = false;
+      }
     });
     selection.fileDetailChanged.subscribe(newdetail => {
       this.fileDetail = newdetail;
@@ -72,6 +77,7 @@ export class CommitDetailComponent implements OnInit {
   closeFilePanel() {
     this.fileToggled = false;
     this.layout.isFilePanelOpen = this.fileToggled;
+    this.selection.unsubscribeFileUpdate();
   }
   openExternal(commit) {
     this.selection.openExternalFileView(this.selectedFile, commit);
