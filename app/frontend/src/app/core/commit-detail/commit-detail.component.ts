@@ -77,6 +77,7 @@ export class CommitDetailComponent implements OnInit {
   closeFilePanel() {
     this.fileToggled = false;
     this.layout.isFilePanelOpen = this.fileToggled;
+    this.selection.unsubscribeFileUpdate();
   }
   openExternal(commit) {
     this.selection.openExternalFileView(this.selectedFile, commit);

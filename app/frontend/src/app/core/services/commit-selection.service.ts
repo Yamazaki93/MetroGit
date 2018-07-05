@@ -147,6 +147,8 @@ export class CommitSelectionService {
     let username = this.cred.username;
     let password = this.cred.password;
     this.electron.ipcRenderer.send('Repo-DeleteBranch', {name: name, username: username, password: password});
-
+  }
+  unsubscribeFileUpdate(): void {
+    this.electron.ipcRenderer.send('Repo-UnsubscribeFileUpdate', {});
   }
 }

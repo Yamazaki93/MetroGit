@@ -11,6 +11,7 @@ ipcMain.on('Repo-Open', openRepo);
 ipcMain.on('Repo-Close', closeRepo);
 ipcMain.on('Repo-GetFileDetail', requireArgParams(getFileDetailWrapper, ['file', 'commit']))
 ipcMain.on('Repo-SubscribeFileUpdate', requireArgParams(subscribeUpdate, ['file', 'commit']))
+ipcMain.on('Repo-UnsubscribeFileUpdate', unsubscribeUpdate);
 
 function init(win) {
     window = win;
@@ -138,6 +139,10 @@ function subscribeUpdate(event, arg) {
             }
         });
     }, 3 * 1000);
+}
+
+function unsubscribeUpdate(event, arg) {
+    clearInterval(fileRefreshInterval);
 }
 
 function getFileDetail(path, commit, fullFile = false) {
