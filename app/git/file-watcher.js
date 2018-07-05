@@ -163,9 +163,7 @@ function getFileDetail(path, commit, fullFile = false) {
         })
     } else {
         let index;
-        return Repo.refreshIndex().then(() => {
-            return Repo.index();
-        }).then(ind => {
+        return Repo.index().then(ind => {
             index = ind;
             return Repo.getHeadCommit().then(cmt => {
                 return cmt.getTree()
