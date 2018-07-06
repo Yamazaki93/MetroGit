@@ -2,34 +2,36 @@ const { ipcMain } = require('electron');
 const { requireArgParams } = require('../infrastructure/handler-helper');
 const path = require('path');
 const NodeGit = require('nodegit');
+const uuid = require('uuid');
 var Repo;
 var window = null;
 var refreshInterval;
-var fileRefreshInterval;
+var fileRefreshSubscriptions = {};
 
 ipcMain.on('Repo-Open', openRepo);
 ipcMain.on('Repo-Close', closeRepo);
 ipcMain.on('Repo-GetFileDetail', requireArgParams(getFileDetailWrapper, ['file', 'commit']))
 ipcMain.on('Repo-SubscribeFileUpdate', requireArgParams(subscribeUpdate, ['file', 'commit']))
-ipcMain.on('Repo-UnsubscribeFileUpdate', unsubscribeUpdate);
+ipcMain.on('Repo-UnsubscribeFileUpdate', requireArgParams(unsubscribeUpdate, ['id']));
 
 function init(win) {
     window = win;
     window.on('close', (event) => {
         clearInterval(refreshInterval);
+        unsubscribeAllUpdate();
     })
 }
 
 function closeRepo(event, arg) {
     Repo = null;
     clearInterval(refreshInterval);
-    clearInterval(fileRefreshInterval);
+    unsubscribeAllUpdate();
 }
 
 function openRepo(event, arg) {
     Repo = null;
     clearInterval(refreshInterval);
-    clearInterval(fileRefreshInterval);
+    unsubscribeAllUpdate();
     if (arg.workingDir) {
         NodeGit.Repository.open(arg.workingDir).then(res => {
             Repo = res;
@@ -129,8 +131,8 @@ function getFileDetailWrapper(event, arg) {
 }
 
 function subscribeUpdate(event, arg) {
-    clearInterval(fileRefreshInterval);
-    fileRefreshInterval = setInterval(() => {
+    let subID = uuid.v4();    
+    fileRefreshSubscriptions[subID] = setInterval(() => {
         getFileDetail(arg.file, arg.commit, arg.fullFile).then(result => {
             event.sender.send('Repo-FileDetailRetrieved', result);
         }).catch(err => {
@@ -139,10 +141,14 @@ function subscribeUpdate(event, arg) {
             }
         });
     }, 3 * 1000);
+    event.returnValue = subID;
 }
 
 function unsubscribeUpdate(event, arg) {
-    clearInterval(fileRefreshInterval);
+    if(fileRefreshSubscriptions[arg.id]) {
+        clearInterval(fileRefreshSubscriptions[arg.id]);
+        delete fileRefreshSubscriptions[arg.id];
+    }
 }
 
 function getFileDetail(path, commit, fullFile = false) {
@@ -302,6 +308,14 @@ function getFileLines(commit, path) {
         return hunkLike;
     }).catch(err => {
         return Promise.resolve([]);
+    });
+}
+
+function unsubscribeAllUpdate(){
+    let subs = Object.keys(fileRefreshSubscriptions);
+    subs.forEach(s => {
+        clearInterval(fileRefreshSubscriptions[s]);
+        delete fileRefreshSubscriptions[s];
     });
 }
 

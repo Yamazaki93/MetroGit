@@ -20,6 +20,7 @@ export class CommitSelectionService {
   selectedCommit: CommitDetail | WIPCommit;
   private _selectedFile = "";
   private _fileDetail: FileDetail;
+  private _currentUpdateSubscription = "";
   private _wipDetail: WIPCommit = {
     sha: "00000",
     author: "",
@@ -101,7 +102,11 @@ export class CommitSelectionService {
     this.selectedFileChange.emit(file);
     this.gettingFileDetail.emit();
     this.electron.ipcRenderer.send('Repo-GetFileDetail', { file: file, commit: sha, fullFile: fullFile });
-    this.electron.ipcRenderer.send('Repo-SubscribeFileUpdate', {file: file, commit: sha, fullFile: fullFile});
+    this.subscribeLiveFileUpdate(file, sha, fullFile);
+  }
+  subscribeLiveFileUpdate(file, commit, fullFile) {
+    this.unsubscribeFileUpdate();
+    this._currentUpdateSubscription = this.electron.ipcRenderer.sendSync('Repo-SubscribeFileUpdate', {file: file, commit: commit, fullFile: fullFile});
   }
   select(commit) {
     if (commit && (!this.selectedCommit || commit !== this.selectedCommit.sha)) {
@@ -149,6 +154,6 @@ export class CommitSelectionService {
     this.electron.ipcRenderer.send('Repo-DeleteBranch', {name: name, username: username, password: password});
   }
   unsubscribeFileUpdate(): void {
-    this.electron.ipcRenderer.send('Repo-UnsubscribeFileUpdate', {});
+    this.electron.ipcRenderer.send('Repo-UnsubscribeFileUpdate', {id: this._currentUpdateSubscription});
   }
 }

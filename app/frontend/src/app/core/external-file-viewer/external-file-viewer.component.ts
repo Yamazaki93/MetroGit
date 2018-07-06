@@ -24,6 +24,9 @@ export class ExternalFileViewerComponent implements OnInit {
       this.sha = params['sha'];
     });
     this.selection.fileDetailChanged.subscribe(detail => {
+      if(this.path !== detail.path) {
+        this.selection.subscribeLiveFileUpdate(detail.path, this.sha, false);
+      }
       this.fileDetail = detail;
       this.path = detail.path;
       this.loading.disableLoading();
