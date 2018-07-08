@@ -1,6 +1,7 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { CommitSelectionService } from '../services/commit-selection.service';
 import { FileDetail } from '../prototypes/file-detail';
+import { CommitChangeService } from '../services/commit-change.service';
 
 @Component({
   selector: 'app-file-view-panel',
@@ -32,7 +33,8 @@ export class FileViewPanelComponent implements OnInit {
   private loading = true;
   private _mode = 'hunk';
   constructor(
-    private ch: CommitSelectionService
+    private ch: CommitSelectionService,
+    private cc: CommitChangeService,
   ) {
     ch.gettingFileDetail.subscribe(() => {
       this._fileDetail = null;
@@ -41,6 +43,16 @@ export class FileViewPanelComponent implements OnInit {
   }
 
   ngOnInit() {
+  }
+  stageHunk(hunk) {
+    let lines = [];
+    hunk.lines.forEach(l => {
+      lines.push({
+        oldLineno: l.oldLineno,
+        newLineno: l.newLineno
+      });
+    });
+    this.cc.stageLines(this._fileDetail.path, lines);
   }
 
 }

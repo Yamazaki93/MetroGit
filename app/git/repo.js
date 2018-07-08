@@ -595,15 +595,15 @@ function stageLines(path, requestedLines) {
     }).then(diff => {
         return getAllHunkLinesInDiff(diff, path);
     }).then(hunkLines => {
-        let reqs = [];
+        let stageHunkLines = [];
         requestedLines.forEach(l => {
             hunkLines.forEach(hl => {
                 if(hl.newLineno() === l.newLineno && hl.oldLineno() === l.oldLineno){
-                    reqs.push(Repo.stageLines(path, hl, false));
+                    stageHunkLines.push(hl);
                 }
             })
         })
-        return Promise.all(reqs);
+        return Repo.stageLines(path, stageHunkLines, false);
     });
 }
 
