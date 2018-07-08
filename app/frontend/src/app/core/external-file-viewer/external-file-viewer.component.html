@@ -1,7 +1,7 @@
 <div class="file-panel p-3 d-flex flex-column">
   <div class="d-flex no-shrink" *ngIf="path">
     <div class="full-width">
-      <h3>{{path}} @ {{getTitle()}}
+      <h3><code>{{path}}</code> @ {{getTitle()}}
         <span class="badge badge-success mr-1" *ngIf="fileDetail && fileDetail.summary.added">{{fileDetail.summary.added}} +</span>
         <span class="badge badge-danger mr-1" *ngIf="fileDetail && fileDetail.summary.removed">{{fileDetail.summary.removed}} -</span>
       </h3>
@@ -9,6 +9,6 @@
   </div>
   <div class="full-width" style="height: 100%; min-height: 0;">
     <app-file-view-panel *ngIf="path" [(mode)]="mode" [detail]="fileDetail"></app-file-view-panel>
-    <h5 class="text-center" *ngIf="!path">{{oldPath}} has no Unstaged Changes</h5>
+    <h5 class="text-center" *ngIf="!path"><code>{{oldPath}}</code> has no {{fileDetail.commit === 'workdir' ? 'unstaged' : 'staged'}} changes</h5>
   </div>
 </div>
