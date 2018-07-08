@@ -55,10 +55,12 @@ export class FileViewPanelComponent implements OnInit {
   private createLineObj(hunk) {
     let lines = [];
     hunk.lines.forEach(l => {
-      lines.push({
-        oldLineno: l.oldLineno,
-        newLineno: l.newLineno
-      });
+      if (l.op !== '') {
+        lines.push({
+          oldLineno: l.oldLineno,
+          newLineno: l.newLineno
+        });
+      }
     });
     return lines;
   }

@@ -11,7 +11,7 @@
   </div>
   <div class="hunk-containers pr-1">
     <div class="hunk-container" *ngFor="let hunk of _fileDetail.hunks">
-      <div class="hunk-action text-right mb-1">
+      <div class="hunk-action text-right mb-1" *ngIf="mode !== 'file'">
         <a class="btn btn-success btn-sm" *ngIf="_fileDetail.commit === 'workdir'" (click)="stageHunk(hunk)">Stage Hunk</a>
         <a class="btn btn-danger btn-sm" *ngIf="_fileDetail.commit === 'tree'" (click)="unstageHunk(hunk)">Unstage Hunk</a>
       </div>
