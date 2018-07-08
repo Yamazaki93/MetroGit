@@ -14,6 +14,7 @@ ipcMain.on('Repo-Push', requireArgParams(push, ['username', 'password']));
 ipcMain.on('Repo-GetCommit', requireArgParams(getCommit, ['commit']));
 ipcMain.on('Repo-Stage', requireArgParams(stage, ['paths']));
 ipcMain.on('Repo-Unstage', requireArgParams(unstage, ['paths']));
+ipcMain.on('Repo-StageLines', requireArgParams(stageLines, ['path', 'lines']))
 ipcMain.on('Repo-CommitStaged', requireArgParams(commitStaged, ['name', 'email', 'message']));
 ipcMain.on('Repo-Commit', requireArgParams(commit, ['name', 'email', 'message', 'files']));
 ipcMain.on('Repo-Stash', requireArgParams(stash, ['name', 'email', 'message']));
@@ -29,7 +30,7 @@ ipcMain.on('Repo-CreateTag', requireArgParams(createTag, ['targetCommit', 'name'
 ipcMain.on('Repo-DeleteTag', requireArgParams(deleteTag, ['name']));
 ipcMain.on('Repo-DeleteBranch', requireArgParams(deleteBranch, ['name']));
 ipcMain.on('Repo-PushTag', requireArgParams(pushTag, ['username', 'password', 'name']));
-ipcMain.on('Repo-Close', closeRepo)
+ipcMain.on('Repo-Close', closeRepo);
 
 function init(repo, sett, sec) {
     repoService = repo;
@@ -137,6 +138,14 @@ function stage(event, arg) {
     }).catch(err => {
         operationFailed('Repo-StageFail', event, err);
     });
+}
+
+function stageLines(event, arg) {
+    repoService.stageLines(arg.path, arg.lines).then(res => {
+
+    }).catch(err => {
+        operationFailed('Repo-StageFail', event, err);
+    })
 }
 
 function unstage(event, arg) {

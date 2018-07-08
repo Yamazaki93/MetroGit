@@ -588,6 +588,57 @@ function stage(paths) {
     });
 }
 
+// lines: [{oldLineno, newLineno}]
+function stageLines(path, requestedLines) {
+    return NodeGit.Diff.indexToWorkdir(Repo, null, {
+        flags: NodeGit.Diff.OPTION.SHOW_UNTRACKED_CONTENT | NodeGit.Diff.OPTION.RECURSE_UNTRACKED_DIRS
+    }).then(diff => {
+        return getAllHunkLinesInDiff(diff, path);
+    }).then(hunkLines => {
+        let reqs = [];
+        requestedLines.forEach(l => {
+            hunkLines.forEach(hl => {
+                if(hl.newLineno() === l.newLineno && hl.oldLineno() === l.oldLineno){
+                    reqs.push(Repo.stageLines(path, hl, false));
+                }
+            })
+        })
+        return Promise.all(reqs);
+    });
+}
+
+function getAllHunkLinesInDiff(diff, path) {
+    return diff.findSimilar({ renameThreshold: 50 }).then(() => {
+        return diff.patches()
+    }).then(patches => {
+        let patch;
+        patches.forEach(p => {
+            if (p.newFile().path() === path) {
+                patch = p;
+            }
+        });
+        if (patch) {
+            return patch.hunks().then(hunks => {
+                let req = [];
+                hunks.forEach(function (hunk) {
+                    req.push(hunk.lines());
+                });
+                return Promise.all(req);
+            })
+        } else {
+            return Promise.reject('FILE_NOT_FOUND')
+        }
+    }).then(hunks => {
+        let hunkLines = [];
+        hunks.forEach(lines => {
+            lines.forEach(function (line) {
+                hunkLines.push(line);
+            });
+        });
+        return hunkLines;
+    })
+}
+
 function unstage(paths) {
     return Repo.getHeadCommit().then(commit => {
         return NodeGit.Reset.default(Repo, commit, paths);
@@ -887,5 +938,6 @@ module.exports = {
     deleteTag: requireRepo(deleteTag),
     pushTag: requireRepo(pushTag),
     deleteBranch: requireRepo(deleteBranch),
-    closeRepo: requireRepo(closeRepo)
+    closeRepo: requireRepo(closeRepo),
+    stageLines: requireRepo(stageLines),
 }
