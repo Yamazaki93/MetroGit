@@ -52,6 +52,12 @@ export class FileViewPanelComponent implements OnInit {
     let lines = this.createLineObj(hunk);
     this.cc.unstageLines(this._fileDetail.path, lines);
   }
+  stageLine(line) {
+    this.cc.stageLines(this._fileDetail.path, [{newLineno: line.newLineno, oldLineno: line.oldLineno}]);
+  }
+  unstageLine(line) {
+    this.cc.unstageLines(this._fileDetail.path, [{newLineno: line.newLineno, oldLineno: line.oldLineno}]);
+  }
   private createLineObj(hunk) {
     let lines = [];
     hunk.lines.forEach(l => {
