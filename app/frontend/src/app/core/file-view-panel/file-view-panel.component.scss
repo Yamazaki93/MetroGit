@@ -11,6 +11,9 @@ $line-content-width: 200px + $line-header-width;
     .hunk-containers{
         overflow-y: auto;
     }
+    .hunk-container{
+        width: 100%;
+    }
     .hunk-headers {
         width: $line-content-width;
         flex-shrink: 0;
@@ -31,7 +34,7 @@ $line-content-width: 200px + $line-header-width;
             display: inline-block;
             min-width: 100%;
         }
-        overflow-x: auto;
+        //overflow-x: auto;
         overflow-y: hidden;
         height: 100%;
     }
