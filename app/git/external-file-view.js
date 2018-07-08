@@ -12,7 +12,7 @@ function init(fw) {
 
 function open(event, arg) {
     let win = new BrowserWindow({});
-    //win.setMenu(null);
+    win.setMenu(null);
     let address = url.format({
         pathname: path.join(__dirname, '../frontend/dist/index.html'),
         hash: `/file/${arg.commit}`,

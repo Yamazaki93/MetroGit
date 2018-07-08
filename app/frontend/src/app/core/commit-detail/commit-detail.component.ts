@@ -56,6 +56,7 @@ export class CommitDetailComponent implements OnInit {
       } else {
         this.fileToggled = false;
         this.layout.isFilePanelOpen = false;
+        this.selection.unsubscribeFileUpdate();
       }
     });
     selection.fileDetailChanged.subscribe(newdetail => {
