@@ -77,7 +77,7 @@ export class CommitSelectionService {
     });
     this.electron.onCD('Repo-BranchDeleted', (event, arg) => {
       if (arg.upstream) {
-        let notification = this.noti.success("Branch Deleted", "Click here to delete the upstream branch");
+        let notification = this.noti.info("Upstream Branch Found", "Local branch deleted. Click here to delete the upstream branch");
         notification.click.subscribe(() => {
           this.deleteRemoteBranch(arg.upstream);
         });
