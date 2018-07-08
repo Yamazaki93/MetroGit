@@ -121,6 +121,9 @@ export class CommitChangeService {
   unstage(paths): void {
     this.electron.ipcRenderer.send('Repo-Unstage', { paths: paths });
   }
+  unstageLines(path, lines) {
+    this.electron.ipcRenderer.send('Repo-UnstageLines', {path: path, lines: lines});
+  }
   commit(paths): void {
     if (this.checkProfileExists()) {
       let name = this.cred.name;

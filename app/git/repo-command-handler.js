@@ -15,6 +15,7 @@ ipcMain.on('Repo-GetCommit', requireArgParams(getCommit, ['commit']));
 ipcMain.on('Repo-Stage', requireArgParams(stage, ['paths']));
 ipcMain.on('Repo-Unstage', requireArgParams(unstage, ['paths']));
 ipcMain.on('Repo-StageLines', requireArgParams(stageLines, ['path', 'lines']))
+ipcMain.on('Repo-UnstageLines', requireArgParams(unstageLines, ['path', 'lines']))
 ipcMain.on('Repo-CommitStaged', requireArgParams(commitStaged, ['name', 'email', 'message']));
 ipcMain.on('Repo-Commit', requireArgParams(commit, ['name', 'email', 'message', 'files']));
 ipcMain.on('Repo-Stash', requireArgParams(stash, ['name', 'email', 'message']));
@@ -145,6 +146,14 @@ function stageLines(event, arg) {
 
     }).catch(err => {
         operationFailed('Repo-StageFail', event, err);
+    })
+}
+
+function unstageLines(event, arg) {
+    repoService.unstageLines(arg.path, arg.lines).then(res => {
+
+    }).catch(err => {
+        operationFailed('Repo-UnstageFail', event, err);
     })
 }
 

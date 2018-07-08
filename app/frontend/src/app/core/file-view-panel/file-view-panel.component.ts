@@ -45,6 +45,14 @@ export class FileViewPanelComponent implements OnInit {
   ngOnInit() {
   }
   stageHunk(hunk) {
+    let lines = this.createLineObj(hunk);
+    this.cc.stageLines(this._fileDetail.path, lines);
+  }
+  unstageHunk(hunk) {
+    let lines = this.createLineObj(hunk);
+    this.cc.unstageLines(this._fileDetail.path, lines);
+  }
+  private createLineObj(hunk) {
     let lines = [];
     hunk.lines.forEach(l => {
       lines.push({
@@ -52,7 +60,7 @@ export class FileViewPanelComponent implements OnInit {
         newLineno: l.newLineno
       });
     });
-    this.cc.stageLines(this._fileDetail.path, lines);
+    return lines;
   }
 
 }

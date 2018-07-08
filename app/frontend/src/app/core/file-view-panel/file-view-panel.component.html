@@ -13,7 +13,7 @@
     <div class="hunk-container" *ngFor="let hunk of _fileDetail.hunks">
       <div class="hunk-action text-right mb-1">
         <a class="btn btn-success btn-sm" *ngIf="_fileDetail.commit === 'workdir'" (click)="stageHunk(hunk)">Stage Hunk</a>
-        <a class="btn btn-danger btn-sm" *ngIf="_fileDetail.commit === 'tree'">Unstage Hunk</a>
+        <a class="btn btn-danger btn-sm" *ngIf="_fileDetail.commit === 'tree'" (click)="unstageHunk(hunk)">Unstage Hunk</a>
       </div>
       <div class="d-flex">
         <div class="hunk-headers" *ngIf="_fileDetail.hunks[0] && (_fileDetail.hunks[0].lines[0].op !== 'binary')">

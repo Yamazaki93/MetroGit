@@ -588,7 +588,7 @@ function stage(paths) {
     });
 }
 
-// lines: [{oldLineno, newLineno}]
+// requestedLines: [{oldLineno, newLineno}]
 function stageLines(path, requestedLines) {
     return NodeGit.Diff.indexToWorkdir(Repo, null, {
         flags: NodeGit.Diff.OPTION.SHOW_UNTRACKED_CONTENT | NodeGit.Diff.OPTION.RECURSE_UNTRACKED_DIRS
@@ -605,6 +605,30 @@ function stageLines(path, requestedLines) {
         })
         return Repo.stageLines(path, stageHunkLines, false);
     });
+}
+
+function unstageLines(path, requestedLines) {
+    let index;
+    return Repo.index().then(ind => {
+        index = ind;
+        return Repo.getHeadCommit().then(cmt => {
+            return cmt.getTree();
+        });
+    }).then(tree => {
+        return NodeGit.Diff.treeToIndex(Repo, tree, index);
+    }).then(diff => {
+        return getAllHunkLinesInDiff(diff, path);
+    }).then(hunkLines => {
+        let unstageHunkLines = [];
+        requestedLines.forEach(l => {
+            hunkLines.forEach(hl => {
+                if(hl.newLineno() === l.newLineno && hl.oldLineno() === l.oldLineno){
+                    unstageHunkLines.push(hl);
+                }
+            });
+        });
+        return Repo.stageLines(path, unstageHunkLines, true);
+    })
 }
 
 function getAllHunkLinesInDiff(diff, path) {
@@ -940,4 +964,5 @@ module.exports = {
     deleteBranch: requireRepo(deleteBranch),
     closeRepo: requireRepo(closeRepo),
     stageLines: requireRepo(stageLines),
+    unstageLines: requireRepo(unstageLines),
 }
