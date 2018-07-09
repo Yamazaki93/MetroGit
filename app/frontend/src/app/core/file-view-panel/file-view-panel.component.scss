@@ -1,5 +1,5 @@
 $line-header-width: 20px;
-$line-content-width: 200px + $line-header-width;
+$line-content-width: 200px + 2*$line-header-width;
 
 .file-view-container{
     height: 100%;
@@ -10,6 +10,9 @@ $line-content-width: 200px + $line-header-width;
     }
     .hunk-containers{
         overflow-y: auto;
+    }
+    .hunk-container{
+        width: 100%;
     }
     .hunk-headers {
         width: $line-content-width;
@@ -31,7 +34,7 @@ $line-content-width: 200px + $line-header-width;
             display: inline-block;
             min-width: 100%;
         }
-        overflow-x: auto;
+        //overflow-x: auto;
         overflow-y: hidden;
         height: 100%;
     }
@@ -41,6 +44,20 @@ $line-content-width: 200px + $line-header-width;
         .line{
             border-bottom: solid 1px var(--gray-dark);
             user-select: initial;
+        }
+        .line-action{
+            text-align: center;
+            border-right: solid 1px var(--gray-dark);
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            width: $line-header-width;
+            .btn {
+                padding: 0;
+                width: $line-header-width;
+                height: $line-header-width;
+                font-size: 13px;
+            }
         }
         .op{
             width: $line-header-width;

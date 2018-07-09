@@ -2,29 +2,36 @@ const { ipcMain } = require('electron');
 const { requireArgParams } = require('../infrastructure/handler-helper');
 const path = require('path');
 const NodeGit = require('nodegit');
+const uuid = require('uuid');
 var Repo;
 var window = null;
 var refreshInterval;
+var fileRefreshSubscriptions = {};
 
 ipcMain.on('Repo-Open', openRepo);
 ipcMain.on('Repo-Close', closeRepo);
 ipcMain.on('Repo-GetFileDetail', requireArgParams(getFileDetailWrapper, ['file', 'commit']))
+ipcMain.on('Repo-SubscribeFileUpdate', requireArgParams(subscribeUpdate, ['file', 'commit']))
+ipcMain.on('Repo-UnsubscribeFileUpdate', requireArgParams(unsubscribeUpdate, ['id']));
 
 function init(win) {
     window = win;
     window.on('close', (event) => {
         clearInterval(refreshInterval);
+        unsubscribeAllUpdate();
     })
 }
 
 function closeRepo(event, arg) {
     Repo = null;
     clearInterval(refreshInterval);
+    unsubscribeAllUpdate();
 }
 
 function openRepo(event, arg) {
     Repo = null;
     clearInterval(refreshInterval);
+    unsubscribeAllUpdate();
     if (arg.workingDir) {
         NodeGit.Repository.open(arg.workingDir).then(res => {
             Repo = res;
@@ -116,7 +123,31 @@ function getFileDetailWrapper(event, arg) {
         getFileDetail(arg.file, arg.commit, arg.fullFile).then(result => {
             event.sender.send('Repo-FileDetailRetrieved', result);
         }).catch(err => {
+            if (err === 'FILE_NOT_FOUND') {
+                event.sender.send('Repo-FileDetailNotFound', {});
+            }
         })
+    }
+}
+
+function subscribeUpdate(event, arg) {
+    let subID = uuid.v4();    
+    fileRefreshSubscriptions[subID] = setInterval(() => {
+        getFileDetail(arg.file, arg.commit, arg.fullFile).then(result => {
+            event.sender.send('Repo-FileDetailRetrieved', result);
+        }).catch(err => {
+            if (err === 'FILE_NOT_FOUND') {
+                event.sender.send('Repo-LiveUpdateFileNotFound', {});
+            }
+        });
+    }, 3 * 1000);
+    event.returnValue = subID;
+}
+
+function unsubscribeUpdate(event, arg) {
+    if(fileRefreshSubscriptions[arg.id]) {
+        clearInterval(fileRefreshSubscriptions[arg.id]);
+        delete fileRefreshSubscriptions[arg.id];
     }
 }
 
@@ -131,18 +162,14 @@ function getFileDetail(path, commit, fullFile = false) {
             })
         });
     } else if (commit === 'workdir') {
-        return Repo.refreshIndex().then(cmt => {
-            return Repo.index();
-        }).then(tree => {
-            return NodeGit.Diff.indexToWorkdir(Repo, tree);
+        return NodeGit.Diff.indexToWorkdir(Repo, null, {
+            flags: NodeGit.Diff.OPTION.SHOW_UNTRACKED_CONTENT | NodeGit.Diff.OPTION.RECURSE_UNTRACKED_DIRS
         }).then(diff => {
             return processDiff(diff, path, commit, fullFile);
         })
     } else {
         let index;
-        return Repo.refreshIndex().then(() => {
-            return Repo.index();
-        }).then(ind => {
+        return Repo.index().then(ind => {
             index = ind;
             return Repo.getHeadCommit().then(cmt => {
                 return cmt.getTree()
@@ -157,7 +184,7 @@ function getFileDetail(path, commit, fullFile = false) {
 
 function processDiff(diff, path, commit, fullFile = false) {
     return diff.findSimilar({ renameThreshold: 50 }).then(() => {
-        return diff.patches();
+        return diff.patches()
     }).then(patches => {
         let patch;
         patches.forEach(p => {
@@ -235,31 +262,13 @@ function processDiff(diff, path, commit, fullFile = false) {
                         if (hunkLikeLines.length === 0) {
                             hunks = result;
                         } else {
-                            hunks = [{lines: hunkLikeLines}];
+                            hunks = [{ lines: hunkLikeLines }];
                         }
                         return { path: path, paths: path.split('/'), commit: commit, hunks: hunks, summary: { added: linesAdded, removed: linesRemoved } };
                     })
                 }
 
             });
-        } else if (!patch && commit === 'workdir') {
-            //special case for unstaged added file
-            return NodeGit.Blob.createFromWorkdir(Repo, path).then(id => {
-                return Repo.getBlob(id);
-            }).then(blob => { 
-                let lines = blob.toString().split(/\r?\n/);
-                let hunkLike = lines.map((l, index) => {
-                    return {
-                        op: "+",
-                        content: l,
-                        oldLineno: -1,
-                        newLineno: index + 1
-                    }
-                })
-                return hunkLike;
-            }).then(hunkLike => {
-                return { path: path, paths: path.split('/'), commit: commit, hunks: [{lines: hunkLike}], summary: { added: hunkLike.length, removed: 0 } };
-            })
         } else {
             return Promise.reject('FILE_NOT_FOUND');
         }
@@ -284,8 +293,8 @@ function getFileLines(commit, path) {
             return Promise.reject('PATH_NOT_FILE');
         }
     }).then(blob => {
-        if(blob.isBinary()) {
-            return [{op: "binary", content: "Binary File Content", oldLineno: -1, newLineno: -1}]
+        if (blob.isBinary()) {
+            return [{ op: "binary", content: "Binary File Content", oldLineno: -1, newLineno: -1 }]
         }
         let lines = blob.toString().split(/\r?\n/);
         let hunkLike = lines.map((l, index) => {
@@ -299,6 +308,14 @@ function getFileLines(commit, path) {
         return hunkLike;
     }).catch(err => {
         return Promise.resolve([]);
+    });
+}
+
+function unsubscribeAllUpdate(){
+    let subs = Object.keys(fileRefreshSubscriptions);
+    subs.forEach(s => {
+        clearInterval(fileRefreshSubscriptions[s]);
+        delete fileRefreshSubscriptions[s];
     });
 }
 

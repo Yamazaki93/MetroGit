@@ -115,8 +115,14 @@ export class CommitChangeService {
   stage(paths): void {
     this.electron.ipcRenderer.send('Repo-Stage', { paths: paths });
   }
+  stageLines(path, lines) {
+    this.electron.ipcRenderer.send('Repo-StageLines', {path: path, lines: lines});
+  }
   unstage(paths): void {
     this.electron.ipcRenderer.send('Repo-Unstage', { paths: paths });
+  }
+  unstageLines(path, lines) {
+    this.electron.ipcRenderer.send('Repo-UnstageLines', {path: path, lines: lines});
   }
   commit(paths): void {
     if (this.checkProfileExists()) {
