@@ -20,10 +20,10 @@
           <div class="hunk mb-3">
             <div class="line d-flex" *ngFor="let line of hunk.lines" [class.added]="line.op==='+'" [class.deleted]="line.op==='-'">
               <div class="line-action">
-                <a class="btn btn-success" *ngIf="line.op !== ' ' && _fileDetail.commit === 'workdir'" (click)="stageLine(line)">
+                <a class="btn btn-success" *ngIf="line.op && line.op !== ' ' && _fileDetail.commit === 'workdir'" (click)="stageLine(line)">
                   <i class="icon-check"></i>
                 </a>
-                <a class="btn btn-danger" *ngIf="line.op !== ' ' && _fileDetail.commit === 'tree'" (click)="unstageLine(line)">
+                <a class="btn btn-danger" *ngIf="line.op && line.op !== ' ' && _fileDetail.commit === 'tree'" (click)="unstageLine(line)">
                   <i class="icon-x"></i>
                 </a>
               </div>
