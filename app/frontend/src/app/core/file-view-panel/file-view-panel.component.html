@@ -9,38 +9,36 @@
       </label>
     </div>
   </div>
-  <div class="hunk-containers pr-1">
-    <div class="hunk-container" *ngFor="let hunk of _fileDetail.hunks">
-      <div class="hunk-action text-right mb-1 mt-1" *ngIf="mode !== 'file'">
-        <a class="btn btn-success btn-sm" *ngIf="_fileDetail.commit === 'workdir'" (click)="stageHunk(hunk)">Stage Hunk</a>
-        <a class="btn btn-danger btn-sm" *ngIf="_fileDetail.commit === 'tree'" (click)="unstageHunk(hunk)">Unstage Hunk</a>
-      </div>
-      <div class="d-flex">
-        <div class="hunk-headers" *ngIf="_fileDetail.hunks[0] && (_fileDetail.hunks[0].lines[0].op !== 'binary')">
-          <div class="hunk mb-3">
-            <div class="line d-flex" *ngFor="let line of hunk.lines" [class.added]="line.op==='+'" [class.deleted]="line.op==='-'">
-              <div class="line-action">
-                <a class="btn btn-success" *ngIf="line.op && line.op !== ' ' && _fileDetail.commit === 'workdir'" (click)="stageLine(line)">
-                  <i class="icon-check"></i>
-                </a>
-                <a class="btn btn-danger" *ngIf="line.op && line.op !== ' ' && _fileDetail.commit === 'tree'" (click)="unstageLine(line)">
-                  <i class="icon-x"></i>
-                </a>
-              </div>
-              <div class="op">{{line.op}}</div>
-              <div class="lineno">{{line.oldLineno > 0 ? line.oldLineno : ""}}</div>
-              <div class="lineno">{{line.newLineno > 0 ? line.newLineno : ""}}</div>
-            </div>
-          </div>
+  <div class="hunk-containers pr-1 d-flex">
+    <div class="hunk-headers" *ngIf="_fileDetail.hunks[0] && (_fileDetail.hunks[0].lines[0].op !== 'binary')">
+      <div class="hunk mb-3" *ngFor="let hunk of _fileDetail.hunks">
+        <div class="hunk-action mb-1 mt-1" *ngIf="mode !== 'file'">
+          <a class="btn btn-success btn-sm" *ngIf="isWorkdir()" (click)="stageHunk(hunk)">Stage Hunk</a>
+          <a class="btn btn-danger btn-sm" *ngIf="isTree()" (click)="unstageHunk(hunk)">Unstage Hunk</a>
         </div>
-        <div class="hunk-contents">
-          <div class="hunk-contents-inner">
-            <div class="hunk mb-3">
-              <div class="line" *ngFor="let line of hunk.lines" [class.added]="line.op==='+'" [class.deleted]="line.op==='-'">
-                <div class="content">
-                  <pre>{{line.content}}</pre>
-                </div>
-              </div>
+        <div class="line d-flex" *ngFor="let line of hunk.lines" [class.added]="line.op==='+'" [class.deleted]="line.op==='-'">
+          <div class="line-action">
+            <a class="btn btn-success" *ngIf="line.op && line.op !== ' ' && isWorkdir()" (click)="stageLine(line)">
+              <i class="icon-check"></i>
+            </a>
+            <a class="btn btn-danger" *ngIf="line.op && line.op !== ' ' && isTree()" (click)="unstageLine(line)">
+              <i class="icon-x"></i>
+            </a>
+          </div>
+          <div class="op">{{line.op}}</div>
+          <div class="lineno">{{line.oldLineno > 0 ? line.oldLineno : ""}}</div>
+          <div class="lineno">{{line.newLineno > 0 ? line.newLineno : ""}}</div>
+        </div>
+      </div>
+    </div>
+    <div class="hunk-contents">
+      <div class="hunk-contents-inner">
+        <div class="hunk mb-3" *ngFor="let hunk of _fileDetail.hunks">
+          <div class="hunk-action text-right mb-1 mt-1" *ngIf="mode !== 'file'"  [style.height]="isTree() || isWorkdir() ? '31px' : '0'"> 
+          </div>
+          <div class="line" *ngFor="let line of hunk.lines" [class.added]="line.op==='+'" [class.deleted]="line.op==='-'">
+            <div class="content">
+              <pre>{{line.content}}</pre>
             </div>
           </div>
         </div>

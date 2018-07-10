@@ -70,5 +70,11 @@ export class FileViewPanelComponent implements OnInit {
     });
     return lines;
   }
+  private isWorkdir(): boolean {
+    return this._fileDetail.commit === 'workdir';
+  }
+  private isTree(): boolean {
+    return this._fileDetail.commit === 'tree';
+  }
 
 }
