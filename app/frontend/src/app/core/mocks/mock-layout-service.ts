@@ -2,6 +2,11 @@ import { Output, EventEmitter } from "../../../../node_modules/@angular/core";
 
 export class MockLayout {
 
+    isLocalShown = true;
+    isRemoteShown = true;
+    isTagsShown = true;
+    isDetailPanelOpen = false;
+    isSubmoduleShown = true;
     set tooltipEnabled(tp) { }
     get tooltipEnabled() { return true; }
 
