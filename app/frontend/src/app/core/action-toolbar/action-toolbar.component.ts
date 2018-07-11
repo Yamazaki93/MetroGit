@@ -1,8 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { RepoService } from '../services/repo.service';
-import { CredentialsService } from '../services/credentials.service';
-import { NotificationsService } from 'angular2-notifications';
-import { Router } from '@angular/router';
 import { CommitChangeService } from '../services/commit-change.service';
 import { LayoutService } from '../services/layout.service';
 
@@ -21,10 +18,7 @@ export class ActionToolbarComponent implements OnInit {
   private tooltip = true;
   constructor(
     private repo: RepoService,
-    private cred: CredentialsService,
-    private noti: NotificationsService,
     private commit: CommitChangeService,
-    private route: Router,
     private layout: LayoutService,
   ) {
     repo.pulling.subscribe(state => {
