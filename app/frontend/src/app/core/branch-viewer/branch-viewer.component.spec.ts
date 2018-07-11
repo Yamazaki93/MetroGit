@@ -15,6 +15,8 @@ import { D3Service } from '../d3/d3.service';
 import { MockD3 } from '../mocks/mock-d3-service';
 import { MockSubmodule } from '../mocks/mock-submodule-service';
 import { SubmodulesService } from '../services/submodules.service';
+import { UpdaterService } from '../../infrastructure/updater.service';
+import { MockUpdater } from '../../infrastructure/mocks/mock-updater-service';
 
 describe('BranchViewerComponent', () => {
   let component: BranchViewerComponent;
@@ -31,7 +33,8 @@ describe('BranchViewerComponent', () => {
         {provide: RepoService, useClass: MockRepo},
         {provide: LayoutService, useClass: MockLayout},
         {provide: SubmodulesService, useClass: MockSubmodule},
-        {provide: D3Service, useClass: MockD3}
+        {provide: D3Service, useClass: MockD3},
+        {provide: UpdaterService, useClass: MockUpdater}
       ],
       schemas: [NO_ERRORS_SCHEMA],
     })
