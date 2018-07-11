@@ -1,4 +1,4 @@
-import { Output, EventEmitter } from "../../../../node_modules/@angular/core";
+import { Output, EventEmitter } from "@angular/core";
 import { CommitDetail, WIPCommit } from "../prototypes/commit";
 import { FileDetail } from "../prototypes/file-detail";
 

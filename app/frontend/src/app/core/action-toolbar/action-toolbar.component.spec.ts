@@ -6,13 +6,13 @@ import { InfrastructureModule } from '../../infrastructure/infrastructure.module
 import { CoreModule } from '../core.module';
 import { RepoService } from '../services/repo.service';
 import { ElectronService } from '../../infrastructure/electron.service';
-import { MockElectron } from '../../infrastructure/mocks/mock-electron.service';
+import { MockElectron } from '../../infrastructure/mocks/mock-electron-service';
 import { NotificationsService, SimpleNotificationsModule } from 'angular2-notifications';
 import { CredentialsService } from '../services/credentials.service';
 import { CommitChangeService } from '../services/commit-change.service';
 import { RouterTestingModule } from '@angular/router/testing';
 import { CommitSelectionService } from '../services/commit-selection.service';
-import { HotkeysService } from '../../../../node_modules/angular2-hotkeys';
+import { HotkeysService } from 'angular2-hotkeys';
 import { MockHotkeys } from '../mocks/mock-hotkeys-service';
 import { LayoutService } from '../services/layout.service';
 import { MockLayout } from '../mocks/mock-layout-service';

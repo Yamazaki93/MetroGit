@@ -3,7 +3,8 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { BranchListComponent } from './branch-list.component';
 import { BranchItemComponent } from '../branch-item/branch-item.component';
 import { D3Service } from '../d3/d3.service';
-import { MockD3 } from '../d3/mock-d3.service';
+import { MockD3 } from '../mocks/mock-d3-service';
+import { ContextMenuModule } from 'ngx-contextmenu';
 
 describe('BranchListComponent', () => {
   let component: BranchListComponent;
@@ -12,6 +13,9 @@ describe('BranchListComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [ BranchListComponent, BranchItemComponent ],
+      imports: [
+        ContextMenuModule
+      ],
       providers: [
         {provide: D3Service, useClass: MockD3}
       ]
