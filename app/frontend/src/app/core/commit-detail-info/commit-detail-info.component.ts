@@ -2,11 +2,7 @@ import { Component, OnInit, Sanitizer, Input, Output, EventEmitter, ViewChild, A
 import { D3Service } from '../d3/d3.service';
 import { DomSanitizer } from '@angular/platform-browser';
 import { CommitDetail, WIPCommit } from '../prototypes/commit';
-import * as moment from 'moment';
 import { CommitSelectionService } from '../services/commit-selection.service';
-import { NotificationsService } from 'angular2-notifications';
-import { Router } from '@angular/router';
-import { CredentialsService } from '../services/credentials.service';
 import { CommitChangeService } from '../services/commit-change.service';
 import { LayoutService } from '../services/layout.service';
 import { CommitFileListComponent } from '../commit-file-list/commit-file-list.component';
@@ -61,8 +57,6 @@ export class CommitDetailInfoComponent implements OnInit, AfterViewChecked {
     private d3: D3Service,
     private sanitize: DomSanitizer,
     private selection: CommitSelectionService,
-    private noti: NotificationsService,
-    private cred: CredentialsService,
     private commitChange: CommitChangeService,
     private layout: LayoutService
   ) {
