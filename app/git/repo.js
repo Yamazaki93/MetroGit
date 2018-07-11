@@ -604,6 +604,8 @@ function stageLines(path, requestedLines) {
             })
         })
         return Repo.stageLines(path, stageHunkLines, false);
+    }).then(() => {
+        return fileWatch.getStatus();
     });
 }
 
@@ -628,7 +630,9 @@ function unstageLines(path, requestedLines) {
             });
         });
         return Repo.stageLines(path, unstageHunkLines, true);
-    })
+    }).then(() => {
+        return fileWatch.getStatus();
+    });
 }
 
 function getAllHunkLinesInDiff(diff, path) {

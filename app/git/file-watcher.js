@@ -140,7 +140,7 @@ function subscribeUpdate(event, arg) {
                 event.sender.send('Repo-LiveUpdateFileNotFound', {});
             }
         });
-    }, 3 * 1000);
+    }, 2 * 1000);
     event.returnValue = subID;
 }
 
