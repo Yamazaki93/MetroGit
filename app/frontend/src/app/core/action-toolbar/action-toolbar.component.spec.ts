@@ -11,6 +11,11 @@ import { NotificationsService, SimpleNotificationsModule } from 'angular2-notifi
 import { CredentialsService } from '../services/credentials.service';
 import { CommitChangeService } from '../services/commit-change.service';
 import { RouterTestingModule } from '@angular/router/testing';
+import { CommitSelectionService } from '../services/commit-selection.service';
+import { HotkeysService } from '../../../../node_modules/angular2-hotkeys';
+import { MockHotkeys } from '../mocks/mock-hotkeys-service';
+import { LayoutService } from '../services/layout.service';
+import { MockLayout } from '../mocks/mock-layout-service';
 
 describe('ActionToolbarComponent', () => {
   let component: ActionToolbarComponent;
@@ -41,8 +46,11 @@ describe('ActionToolbarComponent', () => {
       providers: [
         {provide: ElectronService, useClass: MockElectron},
         RepoService,
+        {provide: HotkeysService, useClass: MockHotkeys},
         CredentialsService,
+        CommitSelectionService,
         CommitChangeService,
+        {provide: LayoutService, useClass: MockLayout}
       ],
       declarations: [ ActionToolbarComponent ]
     })
