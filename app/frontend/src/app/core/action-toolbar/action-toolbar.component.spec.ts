@@ -16,6 +16,9 @@ import { HotkeysService } from '../../../../node_modules/angular2-hotkeys';
 import { MockHotkeys } from '../mocks/mock-hotkeys-service';
 import { LayoutService } from '../services/layout.service';
 import { MockLayout } from '../mocks/mock-layout-service';
+import { MockCommitSelection } from '../mocks/mock-commit-selection-service';
+import { MockCommitChange } from '../mocks/mock-commit-change-service';
+import { MockRepo } from '../mocks/mock-repo-service';
 
 describe('ActionToolbarComponent', () => {
   let component: ActionToolbarComponent;
@@ -45,11 +48,9 @@ describe('ActionToolbarComponent', () => {
       ],
       providers: [
         {provide: ElectronService, useClass: MockElectron},
-        RepoService,
+        {provide: RepoService, useClass: MockRepo},
         {provide: HotkeysService, useClass: MockHotkeys},
-        CredentialsService,
-        CommitSelectionService,
-        CommitChangeService,
+        {provide: CommitChangeService, useClass: MockCommitChange},
         {provide: LayoutService, useClass: MockLayout}
       ],
       declarations: [ ActionToolbarComponent ]

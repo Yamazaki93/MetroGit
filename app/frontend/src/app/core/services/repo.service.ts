@@ -10,6 +10,7 @@ import { ForcePushPromptComponent } from '../force-push-prompt/force-push-prompt
 import { CommitChangeService } from './commit-change.service';
 import { CreateBranchPromptComponent } from '../create-branch-prompt/create-branch-prompt.component';
 import { HotkeysService, Hotkey } from 'angular2-hotkeys';
+import { Branch } from '../prototypes/branch';
 
 @Injectable()
 export class RepoService {
@@ -324,11 +325,3 @@ export class RepoService {
     this.electron.ipcRenderer.send('Repo-RemoveHistory', {workingDir: workingDir});
   }
 }
-
-interface Branch {
-  name: string;
-  fullName: string;
-  shorthand: string;
-  target: string;
-}
-
