@@ -8,8 +8,8 @@ import { MockCommitSelection } from '../mocks/mock-commit-selection-service';
 import { LoadingService } from '../../infrastructure/loading-service.service';
 import { MockLoading } from '../../infrastructure/mocks/mock-loading-service';
 import { ActivatedRoute } from '../../../../node_modules/@angular/router';
-import { Observable } from '../../../../node_modules/rxjs/Observable';
-import 'rxjs/add/observable/of';
+import { of } from 'rxjs/observable/of';
+
 
 describe('ExternalFileViewerComponent', () => {
   let component: ExternalFileViewerComponent;
@@ -24,7 +24,7 @@ describe('ExternalFileViewerComponent', () => {
         {
           provide: ActivatedRoute,
           useValue: {
-            params: Observable.of({ id: "test" })
+            params: of({ id: "test" })
           }
         },
         { provide: CommitSelectionService, useClass: MockCommitSelection },
