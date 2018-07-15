@@ -1,6 +1,7 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { SubtaskPromptComponent } from './subtask-prompt.component';
+import { FormsModule } from '../../../../node_modules/@angular/forms';
 
 describe('SubtaskPromptComponent', () => {
   let component: SubtaskPromptComponent;
@@ -8,6 +9,9 @@ describe('SubtaskPromptComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
+      imports: [
+        FormsModule
+      ],
       declarations: [ SubtaskPromptComponent ]
     })
     .compileComponents();
