@@ -9,7 +9,8 @@ import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { RouterTestingModule } from '@angular/router/testing';
 import { SettingsModule } from './settings/settings.module';
 import { ElectronService } from './infrastructure/electron.service';
-import { MockElectron } from './infrastructure/mocks/mock-electron.service';
+import { MockElectron } from './infrastructure/mocks/mock-electron-service';
+import { HotkeyModule } from 'angular2-hotkeys';
 
 describe('AppComponent', () => {
   beforeEach(async(() => {
@@ -32,6 +33,9 @@ describe('AppComponent', () => {
         }),
         RouterTestingModule,
         InfrastructureModule,
+        HotkeyModule.forRoot({
+          cheatSheetHotkey: '?',
+        }),
         SettingsModule,
         CoreModule,
       ],

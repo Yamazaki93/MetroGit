@@ -1,6 +1,7 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { CreateBranchPromptComponent } from './create-branch-prompt.component';
+import { FormsModule } from '../../../../node_modules/@angular/forms';
 
 describe('CreateBranchPromptComponent', () => {
   let component: CreateBranchPromptComponent;
@@ -8,7 +9,10 @@ describe('CreateBranchPromptComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ CreateBranchPromptComponent ]
+      declarations: [ CreateBranchPromptComponent ],
+      imports: [
+        FormsModule
+      ]
     })
     .compileComponents();
   }));

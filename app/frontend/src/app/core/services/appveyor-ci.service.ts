@@ -59,7 +59,7 @@ export class AppveyorCiService {
     electron.onCD('CI-AppVeyorRebuilded', (event, arg) => {
       this.notification.success(`Rebuild Scheduled ...`);
       this.loading.disableLoading();
-    })
+    });
   }
 
   init() {
