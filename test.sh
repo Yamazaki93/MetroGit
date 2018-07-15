@@ -1,2 +1,2 @@
 cd app/frontend
-ng test
+ng test --config=karma-ci.conf.js
