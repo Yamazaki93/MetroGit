@@ -1,6 +1,6 @@
 
 <img src="./app/visual/Icon-48.png">
-[![Build Status](https://travis-ci.com/Yamazaki93/MetroGit.svg?branch=master)](https://travis-ci.com/Yamazaki93/MetroGit)
+<a href="https://travis-ci.com/Yamazaki93/MetroGit"><img src="https://travis-ci.com/Yamazaki93/MetroGit.svg?branch=master"></a>
 
 # Metro themed Git UI
 
