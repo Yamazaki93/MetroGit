@@ -9,7 +9,7 @@ import { LoadingService } from '../../infrastructure/loading-service.service';
 import { MockLoading } from '../../infrastructure/mocks/mock-loading-service';
 import { ActivatedRoute } from '../../../../node_modules/@angular/router';
 import { Observable } from '../../../../node_modules/rxjs/Observable';
-import '../../../../node_modules/rxjs/add/Observable/of';
+import 'rxjs/add/observable/of';
 
 describe('ExternalFileViewerComponent', () => {
   let component: ExternalFileViewerComponent;
