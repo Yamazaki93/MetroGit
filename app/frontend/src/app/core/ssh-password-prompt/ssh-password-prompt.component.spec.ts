@@ -1,6 +1,7 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { SshPasswordPromptComponent } from './ssh-password-prompt.component';
+import { FormsModule } from '../../../../node_modules/@angular/forms';
 
 describe('SshPasswordPromptComponent', () => {
   let component: SshPasswordPromptComponent;
@@ -8,6 +9,9 @@ describe('SshPasswordPromptComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
+      imports: [
+        FormsModule,
+      ],
       declarations: [ SshPasswordPromptComponent ]
     })
     .compileComponents();
