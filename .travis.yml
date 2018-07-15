@@ -2,4 +2,6 @@ language: node_js
 node_js:
   - "8"
 install:
-  - "./install-dep.sh"
+  - "yarn install"
+  - "cd app/frontend"
+  - "yarn install"
