@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { RepoService } from '../services/repo.service';
 import { Commit } from '../prototypes/commit';
 import { LoadingService } from '../../infrastructure/loading-service.service';
-import { StatusBarService } from '../../infrastructure/status-bar.service';
 
 @Component({
   selector: 'app-git-view',
@@ -15,7 +14,6 @@ export class GitViewComponent implements OnInit {
   private commits: Commit[] = [];
   constructor(
     private repoService: RepoService,
-    private sbSvc: StatusBarService,
     private loading: LoadingService
   ) {
   }

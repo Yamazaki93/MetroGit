@@ -1,14 +1,42 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { BranchViewerComponent } from './branch-viewer.component';
+import { ActionToolbarComponent } from '../action-toolbar/action-toolbar.component';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { BranchListComponent } from '../branch-list/branch-list.component';
+import { OpenRepoPanelComponent } from '../open-repo-panel/open-repo-panel.component';
+import { NO_ERRORS_SCHEMA } from '@angular/core';
+import { RepoService } from '../services/repo.service';
+import { MockRepo } from '../mocks/mock-repo-service';
+import { RouterTestingModule } from '@angular/router/testing';
+import { LayoutService } from '../services/layout.service';
+import { MockLayout } from '../mocks/mock-layout-service';
+import { D3Service } from '../d3/d3.service';
+import { MockD3 } from '../mocks/mock-d3-service';
+import { MockSubmodule } from '../mocks/mock-submodule-service';
+import { SubmodulesService } from '../services/submodules.service';
+import { UpdaterService } from '../../infrastructure/updater.service';
+import { MockUpdater } from '../../infrastructure/mocks/mock-updater-service';
 
-describe('NavigationComponent', () => {
+describe('BranchViewerComponent', () => {
   let component: BranchViewerComponent;
   let fixture: ComponentFixture<BranchViewerComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ BranchViewerComponent ]
+      declarations: [ BranchViewerComponent ],
+      imports: [
+        NgbModule.forRoot(),
+        RouterTestingModule.withRoutes([]),
+      ],
+      providers: [
+        {provide: RepoService, useClass: MockRepo},
+        {provide: LayoutService, useClass: MockLayout},
+        {provide: SubmodulesService, useClass: MockSubmodule},
+        {provide: D3Service, useClass: MockD3},
+        {provide: UpdaterService, useClass: MockUpdater}
+      ],
+      schemas: [NO_ERRORS_SCHEMA],
     })
     .compileComponents();
   }));

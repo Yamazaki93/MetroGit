@@ -7,7 +7,7 @@
       </h3>
     </div>
   </div>
-  <div class="full-width" style="height: 100%; min-height: 0;">
+  <div class="full-width" style="height: 100%; min-height: 0;" *ngIf="fileDetail">
     <app-file-view-panel *ngIf="path" [(mode)]="mode" [detail]="fileDetail"></app-file-view-panel>
     <h5 class="text-center" *ngIf="!path"><code>{{oldPath}}</code> has no {{fileDetail.commit === 'workdir' ? 'unstaged' : 'staged'}} changes</h5>
   </div>

@@ -1,6 +1,15 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ExternalFileViewerComponent } from './external-file-viewer.component';
+import { NO_ERRORS_SCHEMA } from '../../../../node_modules/@angular/core';
+import { RouterTestingModule } from '../../../../node_modules/@angular/router/testing';
+import { CommitSelectionService } from '../services/commit-selection.service';
+import { MockCommitSelection } from '../mocks/mock-commit-selection-service';
+import { LoadingService } from '../../infrastructure/loading-service.service';
+import { MockLoading } from '../../infrastructure/mocks/mock-loading-service';
+import { ActivatedRoute } from '../../../../node_modules/@angular/router';
+import { Observable } from '../../../../node_modules/rxjs/Observable';
+import '../../../../node_modules/rxjs/add/Observable/of';
 
 describe('ExternalFileViewerComponent', () => {
   let component: ExternalFileViewerComponent;
@@ -8,9 +17,22 @@ describe('ExternalFileViewerComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ ExternalFileViewerComponent ]
+      declarations: [ExternalFileViewerComponent],
+      imports: [
+      ],
+      providers: [
+        {
+          provide: ActivatedRoute,
+          useValue: {
+            params: Observable.of({ id: "test" })
+          }
+        },
+        { provide: CommitSelectionService, useClass: MockCommitSelection },
+        { provide: LoadingService, useClass: MockLoading }
+      ],
+      schemas: [NO_ERRORS_SCHEMA],
     })
-    .compileComponents();
+      .compileComponents();
   }));
 
   beforeEach(() => {
