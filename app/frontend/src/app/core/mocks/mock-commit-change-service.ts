@@ -5,6 +5,7 @@ export class MockCommitChange {
     @Output() messageChange = new EventEmitter<string>();
     @Output() detailChange = new EventEmitter<string>();
     @Output() stashed = new EventEmitter();
+    @Output() popped = new EventEmitter();
     @Output() commitingChange = new EventEmitter<boolean>();
     defaultKey = "";
     set newCommitMessage(msg) {

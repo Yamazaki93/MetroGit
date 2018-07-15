@@ -2,8 +2,8 @@
   <a class="action-button" placement="right" [ngbTooltip]="tooltip? 'Create Branch' : ''" container="body" (click)="branch()">
     <i class="icon-git-branch"></i>
   </a>
-  <a class="action-button" placement="right" [ngbTooltip]="tooltip? (behind > 0 ? behind + ' behind' : 'Pull') : ''"
-    container="body" (click)="pull()">
+  <a class="action-button" placement="right" [ngbTooltip]="tooltip? (behind > 0 ? behind + ' behind' : 'Pull') : ''" container="body"
+    (click)="pull()" id="app-action-toolbar-pull-button">
     <i class="icon-arrow-down"></i>
     <app-spinner [enabled]="pulling"></app-spinner>
     <div class="badge" *ngIf="behind" [class.bg-warning]="ahead">
@@ -23,6 +23,7 @@
     <i class="icon-download"></i>
   </a>
   <a class="action-button" placement="right" [ngbTooltip]="tooltip? 'Pop Stash' : ''" container="body" (click)="pop()">
+    <app-spinner [enabled]="popping"></app-spinner>
     <i class="icon-upload"></i>
   </a>
 </div>

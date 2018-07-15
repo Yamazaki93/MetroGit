@@ -10,12 +10,13 @@ import { LayoutService } from '../services/layout.service';
 })
 export class ActionToolbarComponent implements OnInit {
 
-  private pulling = false;
-  private pushing = false;
-  private stashing = false;
-  private behind = 0;
-  private ahead = 0;
-  private tooltip = true;
+  pulling = false;
+  pushing = false;
+  stashing = false;
+  popping = false;
+  behind = 0;
+  ahead = 0;
+  tooltip = true;
   constructor(
     private repo: RepoService,
     private commit: CommitChangeService,
@@ -33,6 +34,9 @@ export class ActionToolbarComponent implements OnInit {
     });
     commit.stashed.subscribe(() => {
       this.stashing = false;
+    });
+    commit.popped.subscribe(() => {
+      this.popping = false;
     });
     layout.tooltipChanged.subscribe(tp => {
       this.tooltip = tp;
@@ -54,6 +58,7 @@ export class ActionToolbarComponent implements OnInit {
     this.commit.stash();
   }
   pop() {
+    this.popping = true;
     this.commit.pop();
   }
   branch() {

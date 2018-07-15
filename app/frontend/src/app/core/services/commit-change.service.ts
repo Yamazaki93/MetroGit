@@ -14,6 +14,7 @@ export class CommitChangeService {
   @Output() messageChange = new EventEmitter<string>();
   @Output() detailChange = new EventEmitter<string>();
   @Output() stashed = new EventEmitter();
+  @Output() popped = new EventEmitter();
   @Output() commitingChange = new EventEmitter<boolean>();
   private set commiting(cmting: boolean) {
     this._commiting = cmting;
@@ -81,6 +82,9 @@ export class CommitChangeService {
     });
     this.electron.onCD('Repo-Stashed', (event, arg) => {
       this.stashed.emit();
+    });
+    this.electron.onCD('Repo-Popped', (event, arg) => {
+      this.popped.emit();
     });
     cmtSelect.selectionChange.subscribe(newSelect => {
       if (<WIPCommit>newSelect) {
