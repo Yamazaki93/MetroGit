@@ -1,6 +1,7 @@
 import { Injectable, ChangeDetectorRef, NgZone } from '@angular/core';
 declare var electron: any;
 
+
 @Injectable()
 export class ElectronService {
   private initialized = false;
