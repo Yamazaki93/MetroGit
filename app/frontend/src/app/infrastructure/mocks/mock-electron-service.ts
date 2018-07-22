@@ -3,6 +3,7 @@ export class MockElectron {
         msg: string
         cb: Function,
     }[];
+    private messageSent: string[] = [];
 
     constructor() {
         this.handlers = [];
@@ -10,7 +11,7 @@ export class MockElectron {
 
     ipcRenderer = {
         send: (event, handler) => {
-
+            this.messageSent.push(event);
         }
     };
 
@@ -32,6 +33,9 @@ export class MockElectron {
                 h.cb(undefined, arg);
             }
         });
+    }
+    messageWasSent(event: string) {
+        return this.messageSent.indexOf(event) !== -1;
     }
     openUrlExternal(url: string) {
     }

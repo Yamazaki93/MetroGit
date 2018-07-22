@@ -326,6 +326,6 @@ export class RepoService {
   }
 
   initRepo() {
-
+    this.electron.ipcRenderer.send('Repo-InitBrowse', {});
   }
 }

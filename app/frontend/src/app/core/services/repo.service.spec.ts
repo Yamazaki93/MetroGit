@@ -41,4 +41,12 @@ describe('RepoService', () => {
   it('should be created', inject([RepoService], (service: RepoService) => {
     expect(service).toBeTruthy();
   }));
+
+  it('should send Repo-InitBrowse on initRepo',  inject([RepoService], (service: RepoService) => {
+    let electronSvc = TestBed.get(ElectronService) as MockElectron;
+
+    service.initRepo();
+
+    expect(electronSvc.messageWasSent('Repo-InitBrowse')).toBeTruthy();
+  }));
 });
