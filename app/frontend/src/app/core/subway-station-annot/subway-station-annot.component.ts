@@ -47,7 +47,9 @@ export class SubwayStationAnnotComponent implements OnInit {
       });
     });
     if (this.repo.hasRepository) {
-      this.currentBranch = this.repo.currentBranch.name;
+      if (this.repo.currentBranch) {
+        this.currentBranch = this.repo.currentBranch.name;
+      }
       this.commits = this.repo.getCommitsWithWIP();
       this.refs = this.repo.refDict;
       this.updateBranchInfo();
@@ -66,19 +68,21 @@ export class SubwayStationAnnotComponent implements OnInit {
   updateBranchInfo(): void {
     let targets = Object.keys(this.refs);
     this.branchInfos = [];
-    this.commits.forEach((cmt, i) => {
-      if (this.refs[cmt.sha]) {
-        let bi = {
-          top: this.height * i,
-          names: [],
-          target: cmt.sha,
-        };
-        this.refs[cmt.sha].forEach(ref => {
-          bi.names.push(ref);
-        });
-        this.branchInfos.push(bi);
-      }
-    });
+    if (this.commits) {
+      this.commits.forEach((cmt, i) => {
+        if (this.refs[cmt.sha]) {
+          let bi = {
+            top: this.height * i,
+            names: [],
+            target: cmt.sha,
+          };
+          this.refs[cmt.sha].forEach(ref => {
+            bi.names.push(ref);
+          });
+          this.branchInfos.push(bi);
+        }
+      });
+    }
     this.branchInfos.forEach(bi => {
       let consolidated = new Map<string, BranchInfo>();
       bi.names.forEach(na => {
