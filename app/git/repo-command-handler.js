@@ -6,7 +6,9 @@ var settings = null;
 var secure = null;
 
 ipcMain.on('Repo-Open', requireArgParams(openRepo, ['workingDir']));
+ipcMain.on('Repo-Init', requireArgParams(initRepo, ['path']));
 ipcMain.on('Repo-Browse', openBrowseFolderDialog);
+ipcMain.on('Repo-InitBrowse', openInitBrowseDialog);
 ipcMain.on('Repo-Fetch', requireArgParams(fetchRepo, ['username', 'password']));
 ipcMain.on('Repo-SetCred', requireArgParams(setCredentials, ['username', 'password']));
 ipcMain.on('Repo-Pull', requireArgParams(pull, ['username', 'password', 'option']));
@@ -75,6 +77,14 @@ function openRepo(event, arg) {
     });
 }
 
+function initRepo(event, arg) {
+    repoService.initRepo(arg.path).then(() => {
+        openRepo(event, {workingDir: arg.path});
+    }).catch(err => {
+        console.log(err);
+    });
+}
+
 function setCredentials(event, arg) {
     settings.updateRepoSetting('auth-username', arg.username);
     repoService.getCurrentFirstRemote().then(remote => {
@@ -119,6 +129,13 @@ function openBrowseFolderDialog(event, arg) {
     let selectedPath = dialog.showOpenDialog({ properties: ['openDirectory'] });
     if (selectedPath && selectedPath.length > 0) {
         event.sender.send('Repo-FolderSelected', { path: selectedPath[0] });
+    }
+}
+
+function openInitBrowseDialog(event, arg) {
+    let selectedPath = dialog.showOpenDialog({ properties: ['openDirectory'] });
+    if (selectedPath && selectedPath.length > 0) {
+        event.sender.send('Repo-InitPathSelected', { path: selectedPath[0] });
     }
 }
 

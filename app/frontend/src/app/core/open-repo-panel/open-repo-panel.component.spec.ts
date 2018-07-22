@@ -38,9 +38,9 @@ describe('OpenRepoPanelComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should delegate initialize new repo', () => {
+  it('should delegate initialize new repo to browseInitFolder', () => {
     let repoSvc = TestBed.get(RepoService);
-    let openRepoSpy = spyOn(repoSvc, 'initRepo').and.callThrough();
+    let openRepoSpy = spyOn(repoSvc, 'browseInitFolder').and.callThrough();
 
     fixture.nativeElement.querySelector('#open-repo-panel-init-btn').click();
 

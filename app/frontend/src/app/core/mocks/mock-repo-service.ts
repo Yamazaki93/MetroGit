@@ -60,6 +60,6 @@ export class MockRepo {
     }
     removeRepoSetting(workingDir) {
     }
-    initRepo() {
+    browseInitFolder() {
     }
 }

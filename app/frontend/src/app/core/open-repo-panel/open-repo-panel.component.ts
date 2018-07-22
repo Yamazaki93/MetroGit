@@ -43,6 +43,6 @@ export class OpenRepoPanelComponent implements OnInit {
     $event.stopPropagation();
   }
   initRepo() {
-    this.repoService.initRepo();
+    this.repoService.browseInitFolder();
   }
 }

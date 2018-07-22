@@ -221,6 +221,9 @@ export class RepoService {
       let n = this.noti.success("Tag Deleted", `Tag ${arg.name} deleted successfully.`);
       this.pushTag(arg.name, true);
     });
+    this.electron.onCD('Repo-InitPathSelected', (event, arg) => {
+      this.electron.ipcRenderer.send('Repo-Init', {path: arg.path});
+    });
     this.cred.credentialChange.subscribe(newCreds => {
       this.retry();
     });
@@ -325,7 +328,7 @@ export class RepoService {
     this.electron.ipcRenderer.send('Repo-RemoveHistory', {workingDir: workingDir});
   }
 
-  initRepo() {
+  browseInitFolder() {
     this.electron.ipcRenderer.send('Repo-InitBrowse', {});
   }
 }
