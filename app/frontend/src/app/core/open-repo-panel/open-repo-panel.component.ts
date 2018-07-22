@@ -42,4 +42,7 @@ export class OpenRepoPanelComponent implements OnInit {
     this.repoService.removeRepoSetting(workingDir);
     $event.stopPropagation();
   }
+  initRepo() {
+    this.repoService.initRepo();
+  }
 }

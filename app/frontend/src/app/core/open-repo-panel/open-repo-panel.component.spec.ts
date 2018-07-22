@@ -37,4 +37,13 @@ describe('OpenRepoPanelComponent', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
+
+  it('should delegate initialize new repo', () => {
+    let repoSvc = TestBed.get(RepoService);
+    let openRepoSpy = spyOn(repoSvc, 'initRepo').and.callThrough();
+
+    fixture.nativeElement.querySelector('#open-repo-panel-init-btn').click();
+
+    expect(openRepoSpy).toHaveBeenCalled();
+  });
 });

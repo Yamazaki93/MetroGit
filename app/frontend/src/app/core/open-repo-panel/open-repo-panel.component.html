@@ -9,6 +9,7 @@
       <h4>
         <i class="icon-folder mr-3"></i>Repositories</h4>
       <a class="btn btn-primary" (click)="openBrowseDialog()">Browse</a>
+      <a class="btn btn-success" (click)="initRepo()" id="open-repo-panel-init-btn">Initialize New Repo</a>
     </div>
     <div class="history-container">
       <div class="content-container" *ngFor="let r of history">

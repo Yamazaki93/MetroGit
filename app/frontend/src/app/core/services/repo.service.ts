@@ -324,4 +324,8 @@ export class RepoService {
   removeRepoSetting(workingDir) {
     this.electron.ipcRenderer.send('Repo-RemoveHistory', {workingDir: workingDir});
   }
+
+  initRepo() {
+
+  }
 }
