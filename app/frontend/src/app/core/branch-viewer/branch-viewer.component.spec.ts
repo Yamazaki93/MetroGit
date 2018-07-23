@@ -75,4 +75,15 @@ describe('BranchViewerComponent', () => {
     component.toggleNavigation();
     expect(component.toggled).toBeFalsy();
   });
+  it('should not error out if repo exist without current branch (right after init)', () => {
+    let RepoSvc = TestBed.get(RepoService) as MockRepo;
+    RepoSvc.hasRepository = true;
+    RepoSvc.currentBranch = undefined;
+
+    let fixtureLocal = TestBed.createComponent(BranchViewerComponent);
+    let compLocal = fixtureLocal.componentInstance;
+    fixtureLocal.detectChanges();
+
+    expect(compLocal).toBeTruthy();
+  });
 });

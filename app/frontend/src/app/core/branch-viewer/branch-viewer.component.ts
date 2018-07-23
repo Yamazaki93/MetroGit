@@ -75,8 +75,10 @@ export class BranchViewerComponent implements OnInit {
     });
     if (this.repoService.hasRepository) {
       this.repoName = this.repoService.repoName;
-      this.branchName = this.repoService.currentBranch.name;
-      this.branchTarget = this.repoService.currentBranch.target;
+      if (this.repoService.currentBranch) {
+        this.branchName = this.repoService.currentBranch.name;
+        this.branchTarget = this.repoService.currentBranch.target;
+      }
       this.refs = this.repoService.refs;
       this.updateReferences(this.refs);
     }

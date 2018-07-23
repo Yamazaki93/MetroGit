@@ -9,9 +9,11 @@ import { D3Service } from '../d3/d3.service';
 export class BranchListComponent implements OnInit, AfterViewInit {
   @Input()
   set branches(bch: Branch[]) {
-    this._branches = bch;
-    this.updateBranchVisual();
-    this.cd.detectChanges();
+    if (bch) {
+      this._branches = bch;
+      this.updateBranchVisual();
+      this.cd.detectChanges();
+    }
   }
   @Input()
   set collapseAll(cp: boolean) {
