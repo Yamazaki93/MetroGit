@@ -558,7 +558,7 @@ function getCurrentBranch() {
             let branchName = branchNames[branchNames.length - 1];
             window.webContents.send('Repo-BranchChanged', { name: branchName, fullName: ref.name(), shorthand: ref.shorthand(), target: ref.target().toString() });
         }).catch(err => {
-            console.log(err);
+            window.webContents.send('Repo-BranchChanged', { name: "", fullName: "", shorthand: "", target: "" });
         });
     }
 }

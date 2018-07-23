@@ -224,6 +224,9 @@ export class RepoService {
     this.electron.onCD('Repo-InitPathSelected', (event, arg) => {
       this.electron.ipcRenderer.send('Repo-Init', {path: arg.path});
     });
+    this.electron.onCD('Repo-InitSuccessful', (event, arg) => {
+      this.openRepo(arg.path);
+    });
     this.cred.credentialChange.subscribe(newCreds => {
       this.retry();
     });

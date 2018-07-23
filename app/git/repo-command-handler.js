@@ -79,7 +79,7 @@ function openRepo(event, arg) {
 
 function initRepo(event, arg) {
     repoService.initRepo(arg.path).then(() => {
-        openRepo(event, {workingDir: arg.path});
+        event.sender.send('Repo-InitSuccessful', {path: arg.path});
     }).catch(err => {
         console.log(err);
     });

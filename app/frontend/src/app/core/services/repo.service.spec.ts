@@ -50,12 +50,20 @@ describe('RepoService', () => {
     expect(electronSvc.messageWasSent('Repo-InitBrowse')).toBeTruthy();
   }));
 
-  it('should send Repo-Init on Repo-InitPathSelected',  inject([RepoService], (service: RepoService) => {
+  it('should send Repo-Init on Repo-InitPathSelected', inject([RepoService], (service: RepoService) => {
     let electronSvc = TestBed.get(ElectronService) as MockElectron;
     service.init();
 
     electronSvc.receiveEvent('Repo-InitPathSelected', {path: 'TestPath'});
 
     expect(electronSvc.messageWasSent('Repo-Init')).toBeTruthy();
+  }));
+  it('should openRepo on Repo-InitSuccessful', inject([RepoService], (service: RepoService) => {
+    let electronSvc = TestBed.get(ElectronService) as MockElectron;
+    service.init();
+
+    electronSvc.receiveEvent('Repo-InitSuccessful', {path: 'TestPath'});
+
+    expect(electronSvc.messageWasSent('Repo-Open')).toBeTruthy();
   }));
 });
