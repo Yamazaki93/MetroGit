@@ -131,7 +131,7 @@ function getFileDetailWrapper(event, arg) {
 }
 
 function subscribeUpdate(event, arg) {
-    let subID = uuid.v4();    
+    let subID = uuid.v4();
     fileRefreshSubscriptions[subID] = setInterval(() => {
         getFileDetail(arg.file, arg.commit, arg.fullFile).then(result => {
             event.sender.send('Repo-FileDetailRetrieved', result);
@@ -145,7 +145,7 @@ function subscribeUpdate(event, arg) {
 }
 
 function unsubscribeUpdate(event, arg) {
-    if(fileRefreshSubscriptions[arg.id]) {
+    if (fileRefreshSubscriptions[arg.id]) {
         clearInterval(fileRefreshSubscriptions[arg.id]);
         delete fileRefreshSubscriptions[arg.id];
     }
@@ -172,10 +172,12 @@ function getFileDetail(path, commit, fullFile = false) {
         return Repo.index().then(ind => {
             index = ind;
             return Repo.getHeadCommit().then(cmt => {
-                return cmt.getTree()
-            });
-        }).then(tree => {
-            return NodeGit.Diff.treeToIndex(Repo, tree, index);
+                return cmt.getTree();
+            }).then(tree => {
+                return NodeGit.Diff.treeToIndex(Repo, tree, index);
+            }).catch(err => {
+                return NodeGit.Diff.treeToIndex(Repo, null, index);
+            })
         }).then(diff => {
             return processDiff(diff, path, commit, fullFile);
         })
@@ -311,7 +313,7 @@ function getFileLines(commit, path) {
     });
 }
 
-function unsubscribeAllUpdate(){
+function unsubscribeAllUpdate() {
     let subs = Object.keys(fileRefreshSubscriptions);
     subs.forEach(s => {
         clearInterval(fileRefreshSubscriptions[s]);
