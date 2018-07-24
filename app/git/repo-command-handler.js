@@ -79,9 +79,9 @@ function openRepo(event, arg) {
 
 function initRepo(event, arg) {
     repoService.initRepo(arg.path).then(() => {
-        event.sender.send('Repo-InitSuccessful', {path: arg.path});
+        event.sender.send('Repo-InitSuccessful', { path: arg.path });
     }).catch(err => {
-        console.log(err);
+        event.sender.send('Repo-InitFailed', { detail_message: err });
     });
 }
 
@@ -291,7 +291,7 @@ function deleteTag(event, arg) {
 
 function deleteBranch(event, arg) {
     repoService.deleteBranch(arg.name, arg.username, arg.password).then(res => {
-        event.sender.send('Repo-BranchDeleted', {name: arg.name, upstream: res.upstream});
+        event.sender.send('Repo-BranchDeleted', { name: arg.name, upstream: res.upstream });
     }).catch(err => {
         operationFailed('Repo-BranchDeleteFailed', event, err);
     });

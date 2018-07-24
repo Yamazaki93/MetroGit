@@ -227,6 +227,9 @@ export class RepoService {
     this.electron.onCD('Repo-InitSuccessful', (event, arg) => {
       this.openRepo(arg.path);
     });
+    this.electron.onCD('Repo-InitFailed', (event, arg) => {
+      this.noti.error('Initialization Error', 'Failed to initialize repository');
+    });
     this.cred.credentialChange.subscribe(newCreds => {
       this.retry();
     });
