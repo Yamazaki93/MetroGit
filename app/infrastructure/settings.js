@@ -67,10 +67,10 @@ let load = function (path) {
             settingsObj.app_settings[k] = defaultSettings.app_settings[k];
         }
     })
-    save();
     if (settingsObj.currentRepo) {
         initRepoSettings(settingsObj.currentRepo.id);
     }
+    save();
     updateSSHKey();
     notifySettingsUpdated();
 }
