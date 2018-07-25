@@ -455,7 +455,9 @@ function refreshRepo() {
         let req = [getCommits(),
         getCurrentBranch(),
         getReferences(),
-        updateCurrentBranchPosition()];
+        updateCurrentBranchPosition().catch(err => {
+            console.log(err);
+        })];
         return Promise.all(req);
     } else {
         return Promise.resolve();
@@ -493,6 +495,7 @@ function openRepo(workingDir) {
                 let url = remotes[0].url();
                 window.webContents.send('Repo-RemotesChanged', { remote: url });
             }
+        }).catch(err => {
         });
         clearInterval(refreshInterval);
         refreshInterval = setInterval(() => {
@@ -500,6 +503,10 @@ function openRepo(workingDir) {
         }, 10 * 1000);
         return refreshRepo();
     });
+}
+
+function initRepo(path) {
+    return NodeGit.Repository.init(path, 0);
 }
 
 function checkSSHKey() {
@@ -550,6 +557,8 @@ function getCurrentBranch() {
             let branchNames = ref.name().split('/');
             let branchName = branchNames[branchNames.length - 1];
             window.webContents.send('Repo-BranchChanged', { name: branchName, fullName: ref.name(), shorthand: ref.shorthand(), target: ref.target().toString() });
+        }).catch(err => {
+            window.webContents.send('Repo-BranchChanged', { name: "", fullName: "", shorthand: "", target: "" });
         });
     }
 }
@@ -942,6 +951,7 @@ function closeRepo() {
 
 module.exports = {
     init: init,
+    initRepo: initRepo,
     openRepo: openRepo,
     fetchRepo: requireRepo(fetchRepo),
     getCurrentRemotes: requireRepo(getCurrentRemotes),

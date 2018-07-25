@@ -76,5 +76,8 @@ export class FileViewPanelComponent implements OnInit {
   private isTree(): boolean {
     return this._fileDetail.commit === 'tree';
   }
+  private isValidLine(line): boolean {
+    return line.op && (line.op === '+' || line.op === '-');
+  }
 
 }

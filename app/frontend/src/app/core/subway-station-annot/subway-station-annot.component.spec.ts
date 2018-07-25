@@ -42,11 +42,16 @@ describe('SubwayStationAnnotComponent', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
-});
+  it('should not error out if repo exist without current branch and commits (right after init)', () => {
+    let RepoSvc = TestBed.get(RepoService) as MockRepo;
+    RepoSvc.hasRepository = true;
+    RepoSvc.currentBranch = undefined;
+    spyOn(RepoSvc, 'getCommitsWithWIP').and.returnValue([]);
 
-/*
-    private repo: RepoService,
-    private commitSelection: CommitSelectionService,
-    private d3: D3Service,
-    private ctxService: ContextMenuService
-*/
+    let fixtureLocal = TestBed.createComponent(SubwayStationAnnotComponent);
+    let compLocal = fixtureLocal.componentInstance;
+    fixtureLocal.detectChanges();
+
+    expect(compLocal).toBeTruthy();
+  });
+});

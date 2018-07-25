@@ -33,15 +33,15 @@ describe('ActionToolbarComponent', () => {
         InfrastructureModule,
       ],
       providers: [
-        {provide: ElectronService, useClass: MockElectron},
-        {provide: RepoService, useClass: MockRepo},
-        {provide: HotkeysService, useClass: MockHotkeys},
-        {provide: CommitChangeService, useClass: MockCommitChange},
-        {provide: LayoutService, useClass: MockLayout}
+        { provide: ElectronService, useClass: MockElectron },
+        { provide: RepoService, useClass: MockRepo },
+        { provide: HotkeysService, useClass: MockHotkeys },
+        { provide: CommitChangeService, useClass: MockCommitChange },
+        { provide: LayoutService, useClass: MockLayout }
       ],
-      declarations: [ ActionToolbarComponent ]
+      declarations: [ActionToolbarComponent]
     })
-    .compileComponents();
+      .compileComponents();
   }));
 
   beforeEach(() => {
@@ -53,4 +53,51 @@ describe('ActionToolbarComponent', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
+  it('should indicate pulling status on pulling emit', () => {
+    let repo = TestBed.get(RepoService) as RepoService;
+
+    repo.pulling.emit(true);
+    fixture.detectChanges();
+
+    expect(component.pulling).toBeTruthy();
+  });
+  it('should indicate pushing status on pushing emit', () => {
+    let repo = TestBed.get(RepoService) as RepoService;
+
+    repo.pushing.emit(true);
+    fixture.detectChanges();
+
+    expect(component.pushing).toBeTruthy();
+  });
+  it('should indicate stashing status on stash', () => {
+    component.stash();
+    fixture.detectChanges();
+
+    expect(component.stashing).toBeTruthy();
+  });
+  it('should not indicating stashing after stashed', () => {
+    let cc = TestBed.get(CommitChangeService) as CommitChangeService;
+
+    component.stash();
+    cc.stashed.emit();
+    fixture.detectChanges();
+
+    expect(component.stashing).toBeFalsy();
+  });
+  it('should indicate popping status on pop', () => {
+    component.pop();
+    fixture.detectChanges();
+
+    expect(component.popping).toBeTruthy();
+  });
+  it('should not indicating popping after popped', () => {
+    let cc = TestBed.get(CommitChangeService) as CommitChangeService;
+
+    component.pop();
+    cc.popped.emit();
+    fixture.detectChanges();
+
+    expect(component.popping).toBeFalsy();
+  });
 });
+

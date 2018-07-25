@@ -35,4 +35,16 @@ describe('CommitChangeService', () => {
   it('should be created', inject([CommitChangeService], (service: CommitChangeService) => {
     expect(service).toBeTruthy();
   }));
+
+  it('should emit popped when Repo-Popped', inject([CommitChangeService], (service: CommitChangeService)  => {
+    let electron = TestBed.get(ElectronService) as MockElectron;
+    let emit = false;
+    service.popped.subscribe(() => {
+      emit = true;
+    });
+
+    electron.receiveEvent('Repo-Popped', {});
+
+    expect(emit).toBeTruthy();
+  }));
 });
