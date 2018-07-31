@@ -52,7 +52,7 @@ export class JiraDetailComponent implements OnInit, OnDestroy {
     this.subs.push(jira.issueRetrieved.subscribe(iss => {
       if (!iss) {
         this.loading = false;
-      }  else if (iss.key === this.currentIssueKey) {
+      } else if (iss.key === this.currentIssueKey) {
         this.issue = iss;
         this.formatCurrentIssue();
         this.querySubtasks();
@@ -159,7 +159,7 @@ export class JiraDetailComponent implements OnInit, OnDestroy {
   }
   updateTitle() {
     this.loading = true;
-    this.jira.updateIssue(this.issue.key, {summary: this.issue.fields.summary}, null);
+    this.jira.updateIssue(this.issue.key, { summary: this.issue.fields.summary }, null);
   }
 
   private delayEnableLoading() {
@@ -170,6 +170,9 @@ export class JiraDetailComponent implements OnInit, OnDestroy {
   }
   loadIssue(key) {
     this.loading = true;
+    if (key !== this.currentIssueKey) {
+      this.jira.pushPrevious(key);
+    }
     this.currentIssueKey = key;
     this.jira.getIssue(key);
   }

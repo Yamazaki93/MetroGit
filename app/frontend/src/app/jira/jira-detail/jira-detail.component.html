@@ -6,6 +6,16 @@
     <div class="full-width">
       <app-key-selector #keySelector (issueSelected)="loadIssue($event)" [currentIssueKey]="currentIssueKey"></app-key-selector>
     </div>
+    <div class="external-link mr-2"  *ngIf="issue" placement="left" [ngbTooltip]="tooltip? 'Previous Issue' : ''" container="body">
+      <h5>
+        <i class="icon-arrow-left"></i>
+      </h5>
+    </div>
+    <div class="external-link mr-2"  *ngIf="issue" placement="left" [ngbTooltip]="tooltip? 'Next Issue' : ''" container="body">
+      <h5>
+        <i class="icon-arrow-right"></i>
+      </h5>
+    </div>
     <div class="external-link mr-2"  *ngIf="issue" placement="left" [ngbTooltip]="tooltip? 'Refresh' : ''" container="body" (click)="refreshIssue()">
       <h5>
         <i class="icon-refresh-cw"></i>

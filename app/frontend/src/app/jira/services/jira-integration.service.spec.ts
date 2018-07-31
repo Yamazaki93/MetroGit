@@ -24,4 +24,26 @@ describe('JiraIntegrationService', () => {
   it('should be created', inject([JiraIntegrationService], (service: JiraIntegrationService) => {
     expect(service).toBeTruthy();
   }));
+
+  it('should register issue as previous when call pushPrevious', inject([JiraIntegrationService], (service: JiraIntegrationService) => {
+    service.pushPrevious('TEST');
+    service.pushPrevious('TEST2');
+
+    expect(service.previousIssueStack[0]).toBe('TEST');
+    expect(service.previousIssueStack[1]).toBe('TEST2');
+  }));
+  it('should emit previousStateChanged true once when there\'s previous issue added', inject([JiraIntegrationService], (service: JiraIntegrationService) => {
+    let emit = false;
+    service.previousIssueStateChanged.subscribe(state => {
+      emit = state;
+    });
+    service.pushPrevious('TEST');
+
+    expect(emit).toBeTruthy();
+
+    emit = false;
+    service.pushPrevious('TEST');
+
+    expect(emit).toBeFalsy();
+  }));
 });

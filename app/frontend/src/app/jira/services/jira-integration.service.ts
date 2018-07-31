@@ -17,8 +17,12 @@ export class JiraIntegrationService {
   @Output() issueQueryRetrieved: EventEmitter<Issue[]> = new EventEmitter<Issue[]>();
   @Output() resolutionRetrieved: EventEmitter<Resolution[]> = new EventEmitter<Resolution[]>();
   @Output() changeIssue: EventEmitter<string> = new EventEmitter<string>();
+  @Output() previousIssueStateChanged: EventEmitter<boolean> = new EventEmitter<boolean>();
+  @Output() nextIssueStateChanged: EventEmitter<boolean> = new EventEmitter<boolean>();
   enabled = false;
   jiraUrl = "";
+  previousIssueStack: string[] = [];
+  nextIssueStack: string[] = [];
   private jiraKeys = [];
   resolutions: Resolution[] = [];
   private issueTypes: IssueType[] = [];
@@ -122,7 +126,7 @@ export class JiraIntegrationService {
     this.electron.ipcRenderer.send('JIRA-AssignIssue', { key: key, name: name });
   }
   addSubtask(key, name, projectId) {
-    this.electron.ipcRenderer.send('JIRA-AddSubtask', { key: key, name: name, projectId: projectId, subtaskId: this.subtaskType.id});
+    this.electron.ipcRenderer.send('JIRA-AddSubtask', { key: key, name: name, projectId: projectId, subtaskId: this.subtaskType.id });
   }
   searchIssuesByKey(keyQuery, fields?) {
     let jql = `key = "${keyQuery}"`;
@@ -134,5 +138,11 @@ export class JiraIntegrationService {
   }
   navigateToIssue(key) {
     this.changeIssue.emit(key);
+  }
+  pushPrevious(key) {
+    this.previousIssueStack.push(key);
+    if (this.previousIssueStack.length === 1) {
+      this.previousIssueStateChanged.emit(true);
+    }
   }
 }
