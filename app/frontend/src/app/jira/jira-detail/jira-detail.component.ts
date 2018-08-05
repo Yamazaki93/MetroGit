@@ -24,9 +24,12 @@ export class JiraDetailComponent implements OnInit, OnDestroy {
     if (cmt) {
       let result = this.jira.parseKeyFromMessage(cmt.message, cmt.detail);
       if (result.length > 0) {
+        if (this.currentIssueKey && this.currentIssueKey !== result[0]) {
+          this.jira.pushPrevious(this.currentIssueKey);
+        }
         this.currentIssueKey = result[0];
         this.loading = true;
-        this.jira.getIssue(this.currentIssueKey);
+        this.jira.navigateToIssue(this.currentIssueKey);
       }
     } else if (!this.issue) {
       this.currentIssueKey = "";
@@ -185,11 +188,15 @@ export class JiraDetailComponent implements OnInit, OnDestroy {
     this.jira.getIssue(key);
   }
   gotoPrevious() {
-    this.jira.pushNext(this.currentIssueKey);
-    this.jira.gotoPrevious();
+    if (this.canPrevious) {
+      this.jira.pushNext(this.currentIssueKey);
+      this.jira.gotoPrevious();
+    }
   }
   gotoNext() {
-    this.jira.pushPrevious(this.currentIssueKey);
-    this.jira.gotoNext();
+    if (this.canNext) {
+      this.jira.pushPrevious(this.currentIssueKey);
+      this.jira.gotoNext();
+    }
   }
 }
