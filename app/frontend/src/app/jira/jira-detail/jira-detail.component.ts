@@ -33,6 +33,8 @@ export class JiraDetailComponent implements OnInit, OnDestroy {
       this.keySelector.enableEditing();
     }
   }
+  canPrevious = false;
+  canNext = false;
   private currentIssueKey = "";
   private issue: Issue;
   private issueIconUrl: SafeResourceUrl;
@@ -78,6 +80,12 @@ export class JiraDetailComponent implements OnInit, OnDestroy {
     }));
     layout.tooltipChanged.subscribe(tp => {
       this.tooltip = tp;
+    });
+    jira.previousIssueStateChanged.subscribe(s => {
+      this.canPrevious = s;
+    });
+    jira.nextIssueStateChanged.subscribe(s => {
+      this.canNext = s;
     });
     this.tooltip = layout.tooltipEnabled;
   }

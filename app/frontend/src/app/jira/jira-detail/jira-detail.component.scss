@@ -37,6 +37,10 @@
         &:hover {
             color: var(--blue);
         }
+        &.disabled {
+            cursor: default;
+            color: var(--gray) !important;
+        }
     }
     .icon-container {
         min-width: 0;
