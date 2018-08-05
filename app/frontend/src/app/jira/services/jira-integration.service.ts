@@ -140,9 +140,37 @@ export class JiraIntegrationService {
     this.changeIssue.emit(key);
   }
   pushPrevious(key) {
-    this.previousIssueStack.push(key);
+    if (this.previousIssueStack.indexOf(key) === -1) {
+      this.previousIssueStack.push(key);
+    }
     if (this.previousIssueStack.length === 1) {
       this.previousIssueStateChanged.emit(true);
+    }
+  }
+  pushNext(key) {
+    if (this.nextIssueStack.indexOf(key) === -1) {
+      this.nextIssueStack.push(key);
+    }
+    if (this.nextIssueStack.length === 1) {
+      this.nextIssueStateChanged.emit(true);
+    }
+  }
+  gotoPrevious() {
+    if (this.previousIssueStack.length) {
+      let issue = this.previousIssueStack.pop();
+      this.navigateToIssue(issue);
+      if (!this.previousIssueStack.length) {
+        this.previousIssueStateChanged.emit(false);
+      }
+    }
+  }
+  gotoNext() {
+    if (this.nextIssueStack.length) {
+      let issue = this.nextIssueStack.pop();
+      this.navigateToIssue(issue);
+      if (!this.nextIssueStack.length) {
+        this.nextIssueStateChanged.emit(false);
+      }
     }
   }
 }

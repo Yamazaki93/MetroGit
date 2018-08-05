@@ -179,9 +179,17 @@ export class JiraDetailComponent implements OnInit, OnDestroy {
   loadIssue(key) {
     this.loading = true;
     if (key !== this.currentIssueKey) {
-      this.jira.pushPrevious(key);
+      this.jira.pushPrevious(this.currentIssueKey);
     }
     this.currentIssueKey = key;
     this.jira.getIssue(key);
+  }
+  gotoPrevious() {
+    this.jira.pushNext(this.currentIssueKey);
+    this.jira.gotoPrevious();
+  }
+  gotoNext() {
+    this.jira.pushPrevious(this.currentIssueKey);
+    this.jira.gotoNext();
   }
 }
