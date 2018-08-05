@@ -142,17 +142,17 @@ export class JiraIntegrationService {
   pushPrevious(key) {
     if (this.previousIssueStack.indexOf(key) === -1) {
       this.previousIssueStack.push(key);
-    }
-    if (this.previousIssueStack.length === 1) {
-      this.previousIssueStateChanged.emit(true);
+      if (this.previousIssueStack.length === 1) {
+        this.previousIssueStateChanged.emit(true);
+      }
     }
   }
   pushNext(key) {
     if (this.nextIssueStack.indexOf(key) === -1) {
       this.nextIssueStack.push(key);
-    }
-    if (this.nextIssueStack.length === 1) {
-      this.nextIssueStateChanged.emit(true);
+      if (this.nextIssueStack.length === 1) {
+        this.nextIssueStateChanged.emit(true);
+      }
     }
   }
   gotoPrevious() {
