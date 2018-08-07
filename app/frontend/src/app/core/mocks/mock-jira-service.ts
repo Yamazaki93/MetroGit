@@ -13,6 +13,8 @@ export class MockJira {
     @Output() issueQueryRetrieved: EventEmitter<Issue[]> = new EventEmitter<Issue[]>();
     @Output() resolutionRetrieved: EventEmitter<Resolution[]> = new EventEmitter<Resolution[]>();
     @Output() changeIssue: EventEmitter<string> = new EventEmitter<string>();
+    @Output() previousIssueStateChanged: EventEmitter<boolean> = new EventEmitter<boolean>();
+    @Output() nextIssueStateChanged: EventEmitter<boolean> = new EventEmitter<boolean>();
     enabled = false;
     jiraUrl = "";
     resolutions: Resolution[] = [];
@@ -38,5 +40,7 @@ export class MockJira {
     searchIssuesBySummary(textQuery, fields?) {
     }
     navigateToIssue(key) {
+    }
+    pushPrevious(key) {
     }
 }

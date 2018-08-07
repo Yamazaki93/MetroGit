@@ -38,4 +38,28 @@ describe('JiraDetailComponent', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
+  it('should call jiraService.pushPrevious when loading different issue', () => {
+    let jiraSvc = TestBed.get(JiraIntegrationService) as MockJira;
+    let previousSpy = spyOn(jiraSvc, 'pushPrevious').and.callThrough();
+    component.loadIssue('TEST');
+
+    expect(previousSpy).toHaveBeenCalled();
+  });
+
+  it('should not call jiraService.pushPrevious when loading same issue', () => {
+    let jiraSvc = TestBed.get(JiraIntegrationService) as MockJira;
+    component.loadIssue('TEST');
+    let previousSpy = spyOn(jiraSvc, 'pushPrevious').and.callThrough();
+    component.loadIssue('TEST');
+
+    expect(previousSpy).toHaveBeenCalledTimes(0);
+  });
+  it('should subscribe to previous/nextIssue changed', () => {
+    let jiraSvc = TestBed.get(JiraIntegrationService) as MockJira;
+    jiraSvc.previousIssueStateChanged.emit(true);
+    jiraSvc.nextIssueStateChanged.emit(true);
+
+    expect(component.canPrevious).toBeTruthy();
+    expect(component.canNext).toBeTruthy();
+  });
 });

@@ -24,15 +24,20 @@ export class JiraDetailComponent implements OnInit, OnDestroy {
     if (cmt) {
       let result = this.jira.parseKeyFromMessage(cmt.message, cmt.detail);
       if (result.length > 0) {
+        if (this.currentIssueKey && this.currentIssueKey !== result[0]) {
+          this.jira.pushPrevious(this.currentIssueKey);
+        }
         this.currentIssueKey = result[0];
         this.loading = true;
-        this.jira.getIssue(this.currentIssueKey);
+        this.jira.navigateToIssue(this.currentIssueKey);
       }
     } else if (!this.issue) {
       this.currentIssueKey = "";
       this.keySelector.enableEditing();
     }
   }
+  canPrevious = false;
+  canNext = false;
   private currentIssueKey = "";
   private issue: Issue;
   private issueIconUrl: SafeResourceUrl;
@@ -52,7 +57,7 @@ export class JiraDetailComponent implements OnInit, OnDestroy {
     this.subs.push(jira.issueRetrieved.subscribe(iss => {
       if (!iss) {
         this.loading = false;
-      }  else if (iss.key === this.currentIssueKey) {
+      } else if (iss.key === this.currentIssueKey) {
         this.issue = iss;
         this.formatCurrentIssue();
         this.querySubtasks();
@@ -78,6 +83,12 @@ export class JiraDetailComponent implements OnInit, OnDestroy {
     }));
     layout.tooltipChanged.subscribe(tp => {
       this.tooltip = tp;
+    });
+    jira.previousIssueStateChanged.subscribe(s => {
+      this.canPrevious = s;
+    });
+    jira.nextIssueStateChanged.subscribe(s => {
+      this.canNext = s;
     });
     this.tooltip = layout.tooltipEnabled;
   }
@@ -159,7 +170,7 @@ export class JiraDetailComponent implements OnInit, OnDestroy {
   }
   updateTitle() {
     this.loading = true;
-    this.jira.updateIssue(this.issue.key, {summary: this.issue.fields.summary}, null);
+    this.jira.updateIssue(this.issue.key, { summary: this.issue.fields.summary }, null);
   }
 
   private delayEnableLoading() {
@@ -170,7 +181,22 @@ export class JiraDetailComponent implements OnInit, OnDestroy {
   }
   loadIssue(key) {
     this.loading = true;
+    if (key !== this.currentIssueKey) {
+      this.jira.pushPrevious(this.currentIssueKey);
+    }
     this.currentIssueKey = key;
     this.jira.getIssue(key);
+  }
+  gotoPrevious() {
+    if (this.canPrevious) {
+      this.jira.pushNext(this.currentIssueKey);
+      this.jira.gotoPrevious();
+    }
+  }
+  gotoNext() {
+    if (this.canNext) {
+      this.jira.pushPrevious(this.currentIssueKey);
+      this.jira.gotoNext();
+    }
   }
 }

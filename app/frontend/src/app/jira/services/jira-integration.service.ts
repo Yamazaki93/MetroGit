@@ -17,8 +17,12 @@ export class JiraIntegrationService {
   @Output() issueQueryRetrieved: EventEmitter<Issue[]> = new EventEmitter<Issue[]>();
   @Output() resolutionRetrieved: EventEmitter<Resolution[]> = new EventEmitter<Resolution[]>();
   @Output() changeIssue: EventEmitter<string> = new EventEmitter<string>();
+  @Output() previousIssueStateChanged: EventEmitter<boolean> = new EventEmitter<boolean>();
+  @Output() nextIssueStateChanged: EventEmitter<boolean> = new EventEmitter<boolean>();
   enabled = false;
   jiraUrl = "";
+  previousIssueStack: string[] = [];
+  nextIssueStack: string[] = [];
   private jiraKeys = [];
   resolutions: Resolution[] = [];
   private issueTypes: IssueType[] = [];
@@ -122,7 +126,7 @@ export class JiraIntegrationService {
     this.electron.ipcRenderer.send('JIRA-AssignIssue', { key: key, name: name });
   }
   addSubtask(key, name, projectId) {
-    this.electron.ipcRenderer.send('JIRA-AddSubtask', { key: key, name: name, projectId: projectId, subtaskId: this.subtaskType.id});
+    this.electron.ipcRenderer.send('JIRA-AddSubtask', { key: key, name: name, projectId: projectId, subtaskId: this.subtaskType.id });
   }
   searchIssuesByKey(keyQuery, fields?) {
     let jql = `key = "${keyQuery}"`;
@@ -134,5 +138,39 @@ export class JiraIntegrationService {
   }
   navigateToIssue(key) {
     this.changeIssue.emit(key);
+  }
+  pushPrevious(key) {
+    if (this.previousIssueStack.indexOf(key) === -1) {
+      this.previousIssueStack.push(key);
+      if (this.previousIssueStack.length === 1) {
+        this.previousIssueStateChanged.emit(true);
+      }
+    }
+  }
+  pushNext(key) {
+    if (this.nextIssueStack.indexOf(key) === -1) {
+      this.nextIssueStack.push(key);
+      if (this.nextIssueStack.length === 1) {
+        this.nextIssueStateChanged.emit(true);
+      }
+    }
+  }
+  gotoPrevious() {
+    if (this.previousIssueStack.length) {
+      let issue = this.previousIssueStack.pop();
+      this.navigateToIssue(issue);
+      if (!this.previousIssueStack.length) {
+        this.previousIssueStateChanged.emit(false);
+      }
+    }
+  }
+  gotoNext() {
+    if (this.nextIssueStack.length) {
+      let issue = this.nextIssueStack.pop();
+      this.navigateToIssue(issue);
+      if (!this.nextIssueStack.length) {
+        this.nextIssueStateChanged.emit(false);
+      }
+    }
   }
 }

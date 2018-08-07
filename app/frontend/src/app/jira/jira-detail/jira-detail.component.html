@@ -6,6 +6,16 @@
     <div class="full-width">
       <app-key-selector #keySelector (issueSelected)="loadIssue($event)" [currentIssueKey]="currentIssueKey"></app-key-selector>
     </div>
+    <div class="external-link mr-2" (click)="gotoPrevious()" [class.disabled]="!canPrevious" *ngIf="issue" placement="left" [ngbTooltip]="tooltip? 'Previous Issue' : ''" container="body">
+      <h5>
+        <i class="icon-arrow-left"></i>
+      </h5>
+    </div>
+    <div class="external-link mr-2" (click)="gotoNext()" [class.disabled]="!canNext" *ngIf="issue" placement="left" [ngbTooltip]="tooltip? 'Next Issue' : ''" container="body">
+      <h5>
+        <i class="icon-arrow-right"></i>
+      </h5>
+    </div>
     <div class="external-link mr-2"  *ngIf="issue" placement="left" [ngbTooltip]="tooltip? 'Refresh' : ''" container="body" (click)="refreshIssue()">
       <h5>
         <i class="icon-refresh-cw"></i>
@@ -69,14 +79,12 @@
           <object [data]="subtask.fields.safePriorityIconUrl" style="width: 20px; height: 20px;"></object>
         </div>
         <div class="mr-2 text-muted subtask-key">
-          <a [routerLink]="'/jira-issue/' + subtask.key">{{subtask.key}}</a>
+          <a (click)="loadIssue(subtask.key)" href="javascript:void(0)">{{subtask.key}}</a>
         </div>
         <div class="subtask-summary">
           {{subtask.fields.summary}}
         </div>
         <div class="flex-no-shrink">
-          <!-- <div class="p-1 rounded" [class.bg-dark]="subtask.fields.status.statusCategory.colorName!=='green' && subtask.fields.status.statusCategory.colorName!=='yellow' "
-            [class.bg-success]="subtask.fields.status.statusCategory.colorName==='green'" [class.bg-primary]="subtask.fields.status.statusCategory.colorName==='yellow'">{{subtask.fields.status.name}}</div> -->
           <app-transition-control (transitioning)="onRequestPosted()" [key]="subtask.key" [padding]="1" [status]="subtask.fields.status"
             [transitions]="subtask.transitions"></app-transition-control>
 
