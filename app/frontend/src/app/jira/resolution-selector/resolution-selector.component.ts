@@ -13,6 +13,7 @@ export class ResolutionSelectorComponent implements OnInit, Prompt {
   toClose = new EventEmitter();
   toEnter = new EventEmitter<string>();
   key = "";
+  required = false;
   private _resolution;
   private resolutions: Resolution[] = [];
   constructor(
@@ -26,6 +27,10 @@ export class ResolutionSelectorComponent implements OnInit, Prompt {
 
   enter() {
     this.toEnter.emit(this._resolution);
+    this.toClose.emit();
+  }
+  continue() {
+    this.toEnter.emit("");
     this.toClose.emit();
   }
   close() {
