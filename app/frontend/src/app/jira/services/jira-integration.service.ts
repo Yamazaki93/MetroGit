@@ -109,7 +109,7 @@ export class JiraIntegrationService {
   addComment(key, body) {
     this.electron.ipcRenderer.send('JIRA-AddComment', { key: key, body: body });
   }
-  updateIssue(key, fields, transition) {
+  updateIssue(key, fields, transition?) {
     let data = {};
     if (fields) {
       data['fields'] = fields;

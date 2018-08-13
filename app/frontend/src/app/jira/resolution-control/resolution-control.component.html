@@ -1,0 +1,8 @@
+<div (click)="toggled = !toggled" class="rounded resolution-container p-2 bg-dark">
+  <ng-container *ngIf="resolution">{{resolution.name}}</ng-container>
+  <div class="transitions" [class.toggled]="toggled">
+    <div class="transition p-1 text-dark" *ngFor="let res of resolutions" (click)="selectResolution(res)">
+      {{res.name}}
+    </div>
+  </div>
+</div>
