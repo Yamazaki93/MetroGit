@@ -50,7 +50,7 @@
     </div>
     <div class="col-6">
       <label>Resolution</label>
-      <app-resolution-control [key]="issue.key" [resolution]="issue.fields.resolution" (resolutionSelected)="onRequestPosted()"></app-resolution-control>
+      <app-resolution-control [editable]="issue.editmeta.resolution" [key]="issue.key" [resolution]="issue.fields.resolution" (resolutionSelected)="onRequestPosted()"></app-resolution-control>
     </div>
   </div>
   <div class="mt-3 issue-status-container row flex-no-shrink"  *ngIf="issue">

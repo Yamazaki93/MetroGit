@@ -94,7 +94,7 @@ function addComment(event, arg) {
 
 function getJiraIssue(key) {
     if (conn) {
-        return conn.get(`/issue/${key}?expand=renderedFields,names,transitions,transitions.fields`).then(result => {
+        return conn.get(`/issue/${key}?expand=renderedFields,names,transitions,transitions.fields,editmeta`).then(result => {
             result.data.fields.description = result.data.renderedFields.description;
             return result;
         });

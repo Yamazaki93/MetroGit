@@ -11,6 +11,7 @@ export class ResolutionControlComponent implements OnInit {
 
   @Input() resolution: Resolution;
   @Input() key: string;
+  @Input() editable = true;
   @Output() resolutionSelected: EventEmitter<Resolution> = new EventEmitter<Resolution>();
   private resolutions: Resolution[];
   private toggled = false;
@@ -26,5 +27,10 @@ export class ResolutionControlComponent implements OnInit {
   selectResolution(resolution: Resolution) {
     this.jira.updateIssue(this.key, { "resolution": { "name": resolution.name } });
     this.resolutionSelected.emit(resolution);
+  }
+  toggle() {
+    if (this.editable) {
+      this.toggled = !this.toggled;
+    }
   }
 }
