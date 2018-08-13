@@ -9,6 +9,7 @@ export class JIRAIssueGuard implements CanActivate {
     ) {
     }
     canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot) {
+        this.jira.pushPrevious(route.params.previousKey);
         this.jira.navigateToIssue(route.params.key);
         return false;
     }
