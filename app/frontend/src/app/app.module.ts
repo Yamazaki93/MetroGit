@@ -46,7 +46,7 @@ const appRoutes: Routes = [
     path: 'file/:sha', component: ExternalFileViewerComponent
   },
   {
-    path: 'jira-issue/:key', canActivate: [JIRAIssueGuard], component: GitViewComponent
+    path: 'jira-issue/:key/:previousKey', canActivate: [JIRAIssueGuard], component: GitViewComponent
   },
   { path: 'release-note', component: ReleaseNoteComponent },
   { path: 'about', component: AboutPageComponent },

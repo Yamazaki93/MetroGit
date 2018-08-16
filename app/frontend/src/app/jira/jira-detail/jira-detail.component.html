@@ -38,27 +38,33 @@
 
   </div>
   <div class="mt-3 full-width flex-no-shrink"  *ngIf="issue">
-    <app-jira-rich-text [rawText]="issue.fields.description"></app-jira-rich-text>
+    <app-jira-rich-text [key]="issue.key" [rawText]="issue.fields.description"></app-jira-rich-text>
   </div>
-  <div class="mt-3 issue-status-container row flex-no-shrink"  *ngIf="issue">
-    <div class="col-3">
+  <div class="mt-3 issue-status-container row flex-no-shrink" *ngIf="issue">
+    <div class="col-6">
       <label>Status</label>
       <app-transition-control (transitioning)="onRequestPosted()" [key]="issue.key" [padding]="2" [status]="issue.fields.status"
         [transitions]="issue.transitions"></app-transition-control>
-      <small *ngIf="issue.fields.resolution">
-        <i class="icon-check mr-2"></i>{{issue.fields.resolution.name}}</small>
+      <!-- <small *ngIf="issue.fields.resolution">
+        <i class="icon-check mr-2"></i>{{issue.fields.resolution.name}}</small> -->
     </div>
-    <div class="col-3">
+    <div class="col-6">
+      <label>Resolution</label>
+      <app-resolution-control [editable]="issue.editmeta.fields.resolution" [key]="issue.key" [resolution]="issue.fields.resolution" (resolutionSelected)="onRequestPosted()"></app-resolution-control>
+    </div>
+  </div>
+  <div class="mt-3 issue-status-container row flex-no-shrink"  *ngIf="issue">
+    <div class="col-4">
       <label>Assignee</label>
       <app-profile-selector (profileSelected)="onRequestPosted()" [key]="issue.key" [profile]="issue.fields.assignee"></app-profile-selector>
     </div>
-    <div class="col-3" *ngIf="issue.fields.storyPoints !== undefined">
+    <div class="col-4" *ngIf="issue.fields.storyPoints !== undefined">
       <label>Story Points</label>
       <div class="p-2 rounded bg-dark">
         <span>{{issue.fields.storyPoints}}</span>
       </div>
     </div>
-    <div class="col-3">
+    <div class="col-4">
       <label>Reporter</label>
       <div class="p-2 rounded bg-dark profile-container">
         <img [src]="issue.fields.reporter.safeAvatarUrl" class="mr-1" width="24px" />

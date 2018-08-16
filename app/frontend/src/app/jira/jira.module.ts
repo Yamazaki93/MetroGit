@@ -16,6 +16,7 @@ import { KeySelectorComponent } from './key-selector/key-selector.component';
 import { ResolutionSelectorComponent } from './resolution-selector/resolution-selector.component';
 import { JIRAIssueGuard } from './services/jira-issue-link-guard';
 import { RouterModule } from '@angular/router';
+import { ResolutionControlComponent } from './resolution-control/resolution-control.component';
 
 
 @NgModule({
@@ -36,6 +37,6 @@ import { RouterModule } from '@angular/router';
     ResolutionSelectorComponent
   ],
   exports: [ JiraDetailComponent ],
-  declarations: [JiraDetailComponent, JiraRichTextComponent, TransitionControlComponent, AddCommentPromptComponent, ProfileSelectorComponent, ProfileFilterPipe, KeySelectorComponent, SubtaskPromptComponent, TitleEditorComponent, ResolutionSelectorComponent]
+  declarations: [JiraDetailComponent, JiraRichTextComponent, TransitionControlComponent, AddCommentPromptComponent, ProfileSelectorComponent, ProfileFilterPipe, KeySelectorComponent, SubtaskPromptComponent, TitleEditorComponent, ResolutionSelectorComponent, ResolutionControlComponent]
 })
 export class JiraModule { }

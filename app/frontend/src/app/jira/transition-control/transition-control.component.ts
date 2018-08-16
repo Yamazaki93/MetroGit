@@ -39,13 +39,18 @@ export class TransitionControlComponent implements OnInit {
     let selectResolution = false;
     this.transitions.forEach(t => {
       if (t.id === transitionID && t.to.statusCategory.key === 'done') {
-        if (t.fields.resolution && t.fields.resolution.required) {
+        if (t.fields.resolution) {
           let pmpt = this.prompt.injectComponent(ResolutionSelectorComponent);
+          pmpt.required = t.fields.resolution.required;
           pmpt.key = this.key;
           selectResolution = true;
           pmpt.toEnter.subscribe(resolution => {
             this.transitioning.emit();
-            this.jira.updateIssue(this.key, { "resolution": { "name": resolution } }, { "id": transitionID });
+            if (resolution) {
+              this.jira.updateIssue(this.key, { "resolution": { "id": resolution } }, { "id": transitionID });
+            } else {
+              this.jira.updateIssue(this.key, null, { "id": transitionID });
+            }
           });
         }
       }

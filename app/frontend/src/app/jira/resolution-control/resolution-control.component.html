@@ -1,0 +1,13 @@
+<div (click)="toggle()" class="rounded resolution-container p-2 bg-dark">
+  <ng-container *ngIf="resolution">{{resolution.name}}</ng-container>
+  <div class="transitions" [class.toggled]="toggled">
+    <div class="transition p-1 text-dark" *ngFor="let res of resolutions" (click)="selectResolution(res)">
+      {{res.name}}
+    </div>
+  </div>
+</div>
+<small *ngIf="!editable" class="text-warning">This field is not editable
+  <a href="javascript:void(0)" placement="right" ngbPopover="The edit issue screen in your JIRA config does not allow changing resolution." container="body">
+    <i class="icon-help-circle"></i>
+  </a>
+</small>

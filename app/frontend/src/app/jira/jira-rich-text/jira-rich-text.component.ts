@@ -9,6 +9,7 @@ import { JiraIntegrationService } from '../services/jira-integration.service';
 })
 export class JiraRichTextComponent implements OnInit, AfterViewChecked {
 
+  @Input() key = "";
   @Input() set rawText(raw: string) {
     this.richText = this.sanitizer.bypassSecurityTrustHtml(raw);
   }
@@ -29,6 +30,7 @@ export class JiraRichTextComponent implements OnInit, AfterViewChecked {
         if (eles[i].classList.contains('jira-issue-macro-key') && eles[i].getAttribute('href').indexOf(`https://${this.jira.jiraUrl}/browse`) !== -1) {
           let url = eles[i].getAttribute('href');
           url = url.replace(`https://${this.jira.jiraUrl}/browse/`, '#jira-issue/');
+          url += '/' + this.key;
           eles[i].setAttribute('href', url);
         }
       }
