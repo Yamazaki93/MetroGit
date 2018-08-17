@@ -14,7 +14,10 @@
     "type": "git",
     "url": "https://github.com/Yamazaki93/MetroGit.git"
   },
-  "author": "Michael Lu",
+  "author": {
+    "name": "Michael Lu",
+    "email": "michaellu@rhodiumcode.com"
+  },
   "license": "SEE LICENSE IN LICENSE",
   "devDependencies": {
     "electron": "^1.8.4",
@@ -41,6 +44,13 @@
         "provider": "github"
       }
     },
+    "linux": {
+      "target": "deb",
+      "category": "Development",
+      "publish": {
+        "provider": "github"
+      }
+    },
     "nsis": {
       "license": "../LICENSE"
     },
@@ -48,7 +58,7 @@
   },
   "dependencies": {
     "axios": "^0.18.0",
-    "electron-updater": "^2.21.10",
+    "electron-updater": "^3.0.3",
     "get-folder-size": "^2.0.0",
     "keytar": "^4.2.1",
     "nodegit": "^0.22.0",
