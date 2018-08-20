@@ -14,9 +14,9 @@ import { FileViewPanelComponent } from '../file-view-panel/file-view-panel.compo
 })
 export class CommitDetailComponent implements OnInit {
 
-  private toggled = false;
+  toggled = false;
+  fileToggled = false;
   private loading = false;
-  private fileToggled = false;
   private selectedCommit: CommitDetail = null;
   private selectedTab = "";
   private selectedFile = "";
@@ -42,7 +42,9 @@ export class CommitDetailComponent implements OnInit {
           this.selectedTab = 'info';
         }
       } else {
-        this.fileToggled = false;
+        this.toggled = false;
+        this.closeFilePanel();
+        this.layout.isDetailPanelOpen = false;
       }
     });
     selection.selectingChange.subscribe(selecting => {

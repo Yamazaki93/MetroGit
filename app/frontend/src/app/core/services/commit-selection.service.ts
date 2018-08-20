@@ -92,6 +92,15 @@ export class CommitSelectionService {
       this._selectedFile = "";
       this.selectedFileChange.emit(this._selectedFile);
     });
+    this.electron.onCD('Repo-Closed', (event, arg) => {
+      this.selectedCommit = null;
+      this.selectionChange.emit(this.selectedCommit);
+    });
+
+    this.electron.onCD('Repo-OpenSuccessful', (event, arg) => {
+      this.selectedCommit = null;
+      this.selectionChange.emit(this.selectedCommit);
+    });
   }
 
   selectFileDetail(file, sha = null, fullFile = false) {

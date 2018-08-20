@@ -27,4 +27,27 @@ describe('CommitSelectionService', () => {
   it('should be created', inject([CommitSelectionService], (service: CommitSelectionService) => {
     expect(service).toBeTruthy();
   }));
+
+  it('should set selectedCommit to null and emit changes on repo closed', inject([CommitSelectionService], (service: CommitSelectionService) => {
+    let emit = false;
+    let electron = TestBed.get(ElectronService) as MockElectron;
+    service.selectionChange.subscribe(s => {
+      emit = true;
+    });
+    electron.receiveEvent('Repo-Closed', {});
+
+    expect(service.selectedCommit).toBeNull();
+    expect(emit).toBeTruthy();
+  }));
+  it('should set selectedCommit to null and emit changes on repo opened', inject([CommitSelectionService], (service: CommitSelectionService) => {
+    let emit = false;
+    let electron = TestBed.get(ElectronService) as MockElectron;
+    service.selectionChange.subscribe(s => {
+      emit = true;
+    });
+    electron.receiveEvent('Repo-OpenSuccessful', {});
+
+    expect(service.selectedCommit).toBeNull();
+    expect(emit).toBeTruthy();
+  }));
 });

@@ -42,4 +42,15 @@ describe('CommitDetailComponent', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
+  it('should untoggle panel and file panel when selected commit is null', () => {
+    let commitSelection = TestBed.get(CommitSelectionService) as MockCommitSelection;
+    component.toggled = true;
+    component.fileToggled = true;
+
+    commitSelection.selectionChange.emit(null);
+    fixture.detectChanges();
+
+    expect(component.toggled).toBeFalsy();
+    expect(component.fileToggled).toBeFalsy();
+  });
 });
