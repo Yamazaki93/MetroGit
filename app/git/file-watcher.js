@@ -162,8 +162,10 @@ function getFileDetail(path, commit, fullFile = false) {
             })
         });
     } else if (commit === 'workdir') {
-        return NodeGit.Diff.indexToWorkdir(Repo, null, {
-            flags: NodeGit.Diff.OPTION.SHOW_UNTRACKED_CONTENT | NodeGit.Diff.OPTION.RECURSE_UNTRACKED_DIRS
+        return Repo.index().then(ind => {
+            return NodeGit.Diff.indexToWorkdir(Repo, ind, {
+                flags: NodeGit.Diff.OPTION.SHOW_UNTRACKED_CONTENT | NodeGit.Diff.OPTION.RECURSE_UNTRACKED_DIRS
+            })
         }).then(diff => {
             return processDiff(diff, path, commit, fullFile);
         })
