@@ -19,4 +19,7 @@ export class AboutPageComponent implements OnInit {
   goToRepo() {
     this.electron.ipcRenderer.send('Shell-Open', {url: 'https://github.com/Yamazaki93/MetroGit'});
   }
+  goToBMC() {
+    this.electron.ipcRenderer.send('Shell-Open', {url: 'https://www.buymeacoffee.com/mjCsGWDTS'});
+  }
 }
