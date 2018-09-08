@@ -60,6 +60,10 @@ export class AppveyorCiService {
       this.notification.success(`Rebuild Scheduled ...`);
       this.loading.disableLoading();
     });
+    electron.onCD('CI-AppVeyorRebuildFailed', (event, arg) => {
+      this.notification.error(`Rebuild Failed. Please try again later`);
+      this.loading.disableLoading();
+    });
   }
 
   init() {

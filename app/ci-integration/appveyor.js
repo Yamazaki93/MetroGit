@@ -136,6 +136,8 @@ function reBuildAppVeyor(event, arg) {
             "commitId": arg.commit
         }).then(resp => {
             event.sender.send('CI-AppVeyorRebuilded', {});
+        }).catch(err => {
+            event.sender.send('CI-AppVeyorRebuildFailed', {});
         })
     }
 }
