@@ -43,6 +43,7 @@ export class CommitDetailComponent implements OnInit {
         }
       } else {
         this.toggled = false;
+        this.selectedTab = "";
         this.closeFilePanel();
         this.layout.isDetailPanelOpen = false;
       }
