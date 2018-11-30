@@ -50,8 +50,10 @@ After installing correct dependencies, do the following.
   3. `cd app/frontend`
   4. `yarn install`
   5. `cd ../..` back to project root directory
-  6. `.\build.ps1` (for windows) or `.\build.sh` (for Mac)
+  6. `.\build.ps1` (for windows) or `.\build.sh` (for Mac/Linux) *
   7. The output is in `dist` folder
+
+\* Make sure to `npm rebuild` in `app/frontent/` if modules are not self registering.
 
 ## Support this app
 
