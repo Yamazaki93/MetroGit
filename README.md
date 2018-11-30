@@ -55,6 +55,8 @@ After installing correct dependencies, do the following.
 
 \* Make sure to `npm rebuild` in `app/frontent/` if modules are not self registering.
 
+\* If you're getting a white page while running after installing, try refreshing (Debian).
+
 ## Support this app
 
 Hi there, if you like this app, find it useful or just like this subway map, I'd loved to hear your feedback and experiences, you can share them with `admin@rhodiumcode.com`
