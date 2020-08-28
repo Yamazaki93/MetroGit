@@ -18,7 +18,7 @@ MetroGit is a native desktop git app with JIRA, AppVeyor and other tools integra
  - Repository specific settings
 
 ## Built On
-This app is built with some really awsome frameworks, including:
+This app is built with some really awesome frameworks, including:
 
 <a href="https://electronjs.org/"><img src="https://camo.githubusercontent.com/627c774e3070482b180c3abd858ef2145d46303b/68747470733a2f2f656c656374726f6e6a732e6f72672f696d616765732f656c656374726f6e2d6c6f676f2e737667" width="250"></a>
 <a href="https://angular.io/"><img src="https://angular.io/assets/images/logos/angular/angular.svg" width="150"></a>
