@@ -57,7 +57,7 @@
     "extends": null
   },
   "dependencies": {
-    "axios": "^0.18.0",
+    "axios": "^0.21.1",
     "electron-updater": "^3.0.3",
     "get-folder-size": "^2.0.0",
     "keytar": "^4.2.1",
