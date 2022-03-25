@@ -20,7 +20,7 @@
   },
   "license": "SEE LICENSE IN LICENSE",
   "devDependencies": {
-    "electron": "^1.8.4",
+    "electron": "^13.6.6",
     "electron-builder": "^20.10.0"
   },
   "build": {
