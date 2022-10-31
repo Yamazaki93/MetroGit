@@ -61,7 +61,7 @@ export class SubwayStationsComponent implements OnInit, AfterViewInit, OnDestroy
     this.selection.select(sha);
   }
   ngOnDestroy() {
-    this.subs.map(s => {
+    this.subs.forEach(s => {
       s.unsubscribe();
     });
   }
